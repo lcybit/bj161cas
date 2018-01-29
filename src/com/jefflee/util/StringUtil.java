@@ -37,7 +37,7 @@ public class StringUtil {
 	}
 
 	public static boolean isBlank(String string) {
-		return string == null || "".equals(string.trim());
+		return null == string || "".equals(string.trim());
 	}
 
 	public static List<String> strings2List(String[] strings) {

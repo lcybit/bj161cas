@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>排课信息展示</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="width:100%;">
+    <div class="layui-row" id="scheduleGroup">
+    </div>
+  </div>
+  <script id="tpl-singleSchedule" type="text/x-jsrender">
+    <div class="layui-col-md4">
+      <table class="layui-table">
+        <tbody>
+          <tr>
+            <td rowspan="2"></td>
+            <td colspan="5">上午</td>
+            <td colspan="3">下午</td>
+          </tr>
+          <tr>
+            <td>早</td>
+            <td>1</td>
+            <td>2</td>
+            <td>3</td>
+            <td>4</td>
+            <td>5</td>
+            <td>6</td>
+            <td>7</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </script>
+  <script>
+    $(document).ready(function() {
+      for(i=0; i<12; i++) {
+        $('#scheduleGroup').append($.templates('#tpl-singleSchedule').render());
+      }
+    })
+
+    function list() {
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/teacher/find',
+        success : function(teacherList) {
+          $('#teacherList').html($.templates('#tpl-teacherList').render(teacherList));
+        }
+      });
+    }
+  
+  </script>
+</body>
+
+</html>

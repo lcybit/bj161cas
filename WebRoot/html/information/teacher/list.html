@@ -27,7 +27,7 @@
       <button class="layui-btn" onclick="goCreate()">新增</button>
     </div>
   </div>
-  <script id="tmpl-teacherList" type="text/x-jsrender">
+  <script id="tpl-teacherList" type="text/x-jsrender">
     <tr>
       <td>{{:teacherId}}</td>
       <td>{{:teacherNo}}</td>
@@ -39,7 +39,7 @@
   </script>
   <script>
     $(document).ready(function() {
-      goList();
+      list();
     })
   
     function goCreate() {
@@ -83,19 +83,19 @@
             url : '/teacher/delete/' + teacherId,
             success : function() {
               layer.close(index);
-              goList();
+              list();
             }
           });
         });
     }
 
-    function goList() {
+    function list() {
       $.ajax({
         async : false,
         type : 'GET',
         url : '/teacher/find',
         success : function(teacherList) {
-          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+          $('#teacherList').html($.templates('#tpl-teacherList').render(teacherList));
         }
       });
     }

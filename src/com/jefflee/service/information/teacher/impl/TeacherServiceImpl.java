@@ -14,6 +14,8 @@ import com.jefflee.service.information.teacher.TeacherService;
 import com.jefflee.util.BeanUtil;
 import com.jefflee.util.DatabaseUtil;
 
+import tk.mybatis.mapper.entity.Example;
+
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
 
@@ -32,7 +34,9 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public List<TeacherDto> findAll() {
-		List<Teacher> teacherList = teacherMapper.selectAll();
+		Example example = new Example(Teacher.class);
+		example.setOrderByClause("teacher_no ASC");
+		List<Teacher> teacherList = teacherMapper.selectByExample(example);
 		List<TeacherDto> teacherDtoList = new ArrayList<TeacherDto>();
 		for (Teacher teacher : teacherList) {
 			TeacherDto teacherDto = new TeacherDto();
