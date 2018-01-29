@@ -16,7 +16,7 @@
   </div>
   <script id="tpl-singleSchedule" type="text/x-jsrender">
     <div class="layui-col-md4">
-      <table class="layui-table">
+      <table class="layui-table" lay-size="sm">
         <tbody>
           <tr>
             <td rowspan="2"></td>
@@ -33,14 +33,35 @@
             <td>6</td>
             <td>7</td>
           </tr>
+			{{for week tmpl="#tpl-singleDay"/}}
         </tbody>
       </table>
     </div>
   </script>
+  <script id="tpl-singleDay" type="text/x-jsrender">
+    <tr>
+      <td>{{:weekName}}</td>
+      {{for day tmpl="#tpl-singlePeriod"/}}
+    </tr>
+  </script>
+  <script id="tpl-singlePeriod" type="text/x-jsrender">
+	<td>{{:period.courseName}}</td>
+  </script>
   <script>
     $(document).ready(function() {
-      for(i=0; i<12; i++) {
-        $('#scheduleGroup').append($.templates('#tpl-singleSchedule').render());
+      var weekName = ['一','二','三','四','五'];
+      var period = {'courseName':'语'};
+      var day = [];
+      var week = [];
+      for (var i=0;i<8;i++){
+      	day.push({'period':period});
+      }
+      for (var i=0;i<5;i++){
+      	week.push({'day':day,'weekName':weekName[i]});
+      }
+      
+      for(var i=0; i<12; i++) {
+        $('#scheduleGroup').append($.templates('#tpl-singleSchedule').render({'week':week}));
       }
     })
 

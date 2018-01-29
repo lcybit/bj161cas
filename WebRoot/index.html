@@ -8,8 +8,12 @@
 </head>
 
 <body>
+
   <div id="navigation" style="width:200px; float:left;"></div>
-  <div id="main" style="width:auto; margin-left:200px;"></div>
+  <div id="navdisplay" style="width:auto;margin-left:200px;">
+		  <button class="layui-btn layui-btn-sm" id="displayButton" ><i class="layui-icon" >&#xe603;</i></button>
+  </div>
+  <div id="main" style="width:auto;margin-left:200px;"></div>
   <script>
     $(document).ready(function() {
       $.ajaxSetup({
@@ -27,6 +31,27 @@
       $('#main').load(url);
     }
   </script>
-</body>
+  <!-- 收起侧边栏 -->
+  <script> 
+	var nav=document.getElementById('navigation'); 
+	var main=document.getElementById('main');
+	var navdisplay=document.getElementById("navdisplay");
+	var displayButton=document.getElementById("displayButton");
+	nav.style.display='block'; 
+	document.getElementById('displayButton').onclick=function(){ 
+   		if(nav.style.display=='none'){     
+       	nav.style.display='block';   
+       	displayButton.textContent='<';    
+       	main.style.marginLeft='200px';  
+       	navdisplay.style.marginLeft='200px';       	 
+    	}else{ 
+    	nav.style.display='none';
+    	displayButton.textContent='>';	
+    	main.style.marginLeft='0px';
+    	navdisplay.style.marginLeft='0px';    	
+    	}
+    }     
+  </script>
+ </body>
 
 </html>
