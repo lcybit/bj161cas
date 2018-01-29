@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>北京161中学排课系统</title>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/layui/layui.all.js"></script>
+</head>
+
+<body>
+  <div id="navigation" style="width:200px; float:left;"></div>
+  <div id="main" style="width:auto; margin-left:200px;"></div>
+  <script>
+    $(document).ready(function() {
+      $.ajaxSetup({
+        cache : false
+      })
+      $('#navigation').load('html/common/navigation.html');
+      $('#main').load('html/common/home.html');
+    });
+  
+    function jump(url) {
+      $.ajaxSetup({
+        cache : false
+      });
+      $('#main').empty();
+      $('#main').load(url);
+    }
+  </script>
+</body>
+
+</html>

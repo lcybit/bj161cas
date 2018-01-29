@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Navigation</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-side layui-bg-black" style="float:left;">
+    <div class="layui-side-scroll">
+      <ul class="layui-nav layui-nav-tree layui-nav-side">
+        <li class="layui-nav-item" id="home">
+          <a href="javascript:;" onclick="jump('html/common/home.html')" style="cursor:pointer">主页</a>
+        </li>
+        <li class="layui-nav-item" id="informationManagement">
+          <a href="javascript:;" style="cursor:pointer">信息管理</a>
+          <dl class="layui-nav-child">
+            <dd id="teacherInfo">
+              <a href="javascript:;" onclick="jump('html/information/teacher/list.html')" style="cursor:pointer">教师信息</a>
+            </dd>
+            <dd id="viewResult">
+              <a href="javascript:;" onclick="jump('html/information/teacher/list.html')" style="cursor:pointer">其他</a>
+            </dd>
+          </dl>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <script>
+  layui.element.init();
+  </script>
+</body>
+
+</html>

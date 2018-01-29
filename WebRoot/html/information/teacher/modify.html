@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改教师信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin-top:30px;">
+    <form class="layui-form" id="teacher" method="post">
+      <div class="layui-form-item">
+        <label class="layui-form-label">教师ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="teacherId" id="teacherId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">教师工号:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="teacherNo" id="teacherNo" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var teacherId = sessionStorage.getItem('currentTeacherId');
+      $('#teacherId').attr('value', teacherId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/teacher/find/' + teacherId,
+        success : function(teacher) {
+          $('#teacherNo').attr('value', teacher.teacherNo);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/teacher/modify',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#teacher').serializeJSON()),
+        success : function(result) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.goList();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>
