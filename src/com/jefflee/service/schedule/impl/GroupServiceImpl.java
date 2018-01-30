@@ -35,7 +35,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public List<GroupDto> listAll() {
 		Example example = new Example(Group.class);
-		example.setOrderByClause("group_no ASC");
+		example.setOrderByClause("start_date ASC");
 		List<Group> groupList = groupMapper.selectByExample(example);
 		List<GroupDto> groupDtoList = new ArrayList<GroupDto>();
 		for (Group group : groupList) {

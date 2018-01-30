@@ -13,8 +13,6 @@ import com.jefflee.mapper.schedule.PlanMapper;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("planService")
 public class PlanServiceImpl implements PlanService {
 
@@ -34,9 +32,7 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public List<PlanDto> listAll() {
-		Example example = new Example(Plan.class);
-		example.setOrderByClause("plan_no ASC");
-		List<Plan> planList = planMapper.selectByExample(example);
+		List<Plan> planList = planMapper.selectAll();
 		List<PlanDto> planDtoList = new ArrayList<PlanDto>();
 		for (Plan plan : planList) {
 			PlanDto planDto = new PlanDto();

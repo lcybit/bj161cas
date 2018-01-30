@@ -15,7 +15,7 @@ public class Schedule {
 	private Integer afternoon;
 	private Integer evening;
 	private Integer days;
-	private Integer start_week;
+	private Integer startWeek;
 
 	public Integer getScheduleId() {
 		return scheduleId;
@@ -65,12 +65,12 @@ public class Schedule {
 		this.days = days;
 	}
 
-	public Integer getStart_week() {
-		return start_week;
+	public Integer getStartWeek() {
+		return startWeek;
 	}
 
-	public void setStart_week(Integer start_week) {
-		this.start_week = start_week;
+	public void setStartWeek(Integer startWeek) {
+		this.startWeek = startWeek;
 	}
 
 }

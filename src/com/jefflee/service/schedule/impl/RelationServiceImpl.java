@@ -13,8 +13,6 @@ import com.jefflee.mapper.schedule.RelationMapper;
 import com.jefflee.service.schedule.RelationService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("relationService")
 public class RelationServiceImpl implements RelationService {
 
@@ -34,9 +32,7 @@ public class RelationServiceImpl implements RelationService {
 
 	@Override
 	public List<RelationDto> listAll() {
-		Example example = new Example(Relation.class);
-		example.setOrderByClause("relation_no ASC");
-		List<Relation> relationList = relationMapper.selectByExample(example);
+		List<Relation> relationList = relationMapper.selectAll();
 		List<RelationDto> relationDtoList = new ArrayList<RelationDto>();
 		for (Relation relation : relationList) {
 			RelationDto relationDto = new RelationDto();

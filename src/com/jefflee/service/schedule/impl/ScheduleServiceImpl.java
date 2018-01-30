@@ -35,7 +35,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public List<ScheduleDto> listAll() {
 		Example example = new Example(Schedule.class);
-		example.setOrderByClause("schedule_no ASC");
+		example.setOrderByClause("start_week ASC");
 		List<Schedule> scheduleList = scheduleMapper.selectByExample(example);
 		List<ScheduleDto> scheduleDtoList = new ArrayList<ScheduleDto>();
 		for (Schedule schedule : scheduleList) {

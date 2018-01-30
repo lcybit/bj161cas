@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>新增年级组信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin-top:30px;">
+    <form class="layui-form" id="group" method="post">
+      <div class="layui-form-item">
+        <label class="layui-form-label">入学年份:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="year" id="year" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">学期:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="semester" id="semester" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">初/高中:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="level" id="level" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">年级:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="grade" id="grade" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">起始日期:</label>
+        <div class="layui-input-block">
+          <input type="text" class="layui-input" name="startDate" id="startDate" placeholder="yyyy-MM-dd">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="create()">新增</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      layui.use('form', function() {
+        layui.form.render();
+      });
+      layui.use('laydate', function(){
+        layui.laydate.render({
+          elem : '#startDate'
+        });
+      });
+    });
+  
+    function create() {
+      $.ajax({
+        async : false,
+        url : '/group/create',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#group').serializeJSON()),
+        success : function(groupId) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>

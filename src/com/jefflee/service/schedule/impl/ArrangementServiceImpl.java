@@ -14,8 +14,6 @@ import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.util.BeanUtil;
 import com.jefflee.util.DatabaseUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("arrangementService")
 public class ArrangementServiceImpl implements ArrangementService {
 
@@ -36,9 +34,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public List<ArrangementDto> listAll() {
-		Example example = new Example(Arrangement.class);
-		example.setOrderByClause("arrangement_no ASC");
-		List<Arrangement> arrangementList = arrangementMapper.selectByExample(example);
+		List<Arrangement> arrangementList = arrangementMapper.selectAll();
 		List<ArrangementDto> arrangementDtoList = new ArrayList<ArrangementDto>();
 		for (Arrangement arrangement : arrangementList) {
 			ArrangementDto arrangementDto = new ArrangementDto();
