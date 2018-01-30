@@ -45,9 +45,9 @@ public class TeacherController {
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public Map<String, String> modify(@RequestBody TeacherDto teacherDto) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer id = teacherService.modify(teacherDto);
-		if (id != null) {
-			result.put("teacherId", id.toString());
+		Integer teacherId = teacherService.modify(teacherDto);
+		if (teacherId != null) {
+			result.put("teacherId", teacherId.toString());
 		}
 		return result;
 	}
