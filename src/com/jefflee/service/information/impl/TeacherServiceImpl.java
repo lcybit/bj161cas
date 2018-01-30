@@ -1,4 +1,4 @@
-package com.jefflee.service.information.teacher.impl;
+package com.jefflee.service.information.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.jefflee.dto.information.TeacherDto;
 import com.jefflee.entity.information.Teacher;
 import com.jefflee.mapper.information.TeacherMapper;
-import com.jefflee.service.information.teacher.TeacherService;
+import com.jefflee.service.information.TeacherService;
 import com.jefflee.util.BeanUtil;
 
 import tk.mybatis.mapper.entity.Example;
