@@ -1,15 +1,15 @@
 package com.jefflee.dto.information;
 
 public class TeacherDto {
-	private String teacherId;
+	private Integer id;
 	private String teacherNo;
 
-	public String getTeacherId() {
-		return teacherId;
+	public Integer getId() {
+		return id;
 	}
 
-	public void setTeacherId(String teacherId) {
-		this.teacherId = teacherId;
+	public void setId(Integer id) {
+		this.id = id;
 	}
 
 	public String getTeacherNo() {

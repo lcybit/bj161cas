@@ -12,7 +12,6 @@ import com.jefflee.entity.information.Teacher;
 import com.jefflee.mapper.information.TeacherMapper;
 import com.jefflee.service.information.teacher.TeacherService;
 import com.jefflee.util.BeanUtil;
-import com.jefflee.util.DatabaseUtil;
 
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,17 +22,18 @@ public class TeacherServiceImpl implements TeacherService {
 	private TeacherMapper teacherMapper;
 
 	@Override
-	public String create(TeacherDto teacherDto) {
-		String teacherId = DatabaseUtil.gnr32Uuid();
-		teacherDto.setTeacherId(teacherId);
+	public Integer create(TeacherDto teacherDto) {
 		Teacher teacher = new Teacher();
 		BeanUtil.copyProperties(teacherDto, teacher);
-		teacherMapper.insert(teacher);
-		return teacherId;
+		if (teacherMapper.insert(teacher) == 1) {
+			return teacher.getTeacherId();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	public List<TeacherDto> findAll() {
+	public List<TeacherDto> listAll() {
 		Example example = new Example(Teacher.class);
 		example.setOrderByClause("teacher_no ASC");
 		List<Teacher> teacherList = teacherMapper.selectByExample(example);
@@ -47,7 +47,7 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public TeacherDto findById(String teacherId) {
+	public TeacherDto findById(Integer teacherId) {
 		TeacherDto teacherDto = new TeacherDto();
 		Teacher teacher = teacherMapper.selectByPrimaryKey(teacherId);
 		BeanUtil.copyProperties(teacher, teacherDto);
@@ -55,16 +55,22 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public String modify(TeacherDto teacherDto) {
+	public Integer modify(TeacherDto teacherDto) {
 		Teacher teacher = new Teacher();
 		BeanUtil.copyProperties(teacherDto, teacher);
-		teacherMapper.updateByPrimaryKey(teacher);
-		return teacher.getTeacherId();
+		if (teacherMapper.updateByPrimaryKey(teacher) == 1) {
+			return teacher.getTeacherId();
+		} else {
+			return null;
+		}
 	}
 
 	@Override
-	public String delete(String teacherId) {
-		teacherMapper.deleteByPrimaryKey(teacherId);
-		return teacherId;
+	public Integer delete(Integer teacherId) {
+		if (teacherMapper.deleteByPrimaryKey(teacherId) == 1) {
+			return teacherId;
+		} else {
+			return null;
+		}
 	}
 }

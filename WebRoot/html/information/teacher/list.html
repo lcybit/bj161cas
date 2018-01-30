@@ -27,7 +27,7 @@
       <button class="layui-btn" onclick="goCreate()">新增</button>
     </div>
   </div>
-  <script id="tpl-teacherList" type="text/x-jsrender">
+  <script id="tmpl-teacherList" type="text/x-jsrender">
     <tr>
       <td>{{:teacherId}}</td>
       <td>{{:teacherNo}}</td>
@@ -93,9 +93,9 @@
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/teacher/find',
+        url : '/teacher/list',
         success : function(teacherList) {
-          $('#teacherList').html($.templates('#tpl-teacherList').render(teacherList));
+          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
         }
       });
     }

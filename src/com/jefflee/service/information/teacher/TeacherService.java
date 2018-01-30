@@ -6,14 +6,14 @@ import com.jefflee.dto.information.TeacherDto;
 
 public interface TeacherService {
 
-	public String create(TeacherDto teacherDto);
+	public Integer create(TeacherDto teacherDto);
 
-	public List<TeacherDto> findAll();
+	public List<TeacherDto> listAll();
 
-	public TeacherDto findById(String teacherId);
+	public TeacherDto findById(Integer teacherId);
 
-	public String modify(TeacherDto teacherDto);
+	public Integer modify(TeacherDto teacherDto);
 
-	public String delete(String teacherId);
+	public Integer delete(Integer teacherId);
 
 }

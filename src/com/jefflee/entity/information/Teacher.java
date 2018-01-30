@@ -1,23 +1,23 @@
 package com.jefflee.entity.information;
 
-import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "info_teacher")
 public class Teacher {
 	@Id
-	@Column(name = "teacher_id")
-	private String teacherId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer teacherId;
 
-	@Column(name = "teacher_no")
 	private String teacherNo;
 
-	public String getTeacherId() {
+	public Integer getTeacherId() {
 		return teacherId;
 	}
 
-	public void setTeacherId(String teacherId) {
+	public void setTeacherId(Integer teacherId) {
 		this.teacherId = teacherId;
 	}
 

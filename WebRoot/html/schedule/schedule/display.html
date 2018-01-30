@@ -14,8 +14,8 @@
     <div class="layui-row" id="scheduleGroup">
     </div>
   </div>
-  <script id="tpl-singleSchedule" type="text/x-jsrender">
-    <div class="layui-col-md4">
+  <script id="tmpl-singleSchedule" type="text/x-jsrender">
+    <div class="layui-col-md3">
       <table class="layui-table" lay-size="sm">
         <tbody>
           <tr>
@@ -33,18 +33,18 @@
             <td>6</td>
             <td>7</td>
           </tr>
-			{{for week tmpl="#tpl-singleDay"/}}
+			{{for week tmpl="#tmpl-singleDay"/}}
         </tbody>
       </table>
     </div>
   </script>
-  <script id="tpl-singleDay" type="text/x-jsrender">
+  <script id="tmpl-singleDay" type="text/x-jsrender">
     <tr>
       <td>{{:weekName}}</td>
-      {{for day tmpl="#tpl-singlePeriod"/}}
+      {{for day tmpl="#tmpl-singlePeriod"/}}
     </tr>
   </script>
-  <script id="tpl-singlePeriod" type="text/x-jsrender">
+  <script id="tmpl-singlePeriod" type="text/x-jsrender">
 	<td>{{:period.courseName}}</td>
   </script>
   <script>
@@ -61,7 +61,7 @@
       }
       
       for(var i=0; i<12; i++) {
-        $('#scheduleGroup').append($.templates('#tpl-singleSchedule').render({'week':week}));
+        $('#scheduleGroup').append($.templates('#tmpl-singleSchedule').render({'week':week}));
       }
     })
 
@@ -71,7 +71,7 @@
         type : 'GET',
         url : '/teacher/find',
         success : function(teacherList) {
-          $('#teacherList').html($.templates('#tpl-teacherList').render(teacherList));
+          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
         }
       });
     }

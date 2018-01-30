@@ -8,10 +8,11 @@
 </head>
 
 <body>
-
   <div id="navigation" style="width:200px; float:left;"></div>
-  <div id="navdisplay" style="width:auto;margin-left:200px;">
-		  <button class="layui-btn layui-btn-sm" id="displayButton" ><i class="layui-icon" >&#xe603;</i></button>
+  <div id="navdisplay" style="width:auto; margin-left:200px;">
+    <button class="layui-btn layui-btn-sm" id="displayButton" >
+      <i class="layui-icon">&#60;</i>
+    </button>
   </div>
   <div id="main" style="width:auto;margin-left:200px;"></div>
   <script>
@@ -39,17 +40,17 @@
 	var displayButton=document.getElementById("displayButton");
 	nav.style.display='block'; 
 	document.getElementById('displayButton').onclick=function(){ 
-   		if(nav.style.display=='none'){     
+ 	  if(nav.style.display=='none'){     
        	nav.style.display='block';   
-       	displayButton.textContent='<';    
+       	displayButton.innerHTML='\&\#60\;';    
        	main.style.marginLeft='200px';  
        	navdisplay.style.marginLeft='200px';       	 
-    	}else{ 
+      }else{ 
     	nav.style.display='none';
-    	displayButton.textContent='>';	
+    	displayButton.innerHTML='\&\#62\;';	
     	main.style.marginLeft='0px';
     	navdisplay.style.marginLeft='0px';    	
-    	}
+      }
     }     
   </script>
  </body>
