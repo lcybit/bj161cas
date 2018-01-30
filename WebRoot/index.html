@@ -33,25 +33,22 @@
     }
   </script>
   <!-- 收起侧边栏 -->
-  <script> 
-	var nav=document.getElementById('navigation'); 
-	var main=document.getElementById('main');
-	var navdisplay=document.getElementById("navdisplay");
-	var displayButton=document.getElementById("displayButton");
-	nav.style.display='block'; 
-	document.getElementById('displayButton').onclick=function(){ 
- 	  if(nav.style.display=='none'){     
-       	nav.style.display='block';   
-       	displayButton.innerHTML='\&\#60\;';    
-       	main.style.marginLeft='200px';  
-       	navdisplay.style.marginLeft='200px';       	 
-      }else{ 
-    	nav.style.display='none';
-    	displayButton.innerHTML='\&\#62\;';	
-    	main.style.marginLeft='0px';
-    	navdisplay.style.marginLeft='0px';    	
-      }
-    }     
+  <script>
+  	$(document).ready(function(){
+  		$('#displayButton').click(function(){
+  			if($('#navigation').css('display')=='none'){
+	  			$('#navigation').show();
+	  			$('#main').css('margin-left','200px');
+	  			$('#navdisplay').css('margin-left','200px');
+	  			$('#displayButton').text('<'); 
+  			}else{
+  				$('#navigation').hide();
+	  			$('#main').css('margin-left','0px');
+	  			$('#navdisplay').css('margin-left','0px');
+	  			$('#displayButton').text('>');  			
+  			}		  				
+  		});
+  	});
   </script>
  </body>
 
