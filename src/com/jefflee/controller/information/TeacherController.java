@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.dto.information.TeacherDto;
-import com.jefflee.service.information.teacher.TeacherService;
+import com.jefflee.service.information.TeacherService;
 
 @RestController
 @RequestMapping(value = "/teacher")

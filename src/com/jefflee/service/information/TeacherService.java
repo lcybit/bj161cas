@@ -1,4 +1,4 @@
-package com.jefflee.service.information.teacher;
+package com.jefflee.service.information;
 
 import java.util.List;
 
