@@ -1,9 +1,9 @@
 package com.jefflee.mapper.schedule;
 
-import com.jefflee.entity.schedule.Schedule;
+import com.jefflee.po.schedule.SchedulePo;
 
 import tk.mybatis.mapper.common.Mapper;
 
-public interface ScheduleMapper extends Mapper<Schedule> {
+public interface ScheduleMapper extends Mapper<SchedulePo> {
 
 }

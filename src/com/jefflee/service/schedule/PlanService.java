@@ -3,6 +3,7 @@ package com.jefflee.service.schedule;
 import java.util.List;
 
 import com.jefflee.dto.schedule.PlanDto;
+import com.jefflee.entity.schedule.Plan;
 
 public interface PlanService {
 
@@ -16,8 +17,8 @@ public interface PlanService {
 
 	public Integer delete(Integer planId);
 
-	public List<PlanDto> findByScheduleId(Integer scheduleId);
+	public List<Plan> findByScheduleId(Integer scheduleId);
 
-	public PlanDto findByRelationId(Integer relationId);
+	public Plan findByRelationId(Integer relationId);
 
 }

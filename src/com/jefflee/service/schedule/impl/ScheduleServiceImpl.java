@@ -7,13 +7,14 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.dto.schedule.PlanDto;
 import com.jefflee.dto.schedule.ScheduleDto;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ScheduleMapper;
+import com.jefflee.po.schedule.SchedulePo;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.ScheduleService;
 import com.jefflee.util.BeanUtil;
+import com.jefflee.view.ScheduleView;
 
 @Service("scheduleService")
 public class ScheduleServiceImpl implements ScheduleService {
@@ -26,10 +27,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public Integer create(ScheduleDto scheduleDto) {
-		Schedule schedule = new Schedule();
-		BeanUtil.copyProperties(scheduleDto, schedule);
-		if (scheduleMapper.insert(schedule) == 1) {
-			return schedule.getScheduleId();
+		Schedule schedule = new Schedule(scheduleDto);
+		SchedulePo schedulePo = schedule.toPo();
+		if (scheduleMapper.insert(schedulePo) == 1) {
+			return schedulePo.getScheduleId();
 		} else {
 			return null;
 		}
@@ -37,30 +38,26 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public List<ScheduleDto> listAll() {
-		List<Schedule> scheduleList = scheduleMapper.selectAll();
+		List<SchedulePo> schedulePoList = scheduleMapper.selectAll();
 		List<ScheduleDto> scheduleDtoList = new ArrayList<ScheduleDto>();
-		for (Schedule schedule : scheduleList) {
-			ScheduleDto scheduleDto = new ScheduleDto();
-			BeanUtil.copyPropertiesSelective(schedule, scheduleDto);
-			scheduleDtoList.add(scheduleDto);
+		for (SchedulePo schedulePo : schedulePoList) {
+			scheduleDtoList.add(new Schedule(schedulePo).toDto());
 		}
 		return scheduleDtoList;
 	}
 
 	@Override
 	public ScheduleDto findById(Integer scheduleId) {
-		ScheduleDto scheduleDto = new ScheduleDto();
-		Schedule schedule = scheduleMapper.selectByPrimaryKey(scheduleId);
-		BeanUtil.copyProperties(schedule, scheduleDto);
-		return scheduleDto;
+		SchedulePo schedulePo = scheduleMapper.selectByPrimaryKey(scheduleId);
+		return new Schedule(schedulePo).toDto();
 	}
 
 	@Override
 	public Integer modify(ScheduleDto scheduleDto) {
-		Schedule schedule = new Schedule();
-		BeanUtil.copyProperties(scheduleDto, schedule);
-		if (scheduleMapper.updateByPrimaryKey(schedule) == 1) {
-			return schedule.getScheduleId();
+		SchedulePo schedulePo = new SchedulePo();
+		BeanUtil.copyProperties(scheduleDto, schedulePo);
+		if (scheduleMapper.updateByPrimaryKey(schedulePo) == 1) {
+			return schedulePo.getScheduleId();
 		} else {
 			return null;
 		}
@@ -76,9 +73,10 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public Integer schedule(Integer scheduleId) {
-		ScheduleDto scheduleDto = findById(scheduleId);
-		List<PlanDto> planDtoList = planService.findByScheduleId(scheduleId);
+	public ScheduleView schedule(Integer scheduleId) {
+		ScheduleView scheduleView = new ScheduleView();
+		Schedule schedule = new Schedule(scheduleMapper.selectByPrimaryKey(scheduleId));
+
 		return null;
 	}
 }

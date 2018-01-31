@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.information.TclassDto;
-import com.jefflee.entity.information.Tclass;
 import com.jefflee.mapper.information.TclassMapper;
+import com.jefflee.po.information.TclassPo;
 import com.jefflee.service.information.TclassService;
 import com.jefflee.util.BeanUtil;
 
@@ -21,10 +21,10 @@ public class TclassServiceImpl implements TclassService {
 
 	@Override
 	public Integer create(TclassDto tclassDto) {
-		Tclass tclass = new Tclass();
-		BeanUtil.copyProperties(tclassDto, tclass);
-		if (tclassMapper.insert(tclass) == 1) {
-			return tclass.getTclassId();
+		TclassPo tclassPo = new TclassPo();
+		BeanUtil.copyProperties(tclassDto, tclassPo);
+		if (tclassMapper.insert(tclassPo) == 1) {
+			return tclassPo.getTclassId();
 		} else {
 			return null;
 		}
@@ -32,11 +32,11 @@ public class TclassServiceImpl implements TclassService {
 
 	@Override
 	public List<TclassDto> listAll() {
-		List<Tclass> tclassList = tclassMapper.selectAll();
+		List<TclassPo> tclassList = tclassMapper.selectAll();
 		List<TclassDto> tclassDtoList = new ArrayList<TclassDto>();
-		for (Tclass tclass : tclassList) {
+		for (TclassPo tclassPo : tclassList) {
 			TclassDto tclassDto = new TclassDto();
-			BeanUtil.copyPropertiesSelective(tclass, tclassDto);
+			BeanUtil.copyPropertiesSelective(tclassPo, tclassDto);
 			tclassDtoList.add(tclassDto);
 		}
 		return tclassDtoList;
@@ -45,17 +45,17 @@ public class TclassServiceImpl implements TclassService {
 	@Override
 	public TclassDto findById(Integer tclassId) {
 		TclassDto tclassDto = new TclassDto();
-		Tclass tclass = tclassMapper.selectByPrimaryKey(tclassId);
-		BeanUtil.copyProperties(tclass, tclassDto);
+		TclassPo tclassPo = tclassMapper.selectByPrimaryKey(tclassId);
+		BeanUtil.copyProperties(tclassPo, tclassDto);
 		return tclassDto;
 	}
 
 	@Override
 	public Integer modify(TclassDto tclassDto) {
-		Tclass tclass = new Tclass();
-		BeanUtil.copyProperties(tclassDto, tclass);
-		if (tclassMapper.updateByPrimaryKey(tclass) == 1) {
-			return tclass.getTclassId();
+		TclassPo tclassPo = new TclassPo();
+		BeanUtil.copyProperties(tclassDto, tclassPo);
+		if (tclassMapper.updateByPrimaryKey(tclassPo) == 1) {
+			return tclassPo.getTclassId();
 		} else {
 			return null;
 		}

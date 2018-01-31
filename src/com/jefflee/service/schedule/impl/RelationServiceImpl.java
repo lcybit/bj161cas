@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.jefflee.dto.schedule.RelationDto;
 import com.jefflee.entity.schedule.Relation;
 import com.jefflee.mapper.schedule.RelationMapper;
+import com.jefflee.po.schedule.RelationPo;
 import com.jefflee.service.schedule.RelationService;
 import com.jefflee.util.BeanUtil;
 
@@ -21,10 +22,10 @@ public class RelationServiceImpl implements RelationService {
 
 	@Override
 	public Integer create(RelationDto relationDto) {
-		Relation relation = new Relation();
-		BeanUtil.copyProperties(relationDto, relation);
-		if (relationMapper.insert(relation) == 1) {
-			return relation.getRelationId();
+		RelationPo relationPo = new RelationPo();
+		BeanUtil.copyProperties(relationDto, relationPo);
+		if (relationMapper.insert(relationPo) == 1) {
+			return relationPo.getRelationId();
 		} else {
 			return null;
 		}
@@ -32,11 +33,11 @@ public class RelationServiceImpl implements RelationService {
 
 	@Override
 	public List<RelationDto> listAll() {
-		List<Relation> relationList = relationMapper.selectAll();
+		List<RelationPo> relationList = relationMapper.selectAll();
 		List<RelationDto> relationDtoList = new ArrayList<RelationDto>();
-		for (Relation relation : relationList) {
+		for (RelationPo relationPo : relationList) {
 			RelationDto relationDto = new RelationDto();
-			BeanUtil.copyPropertiesSelective(relation, relationDto);
+			BeanUtil.copyPropertiesSelective(relationPo, relationDto);
 			relationDtoList.add(relationDto);
 		}
 		return relationDtoList;
@@ -45,17 +46,17 @@ public class RelationServiceImpl implements RelationService {
 	@Override
 	public RelationDto findById(Integer relationId) {
 		RelationDto relationDto = new RelationDto();
-		Relation relation = relationMapper.selectByPrimaryKey(relationId);
-		BeanUtil.copyProperties(relation, relationDto);
+		RelationPo relationPo = relationMapper.selectByPrimaryKey(relationId);
+		BeanUtil.copyProperties(relationPo, relationDto);
 		return relationDto;
 	}
 
 	@Override
 	public Integer modify(RelationDto relationDto) {
-		Relation relation = new Relation();
-		BeanUtil.copyProperties(relationDto, relation);
-		if (relationMapper.updateByPrimaryKey(relation) == 1) {
-			return relation.getRelationId();
+		RelationPo relationPo = new RelationPo();
+		BeanUtil.copyProperties(relationDto, relationPo);
+		if (relationMapper.updateByPrimaryKey(relationPo) == 1) {
+			return relationPo.getRelationId();
 		} else {
 			return null;
 		}
@@ -71,16 +72,16 @@ public class RelationServiceImpl implements RelationService {
 	}
 
 	@Override
-	public List<RelationDto> findByScheduleId(Integer scheduleId) {
-		List<RelationDto> relationDtoList = new ArrayList<RelationDto>();
-		RelationDto relationDto = new RelationDto();
-		Relation queryRelation = new Relation();
-		queryRelation.setScheduleId(scheduleId);
-		List<Relation> relationList = relationMapper.select(queryRelation);
-		for (Relation relation : relationList) {
-			BeanUtil.copyProperties(relation, relationDto);
-			relationDtoList.add(relationDto);
+	public List<Relation> findByScheduleId(Integer scheduleId) {
+		List<Relation> relationList = new ArrayList<Relation>();
+		Relation relation = new Relation();
+		RelationPo queryRelationPo = new RelationPo();
+		queryRelationPo.setScheduleId(scheduleId);
+		List<RelationPo> relationPoList = relationMapper.select(queryRelationPo);
+		for (RelationPo relationPo : relationPoList) {
+			BeanUtil.copyProperties(relationPo, relation);
+			relationPoList.add(relationPo);
 		}
-		return relationDtoList;
+		return relationList;
 	}
 }

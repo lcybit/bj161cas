@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.schedule.GroupDto;
-import com.jefflee.entity.schedule.Group;
 import com.jefflee.mapper.schedule.GroupMapper;
+import com.jefflee.po.schedule.GroupPo;
 import com.jefflee.service.schedule.GroupService;
 import com.jefflee.util.BeanUtil;
 
@@ -21,10 +21,10 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	public Integer create(GroupDto groupDto) {
-		Group group = new Group();
-		BeanUtil.copyProperties(groupDto, group);
-		if (groupMapper.insert(group) == 1) {
-			return group.getGroupId();
+		GroupPo groupPo = new GroupPo();
+		BeanUtil.copyProperties(groupDto, groupPo);
+		if (groupMapper.insert(groupPo) == 1) {
+			return groupPo.getGroupId();
 		} else {
 			return null;
 		}
@@ -32,11 +32,11 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	public List<GroupDto> listAll() {
-		List<Group> groupList = groupMapper.selectAll();
+		List<GroupPo> groupList = groupMapper.selectAll();
 		List<GroupDto> groupDtoList = new ArrayList<GroupDto>();
-		for (Group group : groupList) {
+		for (GroupPo groupPo : groupList) {
 			GroupDto groupDto = new GroupDto();
-			BeanUtil.copyPropertiesSelective(group, groupDto);
+			BeanUtil.copyPropertiesSelective(groupPo, groupDto);
 			groupDtoList.add(groupDto);
 		}
 		return groupDtoList;
@@ -45,17 +45,17 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public GroupDto findById(Integer groupId) {
 		GroupDto groupDto = new GroupDto();
-		Group group = groupMapper.selectByPrimaryKey(groupId);
-		BeanUtil.copyProperties(group, groupDto);
+		GroupPo groupPo = groupMapper.selectByPrimaryKey(groupId);
+		BeanUtil.copyProperties(groupPo, groupDto);
 		return groupDto;
 	}
 
 	@Override
 	public Integer modify(GroupDto groupDto) {
-		Group group = new Group();
-		BeanUtil.copyProperties(groupDto, group);
-		if (groupMapper.updateByPrimaryKey(group) == 1) {
-			return group.getGroupId();
+		GroupPo groupPo = new GroupPo();
+		BeanUtil.copyProperties(groupDto, groupPo);
+		if (groupMapper.updateByPrimaryKey(groupPo) == 1) {
+			return groupPo.getGroupId();
 		} else {
 			return null;
 		}

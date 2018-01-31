@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.dto.schedule.ScheduleDto;
 import com.jefflee.service.schedule.ScheduleService;
+import com.jefflee.view.ScheduleView;
 
 @RestController
 @RequestMapping(value = "/schedule")
@@ -63,13 +64,8 @@ public class ScheduleController {
 	}
 
 	@RequestMapping(value = "/schedule/{scheduleId}", method = RequestMethod.GET)
-	public Map<String, String> schedule(@PathVariable("scheduleId") Integer scheduleId) {
-		Map<String, String> result = new HashMap<String, String>();
-		scheduleId = scheduleService.schedule(scheduleId);
-		if (scheduleId != null) {
-			result.put("scheduleId", scheduleId.toString());
-		}
-		return result;
+	public ScheduleView schedule(@PathVariable("scheduleId") Integer scheduleId) {
+		return scheduleService.schedule(scheduleId);
 	}
 
 }

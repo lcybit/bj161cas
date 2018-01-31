@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.schedule.ArrangementDto;
-import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.mapper.schedule.ArrangementMapper;
+import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.util.BeanUtil;
 import com.jefflee.util.DatabaseUtil;
@@ -22,11 +22,11 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public String create(ArrangementDto arrangementDto) {
-		Arrangement arrangement = new Arrangement();
+		ArrangementPo arrangementPo = new ArrangementPo();
 		arrangementDto.setArrangementId(DatabaseUtil.gnr32Uuid());
-		BeanUtil.copyProperties(arrangementDto, arrangement);
-		if (arrangementMapper.insert(arrangement) == 1) {
-			return arrangement.getArrangementId();
+		BeanUtil.copyProperties(arrangementDto, arrangementPo);
+		if (arrangementMapper.insert(arrangementPo) == 1) {
+			return arrangementPo.getArrangementId();
 		} else {
 			return null;
 		}
@@ -34,11 +34,11 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public List<ArrangementDto> listAll() {
-		List<Arrangement> arrangementList = arrangementMapper.selectAll();
+		List<ArrangementPo> arrangementList = arrangementMapper.selectAll();
 		List<ArrangementDto> arrangementDtoList = new ArrayList<ArrangementDto>();
-		for (Arrangement arrangement : arrangementList) {
+		for (ArrangementPo arrangementPo : arrangementList) {
 			ArrangementDto arrangementDto = new ArrangementDto();
-			BeanUtil.copyPropertiesSelective(arrangement, arrangementDto);
+			BeanUtil.copyPropertiesSelective(arrangementPo, arrangementDto);
 			arrangementDtoList.add(arrangementDto);
 		}
 		return arrangementDtoList;
@@ -47,17 +47,17 @@ public class ArrangementServiceImpl implements ArrangementService {
 	@Override
 	public ArrangementDto findById(Integer arrangementId) {
 		ArrangementDto arrangementDto = new ArrangementDto();
-		Arrangement arrangement = arrangementMapper.selectByPrimaryKey(arrangementId);
-		BeanUtil.copyProperties(arrangement, arrangementDto);
+		ArrangementPo arrangementPo = arrangementMapper.selectByPrimaryKey(arrangementId);
+		BeanUtil.copyProperties(arrangementPo, arrangementDto);
 		return arrangementDto;
 	}
 
 	@Override
 	public String modify(ArrangementDto arrangementDto) {
-		Arrangement arrangement = new Arrangement();
-		BeanUtil.copyProperties(arrangementDto, arrangement);
-		if (arrangementMapper.updateByPrimaryKey(arrangement) == 1) {
-			return arrangement.getArrangementId();
+		ArrangementPo arrangementPo = new ArrangementPo();
+		BeanUtil.copyProperties(arrangementDto, arrangementPo);
+		if (arrangementMapper.updateByPrimaryKey(arrangementPo) == 1) {
+			return arrangementPo.getArrangementId();
 		} else {
 			return null;
 		}

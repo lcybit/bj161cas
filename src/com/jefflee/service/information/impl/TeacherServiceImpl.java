@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.information.TeacherDto;
-import com.jefflee.entity.information.Teacher;
 import com.jefflee.mapper.information.TeacherMapper;
+import com.jefflee.po.information.TeacherPo;
 import com.jefflee.service.information.TeacherService;
 import com.jefflee.util.BeanUtil;
 
@@ -21,10 +21,10 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public Integer create(TeacherDto teacherDto) {
-		Teacher teacher = new Teacher();
-		BeanUtil.copyProperties(teacherDto, teacher);
-		if (teacherMapper.insert(teacher) == 1) {
-			return teacher.getTeacherId();
+		TeacherPo teacherPo = new TeacherPo();
+		BeanUtil.copyProperties(teacherDto, teacherPo);
+		if (teacherMapper.insert(teacherPo) == 1) {
+			return teacherPo.getTeacherId();
 		} else {
 			return null;
 		}
@@ -32,11 +32,11 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public List<TeacherDto> listAll() {
-		List<Teacher> teacherList = teacherMapper.selectAll();
+		List<TeacherPo> teacherList = teacherMapper.selectAll();
 		List<TeacherDto> teacherDtoList = new ArrayList<TeacherDto>();
-		for (Teacher teacher : teacherList) {
+		for (TeacherPo teacherPo : teacherList) {
 			TeacherDto teacherDto = new TeacherDto();
-			BeanUtil.copyPropertiesSelective(teacher, teacherDto);
+			BeanUtil.copyPropertiesSelective(teacherPo, teacherDto);
 			teacherDtoList.add(teacherDto);
 		}
 		return teacherDtoList;
@@ -45,17 +45,17 @@ public class TeacherServiceImpl implements TeacherService {
 	@Override
 	public TeacherDto findById(Integer teacherId) {
 		TeacherDto teacherDto = new TeacherDto();
-		Teacher teacher = teacherMapper.selectByPrimaryKey(teacherId);
-		BeanUtil.copyProperties(teacher, teacherDto);
+		TeacherPo teacherPo = teacherMapper.selectByPrimaryKey(teacherId);
+		BeanUtil.copyProperties(teacherPo, teacherDto);
 		return teacherDto;
 	}
 
 	@Override
 	public Integer modify(TeacherDto teacherDto) {
-		Teacher teacher = new Teacher();
-		BeanUtil.copyProperties(teacherDto, teacher);
-		if (teacherMapper.updateByPrimaryKey(teacher) == 1) {
-			return teacher.getTeacherId();
+		TeacherPo teacherPo = new TeacherPo();
+		BeanUtil.copyProperties(teacherDto, teacherPo);
+		if (teacherMapper.updateByPrimaryKey(teacherPo) == 1) {
+			return teacherPo.getTeacherId();
 		} else {
 			return null;
 		}

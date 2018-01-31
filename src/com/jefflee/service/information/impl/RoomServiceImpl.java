@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.information.RoomDto;
-import com.jefflee.entity.information.Room;
 import com.jefflee.mapper.information.RoomMapper;
+import com.jefflee.po.information.RoomPo;
 import com.jefflee.service.information.RoomService;
 import com.jefflee.util.BeanUtil;
 
@@ -21,10 +21,10 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public Integer create(RoomDto roomDto) {
-		Room room = new Room();
-		BeanUtil.copyProperties(roomDto, room);
-		if (roomMapper.insert(room) == 1) {
-			return room.getRoomId();
+		RoomPo roomPo = new RoomPo();
+		BeanUtil.copyProperties(roomDto, roomPo);
+		if (roomMapper.insert(roomPo) == 1) {
+			return roomPo.getRoomId();
 		} else {
 			return null;
 		}
@@ -32,11 +32,11 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public List<RoomDto> listAll() {
-		List<Room> roomList = roomMapper.selectAll();
+		List<RoomPo> roomList = roomMapper.selectAll();
 		List<RoomDto> roomDtoList = new ArrayList<RoomDto>();
-		for (Room room : roomList) {
+		for (RoomPo roomPo : roomList) {
 			RoomDto roomDto = new RoomDto();
-			BeanUtil.copyPropertiesSelective(room, roomDto);
+			BeanUtil.copyPropertiesSelective(roomPo, roomDto);
 			roomDtoList.add(roomDto);
 		}
 		return roomDtoList;
@@ -45,17 +45,17 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public RoomDto findById(Integer roomId) {
 		RoomDto roomDto = new RoomDto();
-		Room room = roomMapper.selectByPrimaryKey(roomId);
-		BeanUtil.copyProperties(room, roomDto);
+		RoomPo roomPo = roomMapper.selectByPrimaryKey(roomId);
+		BeanUtil.copyProperties(roomPo, roomDto);
 		return roomDto;
 	}
 
 	@Override
 	public Integer modify(RoomDto roomDto) {
-		Room room = new Room();
-		BeanUtil.copyProperties(roomDto, room);
-		if (roomMapper.updateByPrimaryKey(room) == 1) {
-			return room.getRoomId();
+		RoomPo roomPo = new RoomPo();
+		BeanUtil.copyProperties(roomDto, roomPo);
+		if (roomMapper.updateByPrimaryKey(roomPo) == 1) {
+			return roomPo.getRoomId();
 		} else {
 			return null;
 		}

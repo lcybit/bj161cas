@@ -3,6 +3,7 @@ package com.jefflee.service.schedule;
 import java.util.List;
 
 import com.jefflee.dto.schedule.ScheduleDto;
+import com.jefflee.view.ScheduleView;
 
 public interface ScheduleService {
 
@@ -16,6 +17,6 @@ public interface ScheduleService {
 
 	public Integer delete(Integer scheduleId);
 
-	public Integer schedule(Integer scheduleId);
+	public ScheduleView schedule(Integer scheduleId);
 
 }

@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.information.PeriodDto;
-import com.jefflee.entity.information.Period;
 import com.jefflee.mapper.information.PeriodMapper;
+import com.jefflee.po.information.PeriodPo;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.util.BeanUtil;
 
@@ -21,10 +21,10 @@ public class PeriodServiceImpl implements PeriodService {
 
 	@Override
 	public Integer create(PeriodDto periodDto) {
-		Period period = new Period();
-		BeanUtil.copyProperties(periodDto, period);
-		if (periodMapper.insert(period) == 1) {
-			return period.getPeriodId();
+		PeriodPo periodPo = new PeriodPo();
+		BeanUtil.copyProperties(periodDto, periodPo);
+		if (periodMapper.insert(periodPo) == 1) {
+			return periodPo.getPeriodId();
 		} else {
 			return null;
 		}
@@ -32,11 +32,11 @@ public class PeriodServiceImpl implements PeriodService {
 
 	@Override
 	public List<PeriodDto> listAll() {
-		List<Period> periodList = periodMapper.selectAll();
+		List<PeriodPo> periodList = periodMapper.selectAll();
 		List<PeriodDto> periodDtoList = new ArrayList<PeriodDto>();
-		for (Period period : periodList) {
+		for (PeriodPo periodPo : periodList) {
 			PeriodDto periodDto = new PeriodDto();
-			BeanUtil.copyPropertiesSelective(period, periodDto);
+			BeanUtil.copyPropertiesSelective(periodPo, periodDto);
 			periodDtoList.add(periodDto);
 		}
 		return periodDtoList;
@@ -45,17 +45,17 @@ public class PeriodServiceImpl implements PeriodService {
 	@Override
 	public PeriodDto findById(Integer periodId) {
 		PeriodDto periodDto = new PeriodDto();
-		Period period = periodMapper.selectByPrimaryKey(periodId);
-		BeanUtil.copyProperties(period, periodDto);
+		PeriodPo periodPo = periodMapper.selectByPrimaryKey(periodId);
+		BeanUtil.copyProperties(periodPo, periodDto);
 		return periodDto;
 	}
 
 	@Override
 	public Integer modify(PeriodDto periodDto) {
-		Period period = new Period();
-		BeanUtil.copyProperties(periodDto, period);
-		if (periodMapper.updateByPrimaryKey(period) == 1) {
-			return period.getPeriodId();
+		PeriodPo periodPo = new PeriodPo();
+		BeanUtil.copyProperties(periodDto, periodPo);
+		if (periodMapper.updateByPrimaryKey(periodPo) == 1) {
+			return periodPo.getPeriodId();
 		} else {
 			return null;
 		}

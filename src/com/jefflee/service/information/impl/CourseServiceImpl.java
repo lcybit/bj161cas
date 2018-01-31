@@ -8,8 +8,8 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.information.CourseDto;
-import com.jefflee.entity.information.Course;
 import com.jefflee.mapper.information.CourseMapper;
+import com.jefflee.po.information.CoursePo;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.util.BeanUtil;
 
@@ -21,10 +21,10 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public Integer create(CourseDto courseDto) {
-		Course course = new Course();
-		BeanUtil.copyProperties(courseDto, course);
-		if (courseMapper.insert(course) == 1) {
-			return course.getCourseId();
+		CoursePo coursePo = new CoursePo();
+		BeanUtil.copyProperties(courseDto, coursePo);
+		if (courseMapper.insert(coursePo) == 1) {
+			return coursePo.getCourseId();
 		} else {
 			return null;
 		}
@@ -32,11 +32,11 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public List<CourseDto> listAll() {
-		List<Course> courseList = courseMapper.selectAll();
+		List<CoursePo> coursePoList = courseMapper.selectAll();
 		List<CourseDto> courseDtoList = new ArrayList<CourseDto>();
-		for (Course course : courseList) {
+		for (CoursePo coursePo : coursePoList) {
 			CourseDto courseDto = new CourseDto();
-			BeanUtil.copyPropertiesSelective(course, courseDto);
+			BeanUtil.copyPropertiesSelective(coursePo, courseDto);
 			courseDtoList.add(courseDto);
 		}
 		return courseDtoList;
@@ -45,17 +45,17 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public CourseDto findById(Integer courseId) {
 		CourseDto courseDto = new CourseDto();
-		Course course = courseMapper.selectByPrimaryKey(courseId);
-		BeanUtil.copyProperties(course, courseDto);
+		CoursePo coursePo = courseMapper.selectByPrimaryKey(courseId);
+		BeanUtil.copyProperties(coursePo, courseDto);
 		return courseDto;
 	}
 
 	@Override
 	public Integer modify(CourseDto courseDto) {
-		Course course = new Course();
-		BeanUtil.copyProperties(courseDto, course);
-		if (courseMapper.updateByPrimaryKey(course) == 1) {
-			return course.getCourseId();
+		CoursePo coursePo = new CoursePo();
+		BeanUtil.copyProperties(courseDto, coursePo);
+		if (courseMapper.updateByPrimaryKey(coursePo) == 1) {
+			return coursePo.getCourseId();
 		} else {
 			return null;
 		}

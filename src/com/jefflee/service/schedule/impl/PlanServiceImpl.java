@@ -8,9 +8,10 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.schedule.PlanDto;
-import com.jefflee.dto.schedule.RelationDto;
 import com.jefflee.entity.schedule.Plan;
+import com.jefflee.entity.schedule.Relation;
 import com.jefflee.mapper.schedule.PlanMapper;
+import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.RelationService;
 import com.jefflee.util.BeanUtil;
@@ -26,10 +27,10 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public Integer create(PlanDto planDto) {
-		Plan plan = new Plan();
-		BeanUtil.copyProperties(planDto, plan);
-		if (planMapper.insert(plan) == 1) {
-			return plan.getPlanId();
+		PlanPo planPo = new PlanPo();
+		BeanUtil.copyProperties(planDto, planPo);
+		if (planMapper.insert(planPo) == 1) {
+			return planPo.getPlanId();
 		} else {
 			return null;
 		}
@@ -37,11 +38,11 @@ public class PlanServiceImpl implements PlanService {
 
 	@Override
 	public List<PlanDto> listAll() {
-		List<Plan> planList = planMapper.selectAll();
+		List<PlanPo> planList = planMapper.selectAll();
 		List<PlanDto> planDtoList = new ArrayList<PlanDto>();
-		for (Plan plan : planList) {
+		for (PlanPo planPo : planList) {
 			PlanDto planDto = new PlanDto();
-			BeanUtil.copyPropertiesSelective(plan, planDto);
+			BeanUtil.copyPropertiesSelective(planPo, planDto);
 			planDtoList.add(planDto);
 		}
 		return planDtoList;
@@ -50,17 +51,17 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public PlanDto findById(Integer planId) {
 		PlanDto planDto = new PlanDto();
-		Plan plan = planMapper.selectByPrimaryKey(planId);
-		BeanUtil.copyProperties(plan, planDto);
+		PlanPo planPo = planMapper.selectByPrimaryKey(planId);
+		BeanUtil.copyProperties(planPo, planDto);
 		return planDto;
 	}
 
 	@Override
 	public Integer modify(PlanDto planDto) {
-		Plan plan = new Plan();
-		BeanUtil.copyProperties(planDto, plan);
-		if (planMapper.updateByPrimaryKey(plan) == 1) {
-			return plan.getPlanId();
+		PlanPo planPo = new PlanPo();
+		BeanUtil.copyProperties(planDto, planPo);
+		if (planMapper.updateByPrimaryKey(planPo) == 1) {
+			return planPo.getPlanId();
 		} else {
 			return null;
 		}
@@ -76,23 +77,23 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public List<PlanDto> findByScheduleId(Integer scheduleId) {
-		List<PlanDto> planDtoList = new ArrayList<PlanDto>();
-		List<RelationDto> relationDtolList = relationService.findByScheduleId(scheduleId);
-		for (RelationDto relationDto : relationDtolList) {
-			PlanDto planDto = findByRelationId(relationDto.getRelationId());
-			planDtoList.add(planDto);
+	public List<Plan> findByScheduleId(Integer scheduleId) {
+		List<Plan> planList = new ArrayList<Plan>();
+		List<Relation> relationList = relationService.findByScheduleId(scheduleId);
+		for (Relation relation : relationList) {
+			Plan plan = findByRelationId(relation.relationId);
+			planList.add(plan);
 		}
-		return planDtoList;
+		return planList;
 	}
 
 	@Override
-	public PlanDto findByRelationId(Integer relationId) {
-		Plan queryPlan = new Plan();
-		queryPlan.setRelationId(relationId);
-		Plan plan = planMapper.selectOne(queryPlan);
-		PlanDto planDto = new PlanDto();
-		BeanUtil.copyProperties(plan, planDto);
-		return planDto;
+	public Plan findByRelationId(Integer relationId) {
+		PlanPo queryPlanPo = new PlanPo();
+		queryPlanPo.setRelationId(relationId);
+		PlanPo planPo = planMapper.selectOne(queryPlanPo);
+		Plan plan = new Plan();
+		BeanUtil.copyProperties(planPo, plan);
+		return plan;
 	}
 }

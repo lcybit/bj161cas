@@ -1,78 +1,67 @@
 package com.jefflee.entity.schedule;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
+import com.jefflee.dto.schedule.ScheduleDto;
+import com.jefflee.po.schedule.SchedulePo;
 
-@Table(name = "schd_schedule")
 public class Schedule {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer scheduleId;
-	private Integer groupId;
-	private Integer forenoon;
-	private Integer afternoon;
-	private Integer evening;
-	private Integer days;
-	@OrderBy
-	private Integer startWeek;
+	public Integer scheduleId;
+	public Group group;
+	public Integer forenoon;
+	public Integer afternoon;
+	public Integer evening;
+	public Integer days;
+	public Integer startWeek;
 
-	public Integer getScheduleId() {
-		return scheduleId;
+	public Schedule() {
 	}
 
-	public void setScheduleId(Integer scheduleId) {
-		this.scheduleId = scheduleId;
+	public Schedule(ScheduleDto scheduleDto) {
+		fromDto(scheduleDto);
 	}
 
-	public Integer getGroupId() {
-		return groupId;
+	public Schedule(SchedulePo schedulePo) {
+		fromPo(schedulePo);
 	}
 
-	public void setGroupId(Integer groupId) {
-		this.groupId = groupId;
+	public Schedule fromDto(ScheduleDto scheduleDto) {
+		group.groupId = scheduleDto.getGroupId();
+		forenoon = scheduleDto.getForenoon();
+		afternoon = scheduleDto.getAfternoon();
+		evening = scheduleDto.getEvening();
+		days = scheduleDto.getDays();
+		startWeek = scheduleDto.getStartWeek();
+		return this;
 	}
 
-	public Integer getForenoon() {
-		return forenoon;
+	public Schedule fromPo(SchedulePo schedulePo) {
+		group.groupId = schedulePo.getGroupId();
+		forenoon = schedulePo.getForenoon();
+		afternoon = schedulePo.getAfternoon();
+		evening = schedulePo.getEvening();
+		days = schedulePo.getDays();
+		startWeek = schedulePo.getStartWeek();
+		return this;
 	}
 
-	public void setForenoon(Integer forenoon) {
-		this.forenoon = forenoon;
+	public ScheduleDto toDto() {
+		ScheduleDto scheduleDto = new ScheduleDto();
+		scheduleDto.setGroupId(group.groupId);
+		scheduleDto.setForenoon(forenoon);
+		scheduleDto.setAfternoon(afternoon);
+		scheduleDto.setEvening(evening);
+		scheduleDto.setDays(days);
+		scheduleDto.setStartWeek(startWeek);
+		return scheduleDto;
 	}
 
-	public Integer getAfternoon() {
-		return afternoon;
+	public SchedulePo toPo() {
+		SchedulePo schedulePo = new SchedulePo();
+		schedulePo.setGroupId(group.groupId);
+		schedulePo.setForenoon(forenoon);
+		schedulePo.setAfternoon(afternoon);
+		schedulePo.setEvening(evening);
+		schedulePo.setDays(days);
+		schedulePo.setStartWeek(startWeek);
+		return schedulePo;
 	}
-
-	public void setAfternoon(Integer afternoon) {
-		this.afternoon = afternoon;
-	}
-
-	public Integer getEvening() {
-		return evening;
-	}
-
-	public void setEvening(Integer evening) {
-		this.evening = evening;
-	}
-
-	public Integer getDays() {
-		return days;
-	}
-
-	public void setDays(Integer days) {
-		this.days = days;
-	}
-
-	public Integer getStartWeek() {
-		return startWeek;
-	}
-
-	public void setStartWeek(Integer startWeek) {
-		this.startWeek = startWeek;
-	}
-
 }

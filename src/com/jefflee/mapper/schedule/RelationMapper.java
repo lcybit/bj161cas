@@ -1,9 +1,9 @@
 package com.jefflee.mapper.schedule;
 
-import com.jefflee.entity.schedule.Relation;
+import com.jefflee.po.schedule.RelationPo;
 
 import tk.mybatis.mapper.common.Mapper;
 
-public interface RelationMapper extends Mapper<Relation> {
+public interface RelationMapper extends Mapper<RelationPo> {
 
 }
