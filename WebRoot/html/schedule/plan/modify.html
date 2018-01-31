@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改计划课时信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="plan" method="post">
+      <!-- 隐藏计划课时ID -->        
+          <input class="layui-input" name="planId" id="planId" type="hidden" />       
+      <div class="layui-form-item">
+        <label class="layui-form-label">教学关系ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="relationId" id="relationId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">计划课时数:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="periodNum" id="periodNum" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>  
+  <script>
+    $(document).ready(function() {
+      var planId = sessionStorage.getItem('currentPlanId');
+      $('#planId').attr('value', planId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/plan/find/' + planId,
+        success : function(plan) {
+          $('#relationId').attr('value', plan.relationId);
+          $('#periodNum').attr('value', plan.periodNum);
+         }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/plan/modify',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#plan').serializeJSON()),
+        success : function(result) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>

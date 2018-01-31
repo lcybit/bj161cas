@@ -13,12 +13,8 @@
 <body>
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="group" method="post">
-      <div class="layui-form-item">
-        <label class="layui-form-label">年级组ID:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="groupId" id="groupId" type="text" />
-        </div>
-      </div>
+      <!-- 隐藏年级组ID -->        
+          <input class="layui-input" name="groupId" id="groupId" type="hidden" />       
       <div class="layui-form-item">
         <label class="layui-form-label">入学年份:</label>
         <div class="layui-input-block">
@@ -60,7 +56,7 @@
         </div>
       </div>
     </form>
-  </div>
+  </div>  
   <script>
     $(document).ready(function() {
       var groupId = sessionStorage.getItem('currentGroupId');
@@ -104,5 +100,4 @@
     }
   </script>
 </body>
-
 </html>

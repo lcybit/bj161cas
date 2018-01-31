@@ -13,6 +13,8 @@
 <body>
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="schedule" method="post">
+       <!-- 隐藏课表ID -->        
+          <input class="layui-input" name="scheduleId" id="scheduleId" type="hidden" />
       <div class="layui-form-item">
         <label class="layui-form-label">年级组ID:</label>
         <div class="layui-input-block">
@@ -22,37 +24,37 @@
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">上午课时数:</label>
         <div class="layui-input-block">
-          <input type="radio" name="forenoon" id="forenoon" value="0" title="3节">
-          <input type="radio" name="forenoon" id="forenoon" value="1" title="4节">
-          <input type="radio" name="forenoon" id="forenoon" value="2" title="5节" checked="">
-          <input type="radio" name="forenoon" id="forenoon" value="3" title="6节">
+          <input type="radio" name="forenoon" id="forenoon" value="3" title="3节">
+          <input type="radio" name="forenoon" id="forenoon" value="4" title="4节">
+          <input type="radio" name="forenoon" id="forenoon" value="5" title="5节" checked="">
+          <input type="radio" name="forenoon" id="forenoon" value="6" title="6节">
         </div>
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">下午课时数:</label>
         <div class="layui-input-block">         
-          <input type="radio" name="afternoon" id="afternoon" value="0" title="2节">
-          <input type="radio" name="afternoon" id="afternoon" value="1" title="3节" checked="">
-          <input type="radio" name="afternoon" id="afternoon" value="2" title="4节">
-          <input type="radio" name="afternoon" id="afternoon" value="3" title="5节">
+          <input type="radio" name="afternoon" id="afternoon" value="2" title="2节">
+          <input type="radio" name="afternoon" id="afternoon" value="3" title="3节" checked="">
+          <input type="radio" name="afternoon" id="afternoon" value="4" title="4节">
+          <input type="radio" name="afternoon" id="afternoon" value="5" title="5节">
         </div>
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">傍晚课时数:</label>
         <div class="layui-input-block">          
-          <input type="radio" name="evening" id="evening" value="0" title="1节">
-          <input type="radio" name="evening" id="evening" value="1" title="2节">
-          <input type="radio" name="evening" id="evening" value="2" title="3节">
-          <input type="radio" name="evening" id="evening" value="3" title="无" checked="">
+          <input type="radio" name="evening" id="evening" value="1" title="1节">
+          <input type="radio" name="evening" id="evening" value="2" title="2节">
+          <input type="radio" name="evening" id="evening" value="3" title="3节">
+          <input type="radio" name="evening" id="evening" value="0" title="无" checked="">
         </div>
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">每周天数:</label>
         <div class="layui-input-block">         
-          <input type="radio" name="days" id="days" value="0" title="3天">
-          <input type="radio" name="days" id="days" value="1" title="4天">
-          <input type="radio" name="days" id="days" value="2" title="5天" checked="">
-          <input type="radio" name="days" id="days" value="3" title="6天">          
+          <input type="radio" name="days" id="days" value="3" title="3天">
+          <input type="radio" name="days" id="days" value="4" title="4天">
+          <input type="radio" name="days" id="days" value="5" title="5天" checked="">
+          <input type="radio" name="days" id="days" value="6" title="6天">          
         </div>
       </div>
       <div class="layui-form-item">

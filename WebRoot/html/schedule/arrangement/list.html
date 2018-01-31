@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>课表信息列表</title>
+<title>排课信息列表</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
@@ -14,17 +14,15 @@
     <table class="layui-table">
       <thead>
         <tr>
-          <th>课表ID</th>
-          <th>年级组ID</th>
-          <th>上午课时数</th>
-          <th>下午课时数</th>
-          <th>傍晚课时数</th>
-          <th>每周天数</th>
-          <th>起始教学周</th>
+          <th>排课ID</th>
+          <th>课时ID</th>
+          <th>教学关系ID</th>
+          <th>是否排课</th>
+          <th>排课优先级</th>
           <th>操作</th>
         </tr>
       </thead>
-      <tbody id="scheduleList">
+      <tbody id="arrangementList">
       </tbody>
     </table>
     <div class="layui-input-inline">
@@ -32,18 +30,16 @@
       <button class="layui-btn" onclick="goCreate()">新增</button>
     </div>
   </div>
-  <script id="tmpl-scheduleList" type="text/x-jsrender">
+  <script id="tmpl-arrangementList" type="text/x-jsrender">
     <tr>
-      <td>{{:scheduleId}}</td>
-      <td>{{:groupId}}</td>
-      <td>{{:forenoon}}</td>
-      <td>{{:afternoon}}</td>
-      <td>{{:evening}}</td>
-      <td>{{:days}}</td>
-      <td>{{:startWeek}}</td>
+      <td>{{:arrangementId}}</td>
+      <td>{{:periodId}}</td>
+      <td>{{:relationId}}</td>
+      <td>{{:arranged}}</td>
+      <td>{{:priority}}</td>
       <td>
-        <button class="layui-btn" onclick="goModify('{{:scheduleId}}')">修改</button>
-        <button class="layui-btn" onclick="remove('{{:scheduleId}}')">删除</button>
+        <button class="layui-btn" onclick="goModify('{{:arrangementId}}')">修改</button>
+        <button class="layui-btn" onclick="remove('{{:arrangementId}}')">删除</button>
       </td>
     </tr>
   </script>
@@ -58,8 +54,8 @@
         layer.open({
           type : 2,
           id : 'create',
-          title : '新增课表信息',
-          content : '/html/schedule/schedule/create.html',
+          title : '新增排课信息',
+          content : '/html/schedule/arrangement/create.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false
@@ -67,15 +63,15 @@
       });
     }
   
-    function goModify(scheduleId) {
-      sessionStorage.setItem('currentScheduleId', scheduleId);
+    function goModify(arrangementId) {
+      sessionStorage.setItem('currentArrangementId', arrangementId);
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
           type : 2,
           id : 'modify',
-          title : '修改课表信息',
-          content : '/html/schedule/schedule/modify.html',
+          title : '修改排课信息',
+          content : '/html/schedule/arrangement/modify.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false,
@@ -83,14 +79,14 @@
       });
     }
 
-    function remove(scheduleId) {
+    function remove(arrangementId) {
       layer.confirm('确认要删除吗？',
-        {title : '删除课表信息'},
+        {title : '删除排课信息'},
         function(index) {
           $.ajax({
             async : false,
             type : 'DELETE',
-            url : '/schedule/delete/' + scheduleId,
+            url : '/arrangement/delete/' + arrangementId,
             success : function() {
               layer.close(index);
               list();
@@ -99,19 +95,23 @@
         });
     }
 
+    function choose(arrangementId) {
+      sessionStorage.setItem('currentArrangementId', arrangementId)
+    }
+    
     function list() {
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/schedule/list',
-        success : function(scheduleList) {
-          $('#scheduleList').html($.templates('#tmpl-scheduleList').render(scheduleList));
+        url : '/arrangement/list',
+        success : function(arrangementList) {
+          $('#arrangementList').html($.templates('#tmpl-arrangementList').render(arrangementList));
         }
       });
     }
   
     function goBack() {
-      jump('html/schedule/schedule/list.html');
+      jump('html/schedule/arrangement/list.html');
     }
   </script>
 </body>

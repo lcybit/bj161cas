@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>课表信息列表</title>
+<title>教学关系信息列表</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
@@ -14,17 +14,16 @@
     <table class="layui-table">
       <thead>
         <tr>
+          <th>教学关系ID</th>
           <th>课表ID</th>
-          <th>年级组ID</th>
-          <th>上午课时数</th>
-          <th>下午课时数</th>
-          <th>傍晚课时数</th>
-          <th>每周天数</th>
-          <th>起始教学周</th>
+          <th>课程ID</th>
+          <th>教室ID</th>
+          <th>班级ID</th>
+          <th>教师ID</th>
           <th>操作</th>
         </tr>
       </thead>
-      <tbody id="scheduleList">
+      <tbody id="relationList">
       </tbody>
     </table>
     <div class="layui-input-inline">
@@ -32,19 +31,18 @@
       <button class="layui-btn" onclick="goCreate()">新增</button>
     </div>
   </div>
-  <script id="tmpl-scheduleList" type="text/x-jsrender">
+  <script id="tmpl-relationList" type="text/x-jsrender">
     <tr>
+      <td>{{:relationId}}</td>
       <td>{{:scheduleId}}</td>
-      <td>{{:groupId}}</td>
-      <td>{{:forenoon}}</td>
-      <td>{{:afternoon}}</td>
-      <td>{{:evening}}</td>
-      <td>{{:days}}</td>
-      <td>{{:startWeek}}</td>
+      <td>{{:courseId}}</td>
+      <td>{{:roomId}}</td>
+      <td>{{:classId}}</td>
+      <td>{{:teacherId}}</td>
       <td>
-        <button class="layui-btn" onclick="goModify('{{:scheduleId}}')">修改</button>
-        <button class="layui-btn" onclick="remove('{{:scheduleId}}')">删除</button>
-      </td>
+        <button class="layui-btn" onclick="goModify('{{:relationId}}')">修改</button>
+        <button class="layui-btn" onclick="remove('{{:relationId}}')">删除</button>
+	  </td>
     </tr>
   </script>
   <script>
@@ -58,8 +56,8 @@
         layer.open({
           type : 2,
           id : 'create',
-          title : '新增课表信息',
-          content : '/html/schedule/schedule/create.html',
+          title : '新增教学关系信息',
+          content : '/html/schedule/relation/create.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false
@@ -67,15 +65,15 @@
       });
     }
   
-    function goModify(scheduleId) {
-      sessionStorage.setItem('currentScheduleId', scheduleId);
+    function goModify(relationId) {
+      sessionStorage.setItem('currentRelationId', relationId);
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
           type : 2,
           id : 'modify',
-          title : '修改课表信息',
-          content : '/html/schedule/schedule/modify.html',
+          title : '修改教学关系信息',
+          content : '/html/schedule/relation/modify.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false,
@@ -83,14 +81,14 @@
       });
     }
 
-    function remove(scheduleId) {
+    function remove(relationId) {
       layer.confirm('确认要删除吗？',
-        {title : '删除课表信息'},
+        {title : '删除教学关系信息'},
         function(index) {
           $.ajax({
             async : false,
             type : 'DELETE',
-            url : '/schedule/delete/' + scheduleId,
+            url : '/relation/delete/' + relationId,
             success : function() {
               layer.close(index);
               list();
@@ -99,19 +97,23 @@
         });
     }
 
+    function choose(relationId) {
+      sessionStorage.setItem('currentRelationId', relationId)
+    }
+    
     function list() {
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/schedule/list',
-        success : function(scheduleList) {
-          $('#scheduleList').html($.templates('#tmpl-scheduleList').render(scheduleList));
+        url : '/relation/list',
+        success : function(relationList) {
+          $('#relationList').html($.templates('#tmpl-relationList').render(relationList));
         }
       });
     }
   
     function goBack() {
-      jump('html/schedule/schedule/list.html');
+      jump('html/schedule/relation/list.html');
     }
   </script>
 </body>
