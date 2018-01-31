@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>新增教学关系信息</title>
+<title>修改教室信息</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jquery/jquery.js"></script>
@@ -12,19 +12,7 @@
 
 <body>
   <div class="layui-container" style="margin:30px;">
-    <form class="layui-form layui-form-pane" id="relation" method="post">
-      <div class="layui-form-item">
-        <label class="layui-form-label">课表ID:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="scheduleId" id="scheduleId" type="text" />
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">课程ID:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="courseId" id="courseId" type="text" />
-        </div>
-      </div>
+    <form class="layui-form layui-form-pane" id="room" method="post">
       <div class="layui-form-item">
         <label class="layui-form-label">教室ID:</label>
         <div class="layui-input-block">
@@ -32,20 +20,14 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">班级ID:</label>
+        <label class="layui-form-label">教室编号:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="tclassId" id="tclassId" type="text" />
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">教师ID:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="teacherId" id="teacherId" type="text" />
+          <input class="layui-input" name="roomNo" id="roomNo" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
         <div class="layui-input-block">
-          <button class="layui-btn" type="button" onclick="create()">新增</button>
+          <button class="layui-btn" type="button" onclick="modify()">保存</button>
           <button class="layui-btn" type="button" onclick="cancel()">取消</button>
         </div>
       </div>
@@ -53,20 +35,30 @@
   </div>
   <script>
     $(document).ready(function() {
-      layui.use('form', function() {
-        layui.form.render();
-      });  
-    });
-  
-    function create() {
+      var roomId = sessionStorage.getItem('currentRoomId');
+      $('#roomId').attr('value', roomId);
       $.ajax({
         async : false,
-        url : '/relation/create',
+        type : 'GET',
+        url : '/room/find/' + roomId,
+        success : function(room) {
+          $('#roomNo').attr('value', room.roomNo);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async : false,
+        url : '/room/modify',
         type : 'POST',
         dataType : 'json',
         contentType : 'application/json',
-        data : JSON.stringify($('#relation').serializeJSON()),
-        success : function(relationId) {
+        data : JSON.stringify($('#room').serializeJSON()),
+        success : function(result) {
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
           parent.list();

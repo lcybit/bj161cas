@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>修改教师信息</title>
+<title>新增教室信息</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jquery/jquery.js"></script>
@@ -12,22 +12,16 @@
 
 <body>
   <div class="layui-container" style="margin:30px;">
-    <form class="layui-form layui-form-pane" id="teacher" method="post">
+    <form class="layui-form layui-form-pane" id="room" method="post">
       <div class="layui-form-item">
-        <label class="layui-form-label">教师ID:</label>
+        <label class="layui-form-label">教室编号:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="teacherId" id="teacherId" type="text" />
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">教师工号:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="teacherNo" id="teacherNo" type="text" />
+          <input class="layui-input" name="roomNo" id="roomNo" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
         <div class="layui-input-block">
-          <button class="layui-btn" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn" type="button" onclick="create()">新增</button>
           <button class="layui-btn" type="button" onclick="cancel()">取消</button>
         </div>
       </div>
@@ -35,30 +29,20 @@
   </div>
   <script>
     $(document).ready(function() {
-      var teacherId = sessionStorage.getItem('currentTeacherId');
-      $('#teacherId').attr('value', teacherId);
-      $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/teacher/find/' + teacherId,
-        success : function(teacher) {
-          $('#teacherNo').attr('value', teacher.teacherNo);
-        }
-      });
       layui.use('form', function() {
         layui.form.render();
       });
     });
   
-    function modify() {
+    function create() {
       $.ajax({
         async : false,
-        url : '/teacher/modify',
+        url : '/room/create',
         type : 'POST',
         dataType : 'json',
         contentType : 'application/json',
-        data : JSON.stringify($('#teacher').serializeJSON()),
-        success : function(result) {
+        data : JSON.stringify($('#room').serializeJSON()),
+        success : function(roomId) {
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
           parent.list();

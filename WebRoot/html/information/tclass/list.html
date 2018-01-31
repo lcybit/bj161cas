@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>教师信息列表</title>
+<title>班级信息列表</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
@@ -14,12 +14,12 @@
     <table class="layui-table">
       <thead>
         <tr>
-          <th>教师ID</th>
-          <th>教师工号</th>
+          <th>班级ID</th>
+          <th>班级编号</th>
           <th>操作</th>
         </tr>
       </thead>
-      <tbody id="teacherList">
+      <tbody id="tclassList">
       </tbody>
     </table>
     <div class="layui-input-inline">
@@ -27,13 +27,13 @@
       <button class="layui-btn" onclick="goCreate()">新增</button>
     </div>
   </div>
-  <script id="tmpl-teacherList" type="text/x-jsrender">
+  <script id="tmpl-tclassList" type="text/x-jsrender">
     <tr>
-      <td>{{:teacherId}}</td>
-      <td>{{:teacherNo}}</td>
+      <td>{{:tclassId}}</td>
+      <td>{{:tclassNo}}</td>
       <td>
-        <button class="layui-btn" onclick="goModify('{{:teacherId}}')">修改</button>
-        <button class="layui-btn" onclick="remove('{{:teacherId}}')">删除</button>
+        <button class="layui-btn" onclick="goModify('{{:tclassId}}')">修改</button>
+        <button class="layui-btn" onclick="remove('{{:tclassId}}')">删除</button>
       </td>
     </tr>
   </script>
@@ -48,8 +48,8 @@
         layer.open({
           type : 2,
           id : 'create',
-          title : '新增教师信息',
-          content : '/html/information/teacher/create.html',
+          title : '新增班级信息',
+          content : '/html/information/tclass/create.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false
@@ -57,15 +57,15 @@
       });
     }
   
-    function goModify(teacherId) {
-      sessionStorage.setItem('currentTeacherId', teacherId);
+    function goModify(tclassId) {
+      sessionStorage.setItem('currentTclassId', tclassId);
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
           type : 2,
           id : 'modify',
-          title : '修改教师信息',
-          content : '/html/information/teacher/modify.html',
+          title : '修改班级信息',
+          content : '/html/information/tclass/modify.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false,
@@ -73,14 +73,14 @@
       });
     }
 
-    function remove(teacherId) {
+    function remove(tclassId) {
       layer.confirm('确认要删除吗？',
-        {title : '删除教师信息'},
+        {title : '删除班级信息'},
         function(index) {
           $.ajax({
             async : false,
             type : 'DELETE',
-            url : '/teacher/delete/' + teacherId,
+            url : '/tclass/delete/' + tclassId,
             success : function() {
               layer.close(index);
               list();
@@ -93,15 +93,15 @@
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/teacher/list',
-        success : function(teacherList) {
-          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+        url : '/tclass/list',
+        success : function(tclassList) {
+          $('#tclassList').html($.templates('#tmpl-tclassList').render(tclassList));
         }
       });
     }
   
     function goBack() {
-      jump('html/information/teacher/list.html');
+      jump('html/information/tclass/list.html');
     }
   </script>
 </body>
