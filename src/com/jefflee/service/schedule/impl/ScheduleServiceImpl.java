@@ -54,8 +54,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public Integer modify(ScheduleDto scheduleDto) {
-		SchedulePo schedulePo = new SchedulePo();
-		BeanUtil.copyProperties(scheduleDto, schedulePo);
+		SchedulePo schedulePo = new Schedule(scheduleDto).toPo();
 		if (scheduleMapper.updateByPrimaryKey(schedulePo) == 1) {
 			return schedulePo.getScheduleId();
 		} else {

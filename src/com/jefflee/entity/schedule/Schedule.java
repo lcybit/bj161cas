@@ -24,6 +24,8 @@ public class Schedule {
 	}
 
 	public Schedule fromDto(ScheduleDto scheduleDto) {
+		scheduleId = scheduleDto.getScheduleId();
+		group = new Group();
 		group.groupId = scheduleDto.getGroupId();
 		forenoon = scheduleDto.getForenoon();
 		afternoon = scheduleDto.getAfternoon();
@@ -34,6 +36,8 @@ public class Schedule {
 	}
 
 	public Schedule fromPo(SchedulePo schedulePo) {
+		scheduleId = schedulePo.getScheduleId();
+		group = new Group();
 		group.groupId = schedulePo.getGroupId();
 		forenoon = schedulePo.getForenoon();
 		afternoon = schedulePo.getAfternoon();
@@ -45,6 +49,7 @@ public class Schedule {
 
 	public ScheduleDto toDto() {
 		ScheduleDto scheduleDto = new ScheduleDto();
+		scheduleDto.setScheduleId(scheduleId);
 		scheduleDto.setGroupId(group.groupId);
 		scheduleDto.setForenoon(forenoon);
 		scheduleDto.setAfternoon(afternoon);
@@ -56,6 +61,7 @@ public class Schedule {
 
 	public SchedulePo toPo() {
 		SchedulePo schedulePo = new SchedulePo();
+		schedulePo.setScheduleId(scheduleId);
 		schedulePo.setGroupId(group.groupId);
 		schedulePo.setForenoon(forenoon);
 		schedulePo.setAfternoon(afternoon);

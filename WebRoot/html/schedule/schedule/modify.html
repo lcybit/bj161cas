@@ -11,48 +11,54 @@
 </head>
 
 <body>
-  <div class="layui-container" style="margin-top:30px;">
-    <form class="layui-form" id="schedule" method="post">
-      <div class="layui-form-item">
-        <label class="layui-form-label">课表ID:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="scheduleId" id="scheduleId" type="text" />
-        </div>
-      </div>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="schedule" method="post">
       <div class="layui-form-item">
         <label class="layui-form-label">年级组ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="groupId" id="groupId" type="text" />
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" pane="">
         <label class="layui-form-label">上午课时数:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="forenoon" id="forenoon" type="text" />
+          <input type="radio" name="forenoon" id="forenoon" value="0" title="3节">
+          <input type="radio" name="forenoon" id="forenoon" value="1" title="4节">
+          <input type="radio" name="forenoon" id="forenoon" value="2" title="5节" checked="">
+          <input type="radio" name="forenoon" id="forenoon" value="3" title="6节">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" pane="">
         <label class="layui-form-label">下午课时数:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="afternoon" id="afternoon" type="text" />
+        <div class="layui-input-block">         
+          <input type="radio" name="afternoon" id="afternoon" value="0" title="2节">
+          <input type="radio" name="afternoon" id="afternoon" value="1" title="3节" checked="">
+          <input type="radio" name="afternoon" id="afternoon" value="2" title="4节">
+          <input type="radio" name="afternoon" id="afternoon" value="3" title="5节">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" pane="">
         <label class="layui-form-label">傍晚课时数:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="evening" id="evening" type="text" />
+        <div class="layui-input-block">          
+          <input type="radio" name="evening" id="evening" value="0" title="1节">
+          <input type="radio" name="evening" id="evening" value="1" title="2节">
+          <input type="radio" name="evening" id="evening" value="2" title="3节">
+          <input type="radio" name="evening" id="evening" value="3" title="无" checked="">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" pane="">
         <label class="layui-form-label">每周天数:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="days" id="days" type="text" />
+        <div class="layui-input-block">         
+          <input type="radio" name="days" id="days" value="0" title="3天">
+          <input type="radio" name="days" id="days" value="1" title="4天">
+          <input type="radio" name="days" id="days" value="2" title="5天" checked="">
+          <input type="radio" name="days" id="days" value="3" title="6天">          
         </div>
       </div>
       <div class="layui-form-item">
         <label class="layui-form-label">起始教学周:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="startWeek" id="startWeek" type="text" />
+        <div class="layui-input-block">          
+          <input class="layui-input" type="text" name="startWeek" id="startWeek" lay-verify="required|number" autocomplete="off">
         </div>
       </div>
       <div class="layui-form-item">
@@ -73,10 +79,10 @@
         url : '/schedule/find/' + scheduleId,
         success : function(schedule) {
           $('#groupId').attr('value', schedule.groupId);
-          $('#forenoon').attr('value', schedule.forenoon);
-          $('#afternoon').attr('value', schedule.afternoon);
-          $('#evening').attr('value', schedule.evening);
-          $('#days').attr('value', schedule.days);
+          $(":radio[name='forenoon'][value='"+schedule.forenoon+"']").prop("checked","checked","checked","checked");
+          $(":radio[name='afternoon'][value='"+schedule.afternoon+"']").prop("checked","checked","checked","checked");
+          $(":radio[name='evening'][value='"+schedule.evening+"']").prop("checked","checked","checked","checked");
+          $(":radio[name='days'][value='"+schedule.days+"']").prop("checked","checked","checked","checked");
           $('#startWeek').attr('value', schedule.startWeek);
         }
       });
