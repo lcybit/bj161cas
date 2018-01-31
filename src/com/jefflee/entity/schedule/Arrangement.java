@@ -52,4 +52,12 @@ public class Arrangement {
 		this.priority = priority;
 	}
 
+	public boolean isPeriodConflictive(Arrangement arrangement) {
+		if (periodId == arrangement.periodId) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 }

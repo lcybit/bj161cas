@@ -3,6 +3,7 @@ package com.jefflee.entity.schedule;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Table(name = "schd_schedule")
@@ -15,6 +16,7 @@ public class Schedule {
 	private Integer afternoon;
 	private Integer evening;
 	private Integer days;
+	@OrderBy
 	private Integer startWeek;
 
 	public Integer getScheduleId() {

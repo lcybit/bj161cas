@@ -8,9 +8,11 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.dto.schedule.PlanDto;
+import com.jefflee.dto.schedule.RelationDto;
 import com.jefflee.entity.schedule.Plan;
 import com.jefflee.mapper.schedule.PlanMapper;
 import com.jefflee.service.schedule.PlanService;
+import com.jefflee.service.schedule.RelationService;
 import com.jefflee.util.BeanUtil;
 
 @Service("planService")
@@ -18,6 +20,9 @@ public class PlanServiceImpl implements PlanService {
 
 	@Resource(name = "planMapper")
 	private PlanMapper planMapper;
+
+	@Resource(name = "relationService")
+	private RelationService relationService;
 
 	@Override
 	public Integer create(PlanDto planDto) {
@@ -68,5 +73,26 @@ public class PlanServiceImpl implements PlanService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public List<PlanDto> findByScheduleId(Integer scheduleId) {
+		List<PlanDto> planDtoList = new ArrayList<PlanDto>();
+		List<RelationDto> relationDtolList = relationService.findByScheduleId(scheduleId);
+		for (RelationDto relationDto : relationDtolList) {
+			PlanDto planDto = findByRelationId(relationDto.getRelationId());
+			planDtoList.add(planDto);
+		}
+		return planDtoList;
+	}
+
+	@Override
+	public PlanDto findByRelationId(Integer relationId) {
+		Plan queryPlan = new Plan();
+		queryPlan.setRelationId(relationId);
+		Plan plan = planMapper.selectOne(queryPlan);
+		PlanDto planDto = new PlanDto();
+		BeanUtil.copyProperties(plan, planDto);
+		return planDto;
 	}
 }

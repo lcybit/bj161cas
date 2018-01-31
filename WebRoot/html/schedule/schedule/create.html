@@ -4,6 +4,7 @@
 <head>
 <title>新增课表信息</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
@@ -12,6 +13,12 @@
 <body>
   <div class="layui-container" style="margin-top:30px;">
     <form class="layui-form" id="schedule" method="post">
+      <div class="layui-form-item">
+        <label class="layui-form-label">年级组ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="groupId" id="groupId" type="text" />
+        </div>
+      </div>
       <div class="layui-form-item">
         <label class="layui-form-label">上午课时数:</label>
         <div class="layui-input-block">
@@ -53,7 +60,7 @@
   <script>
     $(document).ready(function() {
       var groupId = sessionStorage.getItem('currentGroupId');
-        $('#groupId').attr('value', groupId);
+      $('#groupId').attr('value', groupId);
       layui.use('form', function() {
         layui.form.render();
       });

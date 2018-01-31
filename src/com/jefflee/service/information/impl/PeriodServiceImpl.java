@@ -13,8 +13,6 @@ import com.jefflee.mapper.information.PeriodMapper;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("periodService")
 public class PeriodServiceImpl implements PeriodService {
 
@@ -34,9 +32,7 @@ public class PeriodServiceImpl implements PeriodService {
 
 	@Override
 	public List<PeriodDto> listAll() {
-		Example example = new Example(Period.class);
-		example.setOrderByClause("period_no ASC");
-		List<Period> periodList = periodMapper.selectByExample(example);
+		List<Period> periodList = periodMapper.selectAll();
 		List<PeriodDto> periodDtoList = new ArrayList<PeriodDto>();
 		for (Period period : periodList) {
 			PeriodDto periodDto = new PeriodDto();

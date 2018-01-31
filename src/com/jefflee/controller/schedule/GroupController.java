@@ -45,9 +45,9 @@ public class GroupController {
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public Map<String, String> modify(@RequestBody GroupDto groupDto) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer id = groupService.modify(groupDto);
-		if (id != null) {
-			result.put("groupId", id.toString());
+		Integer groupId = groupService.modify(groupDto);
+		if (groupId != null) {
+			result.put("groupId", groupId.toString());
 		}
 		return result;
 	}

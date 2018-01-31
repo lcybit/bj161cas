@@ -5,6 +5,7 @@ import java.sql.Date;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Table(name = "schd_group")
@@ -16,6 +17,7 @@ public class Group {
 	private Integer semester;
 	private Integer level;
 	private Integer grade;
+	@OrderBy
 	private Date startDate;
 
 	public Integer getGroupId() {

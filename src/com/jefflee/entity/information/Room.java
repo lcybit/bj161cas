@@ -3,6 +3,7 @@ package com.jefflee.entity.information;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Table(name = "info_room")
@@ -10,7 +11,7 @@ public class Room {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer roomId;
-
+	@OrderBy
 	private String roomNo;
 
 	public Integer getRoomId() {

@@ -13,8 +13,6 @@ import com.jefflee.mapper.schedule.GroupMapper;
 import com.jefflee.service.schedule.GroupService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("groupService")
 public class GroupServiceImpl implements GroupService {
 
@@ -34,9 +32,7 @@ public class GroupServiceImpl implements GroupService {
 
 	@Override
 	public List<GroupDto> listAll() {
-		Example example = new Example(Group.class);
-		example.setOrderByClause("start_date ASC");
-		List<Group> groupList = groupMapper.selectByExample(example);
+		List<Group> groupList = groupMapper.selectAll();
 		List<GroupDto> groupDtoList = new ArrayList<GroupDto>();
 		for (Group group : groupList) {
 			GroupDto groupDto = new GroupDto();

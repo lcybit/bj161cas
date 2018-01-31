@@ -13,8 +13,6 @@ import com.jefflee.mapper.information.RoomMapper;
 import com.jefflee.service.information.RoomService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("roomService")
 public class RoomServiceImpl implements RoomService {
 
@@ -34,9 +32,7 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public List<RoomDto> listAll() {
-		Example example = new Example(Room.class);
-		example.setOrderByClause("room_no ASC");
-		List<Room> roomList = roomMapper.selectByExample(example);
+		List<Room> roomList = roomMapper.selectAll();
 		List<RoomDto> roomDtoList = new ArrayList<RoomDto>();
 		for (Room room : roomList) {
 			RoomDto roomDto = new RoomDto();

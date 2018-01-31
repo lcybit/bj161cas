@@ -13,8 +13,6 @@ import com.jefflee.mapper.information.TclassMapper;
 import com.jefflee.service.information.TclassService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("tclassService")
 public class TclassServiceImpl implements TclassService {
 
@@ -34,9 +32,7 @@ public class TclassServiceImpl implements TclassService {
 
 	@Override
 	public List<TclassDto> listAll() {
-		Example example = new Example(Tclass.class);
-		example.setOrderByClause("tclass_no ASC");
-		List<Tclass> tclassList = tclassMapper.selectByExample(example);
+		List<Tclass> tclassList = tclassMapper.selectAll();
 		List<TclassDto> tclassDtoList = new ArrayList<TclassDto>();
 		for (Tclass tclass : tclassList) {
 			TclassDto tclassDto = new TclassDto();

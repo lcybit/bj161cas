@@ -7,19 +7,22 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jefflee.dto.schedule.PlanDto;
 import com.jefflee.dto.schedule.ScheduleDto;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ScheduleMapper;
+import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.ScheduleService;
 import com.jefflee.util.BeanUtil;
-
-import tk.mybatis.mapper.entity.Example;
 
 @Service("scheduleService")
 public class ScheduleServiceImpl implements ScheduleService {
 
 	@Resource(name = "scheduleMapper")
 	private ScheduleMapper scheduleMapper;
+
+	@Resource(name = "planService")
+	private PlanService planService;
 
 	@Override
 	public Integer create(ScheduleDto scheduleDto) {
@@ -34,9 +37,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public List<ScheduleDto> listAll() {
-		Example example = new Example(Schedule.class);
-		example.setOrderByClause("start_week ASC");
-		List<Schedule> scheduleList = scheduleMapper.selectByExample(example);
+		List<Schedule> scheduleList = scheduleMapper.selectAll();
 		List<ScheduleDto> scheduleDtoList = new ArrayList<ScheduleDto>();
 		for (Schedule schedule : scheduleList) {
 			ScheduleDto scheduleDto = new ScheduleDto();
@@ -72,5 +73,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public Integer schedule(Integer scheduleId) {
+		ScheduleDto scheduleDto = findById(scheduleId);
+		List<PlanDto> planDtoList = planService.findByScheduleId(scheduleId);
+		return null;
 	}
 }

@@ -69,4 +69,18 @@ public class RelationServiceImpl implements RelationService {
 			return null;
 		}
 	}
+
+	@Override
+	public List<RelationDto> findByScheduleId(Integer scheduleId) {
+		List<RelationDto> relationDtoList = new ArrayList<RelationDto>();
+		RelationDto relationDto = new RelationDto();
+		Relation queryRelation = new Relation();
+		queryRelation.setScheduleId(scheduleId);
+		List<Relation> relationList = relationMapper.select(queryRelation);
+		for (Relation relation : relationList) {
+			BeanUtil.copyProperties(relation, relationDto);
+			relationDtoList.add(relationDto);
+		}
+		return relationDtoList;
+	}
 }

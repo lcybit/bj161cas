@@ -13,8 +13,6 @@ import com.jefflee.mapper.information.CourseMapper;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("courseService")
 public class CourseServiceImpl implements CourseService {
 
@@ -34,9 +32,7 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public List<CourseDto> listAll() {
-		Example example = new Example(Course.class);
-		example.setOrderByClause("course_no ASC");
-		List<Course> courseList = courseMapper.selectByExample(example);
+		List<Course> courseList = courseMapper.selectAll();
 		List<CourseDto> courseDtoList = new ArrayList<CourseDto>();
 		for (Course course : courseList) {
 			CourseDto courseDto = new CourseDto();

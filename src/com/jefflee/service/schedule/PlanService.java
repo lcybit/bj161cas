@@ -16,4 +16,8 @@ public interface PlanService {
 
 	public Integer delete(Integer planId);
 
+	public List<PlanDto> findByScheduleId(Integer scheduleId);
+
+	public PlanDto findByRelationId(Integer relationId);
+
 }

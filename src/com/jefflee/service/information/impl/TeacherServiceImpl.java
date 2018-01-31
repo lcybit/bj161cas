@@ -13,8 +13,6 @@ import com.jefflee.mapper.information.TeacherMapper;
 import com.jefflee.service.information.TeacherService;
 import com.jefflee.util.BeanUtil;
 
-import tk.mybatis.mapper.entity.Example;
-
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
 
@@ -34,9 +32,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public List<TeacherDto> listAll() {
-		Example example = new Example(Teacher.class);
-		example.setOrderByClause("teacher_no ASC");
-		List<Teacher> teacherList = teacherMapper.selectByExample(example);
+		List<Teacher> teacherList = teacherMapper.selectAll();
 		List<TeacherDto> teacherDtoList = new ArrayList<TeacherDto>();
 		for (Teacher teacher : teacherList) {
 			TeacherDto teacherDto = new TeacherDto();

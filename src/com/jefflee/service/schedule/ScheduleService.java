@@ -16,4 +16,6 @@ public interface ScheduleService {
 
 	public Integer delete(Integer scheduleId);
 
+	public Integer schedule(Integer scheduleId);
+
 }

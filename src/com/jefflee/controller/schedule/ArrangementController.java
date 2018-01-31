@@ -61,4 +61,5 @@ public class ArrangementController {
 		}
 		return result;
 	}
+
 }

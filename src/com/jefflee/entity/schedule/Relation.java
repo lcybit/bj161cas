@@ -64,4 +64,34 @@ public class Relation {
 		this.teacherId = teacherId;
 	}
 
+	public boolean isConflictive(Relation relation) {
+		if (isSame(relation)) {
+			return false;
+		} else if (courseId == relation.courseId) {
+			return true;
+		} else if (roomId == relation.roomId) {
+			return true;
+		} else if (tclassId == relation.tclassId) {
+			return true;
+		} else if (teacherId == relation.teacherId) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	private boolean isSame(Relation relation) {
+		if (courseId != relation.courseId) {
+			return false;
+		} else if (roomId != relation.roomId) {
+			return false;
+		} else if (tclassId == relation.tclassId) {
+			return false;
+		} else if (teacherId == relation.teacherId) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
 }
