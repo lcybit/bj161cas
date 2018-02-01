@@ -2,18 +2,18 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
-import com.jefflee.dto.information.TclassDto;
+import com.jefflee.po.information.TclassPo;
 
 public interface TclassService {
 
-	public Integer create(TclassDto tclassDto);
+	public Integer insert(TclassPo tclassPo);
 
-	public List<TclassDto> listAll();
+	public List<TclassPo> selectAll();
 
-	public TclassDto findById(Integer tclassId);
+	public TclassPo selectById(Integer tclassId);
 
-	public Integer modify(TclassDto tclassDto);
+	public Integer updateById(TclassPo tclassPo);
 
-	public Integer delete(Integer tclassId);
+	public Integer deleteById(Integer tclassId);
 
 }

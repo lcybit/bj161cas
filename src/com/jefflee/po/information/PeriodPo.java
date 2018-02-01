@@ -13,6 +13,8 @@ public class PeriodPo {
 	private Integer periodId;
 	@OrderBy
 	private String periodNo;
+	private Integer orderOfDay;
+	private Integer dayOfWeek;
 
 	public Integer getPeriodId() {
 		return periodId;
@@ -28,5 +30,21 @@ public class PeriodPo {
 
 	public void setPeriodNo(String periodNo) {
 		this.periodNo = periodNo;
+	}
+
+	public Integer getOrderOfDay() {
+		return orderOfDay;
+	}
+
+	public void setOrderOfDay(Integer orderOfDay) {
+		this.orderOfDay = orderOfDay;
+	}
+
+	public Integer getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+	public void setDayOfWeek(Integer dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
 	}
 }

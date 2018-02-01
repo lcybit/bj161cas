@@ -7,14 +7,17 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.dto.schedule.PlanDto;
-import com.jefflee.entity.schedule.Plan;
-import com.jefflee.entity.schedule.Relation;
+import com.jefflee.entity.information.Course;
+import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.PlanMapper;
+import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.po.schedule.PlanPo;
+import com.jefflee.po.schedule.RelationPo;
+import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.RelationService;
-import com.jefflee.util.BeanUtil;
+import com.jefflee.view.CourseView;
 
 @Service("planService")
 public class PlanServiceImpl implements PlanService {
@@ -24,11 +27,11 @@ public class PlanServiceImpl implements PlanService {
 
 	@Resource(name = "relationService")
 	private RelationService relationService;
+	@Resource(name = "arrangementService")
+	private ArrangementService arrangementService;
 
 	@Override
-	public Integer create(PlanDto planDto) {
-		PlanPo planPo = new PlanPo();
-		BeanUtil.copyProperties(planDto, planPo);
+	public Integer insert(PlanPo planPo) {
 		if (planMapper.insert(planPo) == 1) {
 			return planPo.getPlanId();
 		} else {
@@ -37,29 +40,17 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public List<PlanDto> listAll() {
-		List<PlanPo> planList = planMapper.selectAll();
-		List<PlanDto> planDtoList = new ArrayList<PlanDto>();
-		for (PlanPo planPo : planList) {
-			PlanDto planDto = new PlanDto();
-			BeanUtil.copyPropertiesSelective(planPo, planDto);
-			planDtoList.add(planDto);
-		}
-		return planDtoList;
+	public List<PlanPo> selectAll() {
+		return planMapper.selectAll();
 	}
 
 	@Override
-	public PlanDto findById(Integer planId) {
-		PlanDto planDto = new PlanDto();
-		PlanPo planPo = planMapper.selectByPrimaryKey(planId);
-		BeanUtil.copyProperties(planPo, planDto);
-		return planDto;
+	public PlanPo selectById(Integer planId) {
+		return planMapper.selectByPrimaryKey(planId);
 	}
 
 	@Override
-	public Integer modify(PlanDto planDto) {
-		PlanPo planPo = new PlanPo();
-		BeanUtil.copyProperties(planDto, planPo);
+	public Integer updateById(PlanPo planPo) {
 		if (planMapper.updateByPrimaryKey(planPo) == 1) {
 			return planPo.getPlanId();
 		} else {
@@ -68,7 +59,7 @@ public class PlanServiceImpl implements PlanService {
 	}
 
 	@Override
-	public Integer delete(Integer planId) {
+	public Integer deleteById(Integer planId) {
 		if (planMapper.deleteByPrimaryKey(planId) == 1) {
 			return planId;
 		} else {
@@ -76,24 +67,43 @@ public class PlanServiceImpl implements PlanService {
 		}
 	}
 
+	// TODO
 	@Override
-	public List<Plan> findByScheduleId(Integer scheduleId) {
-		List<Plan> planList = new ArrayList<Plan>();
-		List<Relation> relationList = relationService.findByScheduleId(scheduleId);
-		for (Relation relation : relationList) {
-			Plan plan = findByRelationId(relation.relationId);
-			planList.add(plan);
+	public List<PlanPo> selectByScheduleId(Integer scheduleId) {
+		List<PlanPo> planPoList = new ArrayList<PlanPo>();
+		List<RelationPo> relationPoList = relationService.selectByScheduleId(scheduleId);
+		for (RelationPo relation : relationPoList) {
+			planPoList.add(selectByRelationId(relation.getRelationId()));
 		}
-		return planList;
+		return planPoList;
 	}
 
 	@Override
-	public Plan findByRelationId(Integer relationId) {
+	public PlanPo selectByRelationId(Integer relationId) {
 		PlanPo queryPlanPo = new PlanPo();
 		queryPlanPo.setRelationId(relationId);
-		PlanPo planPo = planMapper.selectOne(queryPlanPo);
-		Plan plan = new Plan();
-		BeanUtil.copyProperties(planPo, plan);
-		return plan;
+		return planMapper.selectOne(queryPlanPo);
+	}
+
+	@Override
+	public CourseView gnrCourseView(Schedule schedule, Course course, Tclass tclass) {
+		CourseView courseView = new CourseView();
+		courseView.setCourse(course);
+
+		RelationPo queryRelationPo = new RelationPo();
+		queryRelationPo.setCourseId(course.courseId);
+		queryRelationPo.setTclassId(tclass.tclassId);
+		queryRelationPo.setScheduleId(schedule.scheduleId);
+		RelationPo relationPo = relationService.selectByCombinedId(queryRelationPo).get(0);
+		Integer periodNum = selectByRelationId(relationPo.getRelationId()).getPeriodNum();
+
+		ArrangementPo queryArrangementPo = new ArrangementPo();
+		queryArrangementPo.setArranged(1);
+		queryArrangementPo.setRelationId(relationPo.getRelationId());
+		Integer arrangedNum = arrangementService.selectCount(queryArrangementPo);
+
+		courseView.setUnArrangedNum(periodNum - arrangedNum);
+
+		return courseView;
 	}
 }

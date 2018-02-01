@@ -2,21 +2,22 @@ package com.jefflee.service.schedule;
 
 import java.util.List;
 
-import com.jefflee.dto.schedule.RelationDto;
-import com.jefflee.entity.schedule.Relation;
+import com.jefflee.po.schedule.RelationPo;
 
 public interface RelationService {
 
-	public Integer create(RelationDto relationDto);
+	public Integer insert(RelationPo relationPo);
 
-	public List<RelationDto> listAll();
+	public List<RelationPo> selectAll();
 
-	public RelationDto findById(Integer relationId);
+	public RelationPo selectById(Integer relationId);
 
-	public Integer modify(RelationDto relationDto);
+	public Integer updateById(RelationPo relationPo);
 
-	public Integer delete(Integer relationId);
+	public Integer deleteById(Integer relationId);
 
-	public List<Relation> findByScheduleId(Integer scheduleId);
+	public List<RelationPo> selectByScheduleId(Integer scheduleId);
+
+	public List<RelationPo> selectByCombinedId(RelationPo relationPo);
 
 }

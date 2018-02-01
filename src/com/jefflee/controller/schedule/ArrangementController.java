@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.dto.schedule.ArrangementDto;
+import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.schedule.ArrangementService;
 
 @RestController
@@ -23,9 +23,9 @@ public class ArrangementController {
 	ArrangementService arrangementService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody ArrangementDto arrangementDto) {
+	public Map<String, String> create(@RequestBody ArrangementPo arrangementPo) {
 		Map<String, String> result = new HashMap<String, String>();
-		String arrangementId = arrangementService.create(arrangementDto);
+		String arrangementId = arrangementService.insert(arrangementPo);
 		if (arrangementId != null) {
 			result.put("arrangementId", arrangementId);
 		}
@@ -33,19 +33,19 @@ public class ArrangementController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<ArrangementDto> listAll() {
-		return arrangementService.listAll();
+	public List<ArrangementPo> listAll() {
+		return arrangementService.selectAll();
 	}
 
 	@RequestMapping(value = "/find/{arrangementId}", method = RequestMethod.GET)
-	public ArrangementDto findById(@PathVariable("arrangementId") Integer arrangementId) {
-		return arrangementService.findById(arrangementId);
+	public ArrangementPo findById(@PathVariable("arrangementId") Integer arrangementId) {
+		return arrangementService.selectById(arrangementId);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody ArrangementDto arrangementDto) {
+	public Map<String, String> modify(@RequestBody ArrangementPo arrangementPo) {
 		Map<String, String> result = new HashMap<String, String>();
-		String arrangementId = arrangementService.modify(arrangementDto);
+		String arrangementId = arrangementService.updateById(arrangementPo);
 		if (arrangementId != null) {
 			result.put("arrangementId", arrangementId);
 		}
@@ -55,7 +55,7 @@ public class ArrangementController {
 	@RequestMapping(value = "/delete/{arrangementId}", method = RequestMethod.DELETE)
 	public Map<String, String> delete(@PathVariable("arrangementId") String arrangementId) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementId = arrangementService.delete(arrangementId);
+		arrangementId = arrangementService.deleteById(arrangementId);
 		if (arrangementId != null) {
 			result.put("arrangementId", arrangementId);
 		}

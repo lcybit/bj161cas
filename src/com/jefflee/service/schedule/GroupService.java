@@ -2,18 +2,18 @@ package com.jefflee.service.schedule;
 
 import java.util.List;
 
-import com.jefflee.dto.schedule.GroupDto;
+import com.jefflee.po.schedule.GroupPo;
 
 public interface GroupService {
 
-	public Integer create(GroupDto groupDto);
+	public Integer insert(GroupPo groupPo);
 
-	public List<GroupDto> listAll();
+	public List<GroupPo> selectAll();
 
-	public GroupDto findById(Integer groupId);
+	public GroupPo selectById(Integer groupId);
 
-	public Integer modify(GroupDto groupDto);
+	public Integer updateById(GroupPo groupPo);
 
-	public Integer delete(Integer groupId);
+	public Integer deleteById(Integer groupId);
 
 }

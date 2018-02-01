@@ -1,17 +1,14 @@
 package com.jefflee.service.information.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.dto.information.TeacherDto;
 import com.jefflee.mapper.information.TeacherMapper;
 import com.jefflee.po.information.TeacherPo;
 import com.jefflee.service.information.TeacherService;
-import com.jefflee.util.BeanUtil;
 
 @Service("teacherService")
 public class TeacherServiceImpl implements TeacherService {
@@ -20,9 +17,7 @@ public class TeacherServiceImpl implements TeacherService {
 	private TeacherMapper teacherMapper;
 
 	@Override
-	public Integer create(TeacherDto teacherDto) {
-		TeacherPo teacherPo = new TeacherPo();
-		BeanUtil.copyProperties(teacherDto, teacherPo);
+	public Integer insert(TeacherPo teacherPo) {
 		if (teacherMapper.insert(teacherPo) == 1) {
 			return teacherPo.getTeacherId();
 		} else {
@@ -31,29 +26,17 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<TeacherDto> listAll() {
-		List<TeacherPo> teacherList = teacherMapper.selectAll();
-		List<TeacherDto> teacherDtoList = new ArrayList<TeacherDto>();
-		for (TeacherPo teacherPo : teacherList) {
-			TeacherDto teacherDto = new TeacherDto();
-			BeanUtil.copyPropertiesSelective(teacherPo, teacherDto);
-			teacherDtoList.add(teacherDto);
-		}
-		return teacherDtoList;
+	public List<TeacherPo> selectAll() {
+		return teacherMapper.selectAll();
 	}
 
 	@Override
-	public TeacherDto findById(Integer teacherId) {
-		TeacherDto teacherDto = new TeacherDto();
-		TeacherPo teacherPo = teacherMapper.selectByPrimaryKey(teacherId);
-		BeanUtil.copyProperties(teacherPo, teacherDto);
-		return teacherDto;
+	public TeacherPo selectById(Integer teacherId) {
+		return teacherMapper.selectByPrimaryKey(teacherId);
 	}
 
 	@Override
-	public Integer modify(TeacherDto teacherDto) {
-		TeacherPo teacherPo = new TeacherPo();
-		BeanUtil.copyProperties(teacherDto, teacherPo);
+	public Integer updateById(TeacherPo teacherPo) {
 		if (teacherMapper.updateByPrimaryKey(teacherPo) == 1) {
 			return teacherPo.getTeacherId();
 		} else {
@@ -62,7 +45,7 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public Integer delete(Integer teacherId) {
+	public Integer deleteById(Integer teacherId) {
 		if (teacherMapper.deleteByPrimaryKey(teacherId) == 1) {
 			return teacherId;
 		} else {

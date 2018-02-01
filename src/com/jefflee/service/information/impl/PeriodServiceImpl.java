@@ -1,17 +1,14 @@
 package com.jefflee.service.information.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.dto.information.PeriodDto;
 import com.jefflee.mapper.information.PeriodMapper;
 import com.jefflee.po.information.PeriodPo;
 import com.jefflee.service.information.PeriodService;
-import com.jefflee.util.BeanUtil;
 
 @Service("periodService")
 public class PeriodServiceImpl implements PeriodService {
@@ -20,9 +17,7 @@ public class PeriodServiceImpl implements PeriodService {
 	private PeriodMapper periodMapper;
 
 	@Override
-	public Integer create(PeriodDto periodDto) {
-		PeriodPo periodPo = new PeriodPo();
-		BeanUtil.copyProperties(periodDto, periodPo);
+	public Integer insert(PeriodPo periodPo) {
 		if (periodMapper.insert(periodPo) == 1) {
 			return periodPo.getPeriodId();
 		} else {
@@ -31,29 +26,17 @@ public class PeriodServiceImpl implements PeriodService {
 	}
 
 	@Override
-	public List<PeriodDto> listAll() {
-		List<PeriodPo> periodList = periodMapper.selectAll();
-		List<PeriodDto> periodDtoList = new ArrayList<PeriodDto>();
-		for (PeriodPo periodPo : periodList) {
-			PeriodDto periodDto = new PeriodDto();
-			BeanUtil.copyPropertiesSelective(periodPo, periodDto);
-			periodDtoList.add(periodDto);
-		}
-		return periodDtoList;
+	public List<PeriodPo> selectAll() {
+		return periodMapper.selectAll();
 	}
 
 	@Override
-	public PeriodDto findById(Integer periodId) {
-		PeriodDto periodDto = new PeriodDto();
-		PeriodPo periodPo = periodMapper.selectByPrimaryKey(periodId);
-		BeanUtil.copyProperties(periodPo, periodDto);
-		return periodDto;
+	public PeriodPo selectById(Integer periodId) {
+		return periodMapper.selectByPrimaryKey(periodId);
 	}
 
 	@Override
-	public Integer modify(PeriodDto periodDto) {
-		PeriodPo periodPo = new PeriodPo();
-		BeanUtil.copyProperties(periodDto, periodPo);
+	public Integer updateById(PeriodPo periodPo) {
 		if (periodMapper.updateByPrimaryKey(periodPo) == 1) {
 			return periodPo.getPeriodId();
 		} else {
@@ -62,11 +45,16 @@ public class PeriodServiceImpl implements PeriodService {
 	}
 
 	@Override
-	public Integer delete(Integer periodId) {
+	public Integer deleteById(Integer periodId) {
 		if (periodMapper.deleteByPrimaryKey(periodId) == 1) {
 			return periodId;
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public List<PeriodPo> select(PeriodPo periodPo) {
+		return periodMapper.select(periodPo);
 	}
 }

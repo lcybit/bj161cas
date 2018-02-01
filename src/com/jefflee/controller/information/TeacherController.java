@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.dto.information.TeacherDto;
+import com.jefflee.po.information.TeacherPo;
 import com.jefflee.service.information.TeacherService;
 
 @RestController
@@ -23,9 +23,9 @@ public class TeacherController {
 	TeacherService teacherService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody TeacherDto teacherDto) {
+	public Map<String, String> create(@RequestBody TeacherPo teacherPo) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer teacherId = teacherService.create(teacherDto);
+		Integer teacherId = teacherService.insert(teacherPo);
 		if (teacherId != null) {
 			result.put("teacherId", teacherId.toString());
 		}
@@ -33,19 +33,19 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<TeacherDto> listAll() {
-		return teacherService.listAll();
+	public List<TeacherPo> listAll() {
+		return teacherService.selectAll();
 	}
 
 	@RequestMapping(value = "/find/{teacherId}", method = RequestMethod.GET)
-	public TeacherDto findById(@PathVariable("teacherId") Integer teacherId) {
-		return teacherService.findById(teacherId);
+	public TeacherPo findById(@PathVariable("teacherId") Integer teacherId) {
+		return teacherService.selectById(teacherId);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody TeacherDto teacherDto) {
+	public Map<String, String> modify(@RequestBody TeacherPo teacherPo) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer teacherId = teacherService.modify(teacherDto);
+		Integer teacherId = teacherService.updateById(teacherPo);
 		if (teacherId != null) {
 			result.put("teacherId", teacherId.toString());
 		}
@@ -55,7 +55,7 @@ public class TeacherController {
 	@RequestMapping(value = "/delete/{teacherId}", method = RequestMethod.DELETE)
 	public Map<String, String> delete(@PathVariable("teacherId") Integer teacherId) {
 		Map<String, String> result = new HashMap<String, String>();
-		teacherId = teacherService.delete(teacherId);
+		teacherId = teacherService.deleteById(teacherId);
 		if (teacherId != null) {
 			result.put("teacherId", teacherId.toString());
 		}

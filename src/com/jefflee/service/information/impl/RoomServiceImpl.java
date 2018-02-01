@@ -1,17 +1,14 @@
 package com.jefflee.service.information.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.dto.information.RoomDto;
 import com.jefflee.mapper.information.RoomMapper;
 import com.jefflee.po.information.RoomPo;
 import com.jefflee.service.information.RoomService;
-import com.jefflee.util.BeanUtil;
 
 @Service("roomService")
 public class RoomServiceImpl implements RoomService {
@@ -20,9 +17,7 @@ public class RoomServiceImpl implements RoomService {
 	private RoomMapper roomMapper;
 
 	@Override
-	public Integer create(RoomDto roomDto) {
-		RoomPo roomPo = new RoomPo();
-		BeanUtil.copyProperties(roomDto, roomPo);
+	public Integer insert(RoomPo roomPo) {
 		if (roomMapper.insert(roomPo) == 1) {
 			return roomPo.getRoomId();
 		} else {
@@ -31,29 +26,17 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public List<RoomDto> listAll() {
-		List<RoomPo> roomList = roomMapper.selectAll();
-		List<RoomDto> roomDtoList = new ArrayList<RoomDto>();
-		for (RoomPo roomPo : roomList) {
-			RoomDto roomDto = new RoomDto();
-			BeanUtil.copyPropertiesSelective(roomPo, roomDto);
-			roomDtoList.add(roomDto);
-		}
-		return roomDtoList;
+	public List<RoomPo> selectAll() {
+		return roomMapper.selectAll();
 	}
 
 	@Override
-	public RoomDto findById(Integer roomId) {
-		RoomDto roomDto = new RoomDto();
-		RoomPo roomPo = roomMapper.selectByPrimaryKey(roomId);
-		BeanUtil.copyProperties(roomPo, roomDto);
-		return roomDto;
+	public RoomPo selectById(Integer roomId) {
+		return roomMapper.selectByPrimaryKey(roomId);
 	}
 
 	@Override
-	public Integer modify(RoomDto roomDto) {
-		RoomPo roomPo = new RoomPo();
-		BeanUtil.copyProperties(roomDto, roomPo);
+	public Integer updateById(RoomPo roomPo) {
 		if (roomMapper.updateByPrimaryKey(roomPo) == 1) {
 			return roomPo.getRoomId();
 		} else {
@@ -62,7 +45,7 @@ public class RoomServiceImpl implements RoomService {
 	}
 
 	@Override
-	public Integer delete(Integer roomId) {
+	public Integer deleteById(Integer roomId) {
 		if (roomMapper.deleteByPrimaryKey(roomId) == 1) {
 			return roomId;
 		} else {

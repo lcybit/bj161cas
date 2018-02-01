@@ -1,17 +1,14 @@
 package com.jefflee.service.information.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.dto.information.CourseDto;
 import com.jefflee.mapper.information.CourseMapper;
 import com.jefflee.po.information.CoursePo;
 import com.jefflee.service.information.CourseService;
-import com.jefflee.util.BeanUtil;
 
 @Service("courseService")
 public class CourseServiceImpl implements CourseService {
@@ -20,9 +17,7 @@ public class CourseServiceImpl implements CourseService {
 	private CourseMapper courseMapper;
 
 	@Override
-	public Integer create(CourseDto courseDto) {
-		CoursePo coursePo = new CoursePo();
-		BeanUtil.copyProperties(courseDto, coursePo);
+	public Integer insert(CoursePo coursePo) {
 		if (courseMapper.insert(coursePo) == 1) {
 			return coursePo.getCourseId();
 		} else {
@@ -31,29 +26,17 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public List<CourseDto> listAll() {
-		List<CoursePo> coursePoList = courseMapper.selectAll();
-		List<CourseDto> courseDtoList = new ArrayList<CourseDto>();
-		for (CoursePo coursePo : coursePoList) {
-			CourseDto courseDto = new CourseDto();
-			BeanUtil.copyPropertiesSelective(coursePo, courseDto);
-			courseDtoList.add(courseDto);
-		}
-		return courseDtoList;
+	public List<CoursePo> selectAll() {
+		return courseMapper.selectAll();
 	}
 
 	@Override
-	public CourseDto findById(Integer courseId) {
-		CourseDto courseDto = new CourseDto();
-		CoursePo coursePo = courseMapper.selectByPrimaryKey(courseId);
-		BeanUtil.copyProperties(coursePo, courseDto);
-		return courseDto;
+	public CoursePo selectById(Integer courseId) {
+		return courseMapper.selectByPrimaryKey(courseId);
 	}
 
 	@Override
-	public Integer modify(CourseDto courseDto) {
-		CoursePo coursePo = new CoursePo();
-		BeanUtil.copyProperties(courseDto, coursePo);
+	public Integer updateById(CoursePo coursePo) {
 		if (courseMapper.updateByPrimaryKey(coursePo) == 1) {
 			return coursePo.getCourseId();
 		} else {
@@ -62,7 +45,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 
 	@Override
-	public Integer delete(Integer courseId) {
+	public Integer deleteById(Integer courseId) {
 		if (courseMapper.deleteByPrimaryKey(courseId) == 1) {
 			return courseId;
 		} else {

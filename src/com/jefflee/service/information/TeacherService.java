@@ -2,18 +2,18 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
-import com.jefflee.dto.information.TeacherDto;
+import com.jefflee.po.information.TeacherPo;
 
 public interface TeacherService {
 
-	public Integer create(TeacherDto teacherDto);
+	public Integer insert(TeacherPo teacherPo);
 
-	public List<TeacherDto> listAll();
+	public List<TeacherPo> selectAll();
 
-	public TeacherDto findById(Integer teacherId);
+	public TeacherPo selectById(Integer teacherId);
 
-	public Integer modify(TeacherDto teacherDto);
+	public Integer updateById(TeacherPo teacherPo);
 
-	public Integer delete(Integer teacherId);
+	public Integer deleteById(Integer teacherId);
 
 }

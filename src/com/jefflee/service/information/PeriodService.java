@@ -2,18 +2,20 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
-import com.jefflee.dto.information.PeriodDto;
+import com.jefflee.po.information.PeriodPo;
 
 public interface PeriodService {
 
-	public Integer create(PeriodDto periodDto);
+	public Integer insert(PeriodPo periodPo);
 
-	public List<PeriodDto> listAll();
+	public List<PeriodPo> selectAll();
 
-	public PeriodDto findById(Integer periodId);
+	public PeriodPo selectById(Integer periodId);
 
-	public Integer modify(PeriodDto periodDto);
+	public Integer updateById(PeriodPo periodPo);
 
-	public Integer delete(Integer periodId);
+	public Integer deleteById(Integer periodId);
+
+	public List<PeriodPo> select(PeriodPo queryPeriodPo);
 
 }

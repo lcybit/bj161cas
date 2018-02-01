@@ -2,18 +2,18 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
-import com.jefflee.dto.information.RoomDto;
+import com.jefflee.po.information.RoomPo;
 
 public interface RoomService {
 
-	public Integer create(RoomDto roomDto);
+	public Integer insert(RoomPo roomPo);
 
-	public List<RoomDto> listAll();
+	public List<RoomPo> selectAll();
 
-	public RoomDto findById(Integer roomId);
+	public RoomPo selectById(Integer roomId);
 
-	public Integer modify(RoomDto roomDto);
+	public Integer updateById(RoomPo roomPo);
 
-	public Integer delete(Integer roomId);
+	public Integer deleteById(Integer roomId);
 
 }

@@ -7,14 +7,22 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.dto.schedule.ScheduleDto;
+import com.jefflee.entity.information.Course;
+import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.schedule.Day;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ScheduleMapper;
+import com.jefflee.po.information.CoursePo;
+import com.jefflee.po.information.TclassPo;
 import com.jefflee.po.schedule.SchedulePo;
+import com.jefflee.service.information.CourseService;
+import com.jefflee.service.information.TclassService;
+import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.ScheduleService;
-import com.jefflee.util.BeanUtil;
+import com.jefflee.view.CourseView;
 import com.jefflee.view.ScheduleView;
+import com.jefflee.view.WeekView;
 
 @Service("scheduleService")
 public class ScheduleServiceImpl implements ScheduleService {
@@ -24,11 +32,16 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Resource(name = "planService")
 	private PlanService planService;
+	@Resource(name = "arrangementService")
+	private ArrangementService arrangementService;
+
+	@Resource(name = "courseService")
+	private CourseService courseService;
+	@Resource(name = "tclassService")
+	private TclassService tclassService;
 
 	@Override
-	public Integer create(ScheduleDto scheduleDto) {
-		Schedule schedule = new Schedule(scheduleDto);
-		SchedulePo schedulePo = schedule.toPo();
+	public Integer insert(SchedulePo schedulePo) {
 		if (scheduleMapper.insert(schedulePo) == 1) {
 			return schedulePo.getScheduleId();
 		} else {
@@ -37,24 +50,17 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public List<ScheduleDto> listAll() {
-		List<SchedulePo> schedulePoList = scheduleMapper.selectAll();
-		List<ScheduleDto> scheduleDtoList = new ArrayList<ScheduleDto>();
-		for (SchedulePo schedulePo : schedulePoList) {
-			scheduleDtoList.add(new Schedule(schedulePo).toDto());
-		}
-		return scheduleDtoList;
+	public List<SchedulePo> selectAll() {
+		return scheduleMapper.selectAll();
 	}
 
 	@Override
-	public ScheduleDto findById(Integer scheduleId) {
-		SchedulePo schedulePo = scheduleMapper.selectByPrimaryKey(scheduleId);
-		return new Schedule(schedulePo).toDto();
+	public SchedulePo selectById(Integer scheduleId) {
+		return scheduleMapper.selectByPrimaryKey(scheduleId);
 	}
 
 	@Override
-	public Integer modify(ScheduleDto scheduleDto) {
-		SchedulePo schedulePo = new Schedule(scheduleDto).toPo();
+	public Integer updateById(SchedulePo schedulePo) {
 		if (scheduleMapper.updateByPrimaryKey(schedulePo) == 1) {
 			return schedulePo.getScheduleId();
 		} else {
@@ -63,7 +69,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public Integer delete(Integer scheduleId) {
+	public Integer deleteById(Integer scheduleId) {
 		if (scheduleMapper.deleteByPrimaryKey(scheduleId) == 1) {
 			return scheduleId;
 		} else {
@@ -72,10 +78,60 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public ScheduleView schedule(Integer scheduleId) {
+	public ScheduleView gnrScheduleView(Integer scheduleId) {
 		ScheduleView scheduleView = new ScheduleView();
-		Schedule schedule = new Schedule(scheduleMapper.selectByPrimaryKey(scheduleId));
 
-		return null;
+		Schedule schedule = new Schedule(scheduleMapper.selectByPrimaryKey(scheduleId));
+		scheduleView.setSchedule(schedule);
+
+		List<Course> courseList = new ArrayList<Course>();
+		// TODO part of
+		List<CoursePo> coursePoList = courseService.selectAll();
+		for (CoursePo coursePo : coursePoList) {
+			courseList.add(new Course(coursePo));
+		}
+		scheduleView.setCourseList(courseList);
+
+		List<Tclass> tclassList = new ArrayList<Tclass>();
+		// TODO part of
+		List<TclassPo> tclassPoList = tclassService.selectAll();
+		for (TclassPo tclassPo : tclassPoList) {
+			tclassList.add(new Tclass(tclassPo));
+		}
+
+		List<WeekView> weekViewList = gnrWeekViewList(schedule, courseList, tclassList);
+		scheduleView.setWeekViewList(weekViewList);
+
+		return scheduleView;
+	}
+
+	private List<WeekView> gnrWeekViewList(Schedule schedule, List<Course> courseList, List<Tclass> tclassList) {
+		List<WeekView> weekViewList = new ArrayList<WeekView>();
+
+		for (Tclass tclass : tclassList) {
+			weekViewList.add(gnrWeekView(schedule, courseList, tclass));
+		}
+
+		return weekViewList;
+	}
+
+	private WeekView gnrWeekView(Schedule schedule, List<Course> courseList, Tclass tclass) {
+		WeekView weekView = new WeekView();
+
+		weekView.setType("tclass");
+		weekView.setTypeId(tclass.tclassId);
+
+		// TODO
+		List<Day> dayList = new ArrayList<Day>();
+		dayList = arrangementService.gnrDayList(schedule, tclass);
+		weekView.setDayList(dayList);
+
+		List<CourseView> courseViewList = new ArrayList<CourseView>();
+		for (Course course : courseList) {
+			courseViewList.add(planService.gnrCourseView(schedule, course, tclass));
+		}
+		weekView.setCourseViewList(courseViewList);
+
+		return weekView;
 	}
 }

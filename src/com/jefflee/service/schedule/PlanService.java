@@ -2,23 +2,28 @@ package com.jefflee.service.schedule;
 
 import java.util.List;
 
-import com.jefflee.dto.schedule.PlanDto;
-import com.jefflee.entity.schedule.Plan;
+import com.jefflee.entity.information.Course;
+import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.schedule.Schedule;
+import com.jefflee.po.schedule.PlanPo;
+import com.jefflee.view.CourseView;
 
 public interface PlanService {
 
-	public Integer create(PlanDto planDto);
+	public Integer insert(PlanPo planPo);
 
-	public List<PlanDto> listAll();
+	public List<PlanPo> selectAll();
 
-	public PlanDto findById(Integer planId);
+	public PlanPo selectById(Integer planId);
 
-	public Integer modify(PlanDto planDto);
+	public Integer updateById(PlanPo planPo);
 
-	public Integer delete(Integer planId);
+	public Integer deleteById(Integer planId);
 
-	public List<Plan> findByScheduleId(Integer scheduleId);
+	public List<PlanPo> selectByScheduleId(Integer scheduleId);
 
-	public Plan findByRelationId(Integer relationId);
+	public PlanPo selectByRelationId(Integer relationId);
+
+	public CourseView gnrCourseView(Schedule schedule, Course course, Tclass tclass);
 
 }

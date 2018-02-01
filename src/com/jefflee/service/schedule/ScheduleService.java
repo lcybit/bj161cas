@@ -2,21 +2,21 @@ package com.jefflee.service.schedule;
 
 import java.util.List;
 
-import com.jefflee.dto.schedule.ScheduleDto;
+import com.jefflee.po.schedule.SchedulePo;
 import com.jefflee.view.ScheduleView;
 
 public interface ScheduleService {
 
-	public Integer create(ScheduleDto scheduleDto);
+	public Integer insert(SchedulePo schedulePo);
 
-	public List<ScheduleDto> listAll();
+	public List<SchedulePo> selectAll();
 
-	public ScheduleDto findById(Integer scheduleId);
+	public SchedulePo selectById(Integer scheduleId);
 
-	public Integer modify(ScheduleDto scheduleDto);
+	public Integer updateById(SchedulePo schedulePo);
 
-	public Integer delete(Integer scheduleId);
+	public Integer deleteById(Integer scheduleId);
 
-	public ScheduleView schedule(Integer scheduleId);
+	public ScheduleView gnrScheduleView(Integer scheduleId);
 
 }

@@ -2,18 +2,29 @@ package com.jefflee.service.schedule;
 
 import java.util.List;
 
-import com.jefflee.dto.schedule.ArrangementDto;
+import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.schedule.Day;
+import com.jefflee.entity.schedule.Schedule;
+import com.jefflee.po.schedule.ArrangementPo;
 
 public interface ArrangementService {
 
-	public String create(ArrangementDto arrangementDto);
+	public String insert(ArrangementPo arrangementPo);
 
-	public List<ArrangementDto> listAll();
+	public List<ArrangementPo> selectAll();
 
-	public ArrangementDto findById(Integer arrangementId);
+	public ArrangementPo selectById(Integer arrangementId);
 
-	public String modify(ArrangementDto arrangementDto);
+	public String updateById(ArrangementPo arrangementPo);
 
-	public String delete(String arrangementId);
+	public String deleteById(String arrangementId);
+
+	public Integer selectCount(ArrangementPo queryArrangementPo);
+
+	public List<ArrangementPo> selectByPeriodId(Integer periodId);
+
+	public List<ArrangementPo> selectByRelationId(Integer relationId);
+
+	public List<Day> gnrDayList(Schedule schedule, Tclass tclass);
 
 }

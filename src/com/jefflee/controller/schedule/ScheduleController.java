@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.dto.schedule.ScheduleDto;
+import com.jefflee.po.schedule.SchedulePo;
 import com.jefflee.service.schedule.ScheduleService;
 import com.jefflee.view.ScheduleView;
 
@@ -24,9 +24,9 @@ public class ScheduleController {
 	ScheduleService scheduleService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody ScheduleDto scheduleDto) {
+	public Map<String, String> create(@RequestBody SchedulePo schedulePo) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer scheduleId = scheduleService.create(scheduleDto);
+		Integer scheduleId = scheduleService.insert(schedulePo);
 		if (scheduleId != null) {
 			result.put("scheduleId", scheduleId.toString());
 		}
@@ -34,19 +34,19 @@ public class ScheduleController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<ScheduleDto> listAll() {
-		return scheduleService.listAll();
+	public List<SchedulePo> listAll() {
+		return scheduleService.selectAll();
 	}
 
 	@RequestMapping(value = "/find/{scheduleId}", method = RequestMethod.GET)
-	public ScheduleDto findById(@PathVariable("scheduleId") Integer scheduleId) {
-		return scheduleService.findById(scheduleId);
+	public SchedulePo findById(@PathVariable("scheduleId") Integer scheduleId) {
+		return scheduleService.selectById(scheduleId);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody ScheduleDto scheduleDto) {
+	public Map<String, String> modify(@RequestBody SchedulePo schedulePo) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer scheduleId = scheduleService.modify(scheduleDto);
+		Integer scheduleId = scheduleService.updateById(schedulePo);
 		if (scheduleId != null) {
 			result.put("scheduleId", scheduleId.toString());
 		}
@@ -56,7 +56,7 @@ public class ScheduleController {
 	@RequestMapping(value = "/delete/{scheduleId}", method = RequestMethod.DELETE)
 	public Map<String, String> delete(@PathVariable("scheduleId") Integer scheduleId) {
 		Map<String, String> result = new HashMap<String, String>();
-		scheduleId = scheduleService.delete(scheduleId);
+		scheduleId = scheduleService.deleteById(scheduleId);
 		if (scheduleId != null) {
 			result.put("scheduleId", scheduleId.toString());
 		}
@@ -65,7 +65,7 @@ public class ScheduleController {
 
 	@RequestMapping(value = "/schedule/{scheduleId}", method = RequestMethod.GET)
 	public ScheduleView schedule(@PathVariable("scheduleId") Integer scheduleId) {
-		return scheduleService.schedule(scheduleId);
+		return scheduleService.gnrScheduleView(scheduleId);
 	}
 
 }
