@@ -63,8 +63,8 @@ public class ScheduleController {
 		return result;
 	}
 
-	@RequestMapping(value = "/schedule/{scheduleId}", method = RequestMethod.GET)
-	public ScheduleView schedule(@PathVariable("scheduleId") Integer scheduleId) {
+	@RequestMapping(value = "/display/{scheduleId}", method = RequestMethod.GET)
+	public ScheduleView display(@PathVariable("scheduleId") Integer scheduleId) {
 		return scheduleService.gnrScheduleView(scheduleId);
 	}
 

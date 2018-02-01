@@ -15,6 +15,11 @@
     </div>
   </div>
   <script id="tmpl-scheduleView" type="text/x-jsrender">
+    <table class="layui-table" lay=size="sm">
+      <tr>
+        {{for courseList tmpl="#tmpl-course" /}}
+      </tr>
+    </table>
     {{for weekViewList tmpl="#tmpl-weekView" /}}
   </script>
   <script id="tmpl-weekView" type="text/x-jsrender">
@@ -23,9 +28,8 @@
         <tbody>
           <tr>
             <td rowspan="2"></td>
-            <td colspan="{{:#parent.schedule.forenoon}}">上午</td>
-            <td colspan="{{:#parent.schedule.afternoon}}">下午</td>
-            <td colspan="{{:#parent.schedule.evening}}">傍晚</td>
+            <td colspan="{{:#parent.parent.data.schedule.forenoon}}">上午</td>
+            <td colspan="{{:#parent.parent.data.schedule.afternoon}}">下午</td>
           </tr>
           <tr>
             <td>早</td>
@@ -37,16 +41,27 @@
             <td>6</td>
             <td>7</td>
           </tr>
-			{{for dayViewList tmpl="#tmpl-dayView"/}}
+			{{for dayViewList tmpl="#tmpl-dayView" /}}
         </tbody>
+      </table>
+      <table class="layui-table" lay-size="sm">
+        <tr>
+          {{for courseViewList tmpl="#tmpl-courseView" /}}
+        </tr>
       </table>
     </div>
   </script>
+  <script id="tmpl-course" type="text/x-jsrender">
+    <td>{{:courseNo}}
+  </script>
   <script id="tmpl-dayView" type="text/x-jsrender">
     <tr>
-      <td></td>
-      {{for arrangementViewList tmpl="#tmpl-arrangementView"/}}
+      <td>{{:#getIndex() +1}}</td>
+      {{for arrangementViewList tmpl="#tmpl-arrangementView" /}}
     </tr>
+  </script>
+  <script id="tmpl-courseView" type="text/x-jsrender">
+    <td>{{:course.courseNo+unArrangedNum}}</td>
   </script>
   <script id="tmpl-arrangementView" type="text/x-jsrender">
 	<td id="{{:arrangementId}}" style="cursor:pointer" onclick="alert()">{{:periodId}}</td>
@@ -56,7 +71,7 @@
       var scheduleId = sessionStorage.getItem('currentScheduleId');
       $.ajax({
         async : false,
-        url : '/schedule/schedule/' + scheduleId,
+        url : '/schedule/display/' + scheduleId,
         type : 'GET',
         success : function(scheduleView) {
           $('#scheduleView').append($.templates('#tmpl-scheduleView').render(scheduleView));
