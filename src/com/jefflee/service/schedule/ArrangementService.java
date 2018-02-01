@@ -9,15 +9,15 @@ import com.jefflee.view.DayView;
 
 public interface ArrangementService {
 
-	public String insert(ArrangementPo arrangementPo);
+	public Integer insert(ArrangementPo arrangementPo);
 
 	public List<ArrangementPo> selectAll();
 
 	public ArrangementPo selectById(Integer arrangementId);
 
-	public String updateById(ArrangementPo arrangementPo);
+	public Integer updateById(ArrangementPo arrangementPo);
 
-	public String deleteById(String arrangementId);
+	public Integer deleteById(Integer arrangementId);
 
 	public Integer selectCount(ArrangementPo queryArrangementPo);
 

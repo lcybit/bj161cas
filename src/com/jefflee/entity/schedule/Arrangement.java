@@ -4,7 +4,7 @@ import com.jefflee.entity.information.Period;
 import com.jefflee.po.schedule.ArrangementPo;
 
 public class Arrangement {
-	public String arrangementId;
+	public Integer arrangementId;
 	public Period period;
 	public Relation relation;
 	public Integer arranged;
@@ -15,7 +15,7 @@ public class Arrangement {
 		this.relation = new Relation();
 	}
 
-	public Arrangement(String arrangementId) {
+	public Arrangement(Integer arrangementId) {
 		this.arrangementId = arrangementId;
 		this.period = new Period();
 		this.relation = new Relation();

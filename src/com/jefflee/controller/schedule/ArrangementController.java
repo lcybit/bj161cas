@@ -25,9 +25,9 @@ public class ArrangementController {
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public Map<String, String> create(@RequestBody ArrangementPo arrangementPo) {
 		Map<String, String> result = new HashMap<String, String>();
-		String arrangementId = arrangementService.insert(arrangementPo);
+		Integer arrangementId = arrangementService.insert(arrangementPo);
 		if (arrangementId != null) {
-			result.put("arrangementId", arrangementId);
+			result.put("arrangementId", arrangementId.toString());
 		}
 		return result;
 	}
@@ -45,19 +45,19 @@ public class ArrangementController {
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public Map<String, String> modify(@RequestBody ArrangementPo arrangementPo) {
 		Map<String, String> result = new HashMap<String, String>();
-		String arrangementId = arrangementService.updateById(arrangementPo);
+		Integer arrangementId = arrangementService.updateById(arrangementPo);
 		if (arrangementId != null) {
-			result.put("arrangementId", arrangementId);
+			result.put("arrangementId", arrangementId.toString());
 		}
 		return result;
 	}
 
 	@RequestMapping(value = "/delete/{arrangementId}", method = RequestMethod.DELETE)
-	public Map<String, String> delete(@PathVariable("arrangementId") String arrangementId) {
+	public Map<String, String> delete(@PathVariable("arrangementId") Integer arrangementId) {
 		Map<String, String> result = new HashMap<String, String>();
 		arrangementId = arrangementService.deleteById(arrangementId);
 		if (arrangementId != null) {
-			result.put("arrangementId", arrangementId);
+			result.put("arrangementId", arrangementId.toString());
 		}
 		return result;
 	}

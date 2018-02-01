@@ -23,8 +23,9 @@
         <tbody>
           <tr>
             <td rowspan="2"></td>
-            <td colspan="5">上午</td>
-            <td colspan="3">下午</td>
+            <td colspan="{{:#parent.schedule.forenoon}}">上午</td>
+            <td colspan="{{:#parent.schedule.afternoon}}">下午</td>
+            <td colspan="{{:#parent.schedule.evening}}">傍晚</td>
           </tr>
           <tr>
             <td>早</td>
@@ -48,7 +49,7 @@
     </tr>
   </script>
   <script id="tmpl-arrangementView" type="text/x-jsrender">
-	<td id="{{arrangementView.arrangementId}}" style="cursor:pointer" onclick="alert()">{{:arrangementView.courseId}}</td>
+	<td id="{{:arrangementId}}" style="cursor:pointer" onclick="alert()">{{:periodId}}</td>
   </script>
   <script>
     $(document).ready(function() {
@@ -58,7 +59,7 @@
         url : '/schedule/schedule/' + scheduleId,
         type : 'GET',
         success : function(scheduleView) {
-          $.('#scheduleView').append($.templates('#tmpl-scheduleView').render(scheduleView));
+          $('#scheduleView').append($.templates('#tmpl-scheduleView').render(scheduleView));
         }
       });
     })

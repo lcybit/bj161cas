@@ -1,7 +1,7 @@
 package com.jefflee.view;
 
 public class ArrangementView {
-	private String arrangementId;
+	private Integer arrangementId;
 	private Integer periodId;
 	private Integer courseId;
 	private Integer roomId;
@@ -10,11 +10,11 @@ public class ArrangementView {
 	private Integer arranged;
 	private Integer priority;
 
-	public String getArrangementId() {
+	public Integer getArrangementId() {
 		return arrangementId;
 	}
 
-	public void setArrangementId(String arrangementId) {
+	public void setArrangementId(Integer arrangementId) {
 		this.arrangementId = arrangementId;
 	}
 

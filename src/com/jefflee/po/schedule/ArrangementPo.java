@@ -1,22 +1,25 @@
 package com.jefflee.po.schedule;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Table(name = "schd_arrangement")
 public class ArrangementPo {
 	@Id
-	private String arrangementId;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer arrangementId;
 	private Integer periodId;
 	private Integer relationId;
 	private Integer arranged;
 	private Integer priority;
 
-	public String getArrangementId() {
+	public Integer getArrangementId() {
 		return arrangementId;
 	}
 
-	public void setArrangementId(String arrangementId) {
+	public void setArrangementId(Integer arrangementId) {
 		this.arrangementId = arrangementId;
 	}
 
