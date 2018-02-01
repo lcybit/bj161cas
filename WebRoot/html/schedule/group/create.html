@@ -44,7 +44,7 @@
       <div class="layui-form-item">
         <label class="layui-form-label">起始日期:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="startDate" id="startDate" type="text" />
+          <input class="layui-input" name="startDate" id="startDate" type="text" placeholder="yyyy-mm-dd"/>
         </div>
       </div>
       <div class="layui-form-item">
@@ -62,11 +62,15 @@
       });
       layui.use('laydate', function(){
         layui.laydate.render({
-          elem : '#startDate'
+          elem : '#startDate'          
         });
         layui.laydate.render({
           elem: '#year'
           ,type: 'year'
+          ,change: function(value){
+            $('#year').attr('value',value);
+            $('.layui-laydate').remove(0);
+          }
         });
       });      
     });

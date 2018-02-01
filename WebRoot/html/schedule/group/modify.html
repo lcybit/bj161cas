@@ -76,6 +76,22 @@
       layui.use('form', function() {
         layui.form.render();
       });
+      layui.use('laydate', function(){
+        layui.laydate.render({
+          elem : '#startDate'
+          ,ready: function(date){
+            console.log(date);
+          }
+        });
+        layui.laydate.render({
+          elem: '#year'
+          ,type: 'year'
+          ,change: function(value){
+            $('#year').attr('value',value);
+            $('.layui-laydate').remove(0);
+          }
+        });
+      });      
     });
   
     function modify() {

@@ -1,7 +1,5 @@
 package com.jefflee.entity.schedule;
 
-import java.sql.Date;
-
 import com.jefflee.po.schedule.GroupPo;
 
 public class Group {
@@ -10,7 +8,7 @@ public class Group {
 	public Integer semester;
 	public Integer level;
 	public Integer grade;
-	public Date startDate;
+	public String startDate;
 
 	public Group() {
 	}

@@ -1,7 +1,5 @@
 package com.jefflee.po.schedule;
 
-import java.sql.Date;
-
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +16,7 @@ public class GroupPo {
 	private Integer level;
 	private Integer grade;
 	@OrderBy
-	private Date startDate;
+	private String startDate;
 
 	public Integer getGroupId() {
 		return groupId;
@@ -60,11 +58,11 @@ public class GroupPo {
 		this.grade = grade;
 	}
 
-	public Date getStartDate() {
+	public String getStartDate() {
 		return startDate;
 	}
 
-	public void setStartDate(Date startDate) {
+	public void setStartDate(String startDate) {
 		this.startDate = startDate;
 	}
 
