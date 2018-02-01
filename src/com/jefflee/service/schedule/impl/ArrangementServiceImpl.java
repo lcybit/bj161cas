@@ -16,6 +16,7 @@ import com.jefflee.po.schedule.RelationPo;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.RelationService;
+import com.jefflee.util.DatabaseUtil;
 import com.jefflee.view.ArrangementView;
 import com.jefflee.view.DayView;
 
@@ -33,6 +34,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public String insert(ArrangementPo arrangementPo) {
+		arrangementPo.setArrangementId(DatabaseUtil.gnr32Uuid());
 		if (arrangementMapper.insert(arrangementPo) == 1) {
 			return arrangementPo.getArrangementId();
 		} else {

@@ -16,6 +16,8 @@
         <tr>
           <th>课时ID</th>
           <th>课时编号</th>
+          <th>周几</th>
+          <th>第几节</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -31,6 +33,8 @@
     <tr>
       <td>{{:periodId}}</td>
       <td>{{:periodNo}}</td>
+	  <td>{{:dayOfWeek}}</td>
+	  <td>{{:orderOfDay}}</td>
       <td>
         <button class="layui-btn" onclick="goModify('{{:periodId}}')">修改</button>
         <button class="layui-btn" onclick="remove('{{:periodId}}')">删除</button>

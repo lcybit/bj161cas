@@ -15,7 +15,7 @@
     </div>
   </div>
   <script id="tmpl-scheduleView" type="text/x-jsrender">
-    {{for weekViewList tmpl="tmpl-weekView" /}}
+    {{for weekViewList tmpl="#tmpl-weekView" /}}
   </script>
   <script id="tmpl-weekView" type="text/x-jsrender">
     <div class="layui-col-md3">
@@ -56,10 +56,7 @@
       $.ajax({
         async : false,
         url : '/schedule/schedule/' + scheduleId,
-        type : 'POST',
-        dataType : 'json',
-        contentType : 'application/json',
-        data : JSON.stringify($('#schedule').serializeJSON()),
+        type : 'GET',
         success : function(scheduleView) {
           $.('#scheduleView').append($.templates('#tmpl-scheduleView').render(scheduleView));
         }

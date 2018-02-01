@@ -42,7 +42,7 @@
       <td>
         <button class="layui-btn" onclick="goModify('{{:groupId}}')">修改</button>
         <button class="layui-btn" onclick="remove('{{:groupId}}')">删除</button>
-        <button class="layui-btn" onclick="choose('{{:groupId}}')">选择</button>
+        <button class="layui-btn" id="choose" onclick="choose('{{:groupId}}')">选择</button>
       </td>
     </tr>
   </script>
@@ -99,7 +99,12 @@
     }
 
     function choose(groupId) {
-      sessionStorage.setItem('currentGroupId', groupId)
+      sessionStorage.setItem('currentGroupId', groupId);
+      $(document).ready(function(){
+        $("#choose").click(function(){
+         $(this).css("background-color","yellow");
+        });
+      });
     }
     
     function list() {
