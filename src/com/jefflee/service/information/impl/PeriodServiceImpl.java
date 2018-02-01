@@ -57,4 +57,12 @@ public class PeriodServiceImpl implements PeriodService {
 	public List<PeriodPo> select(PeriodPo periodPo) {
 		return periodMapper.select(periodPo);
 	}
+
+	@Override
+	public PeriodPo selectByOrder(Integer dayOfWeek, Integer orderOfDay) {
+		PeriodPo queryPeriodPo = new PeriodPo();
+		queryPeriodPo.setDayOfWeek(dayOfWeek);
+		queryPeriodPo.setOrderOfDay(orderOfDay);
+		return periodMapper.selectOne(queryPeriodPo);
+	}
 }

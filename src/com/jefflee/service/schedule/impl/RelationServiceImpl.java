@@ -61,7 +61,7 @@ public class RelationServiceImpl implements RelationService {
 	}
 
 	@Override
-	public List<RelationPo> selectByCombinedId(RelationPo relationPo) {
+	public List<RelationPo> select(RelationPo relationPo) {
 		return relationMapper.select(relationPo);
 	}
 

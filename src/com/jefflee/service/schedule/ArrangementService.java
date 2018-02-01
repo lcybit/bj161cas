@@ -3,9 +3,9 @@ package com.jefflee.service.schedule;
 import java.util.List;
 
 import com.jefflee.entity.information.Tclass;
-import com.jefflee.entity.schedule.Day;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.po.schedule.ArrangementPo;
+import com.jefflee.view.DayView;
 
 public interface ArrangementService {
 
@@ -25,6 +25,6 @@ public interface ArrangementService {
 
 	public List<ArrangementPo> selectByRelationId(Integer relationId);
 
-	public List<Day> gnrDayList(Schedule schedule, Tclass tclass);
+	public List<DayView> gnrDayViewList(Schedule schedule, Tclass tclass);
 
 }

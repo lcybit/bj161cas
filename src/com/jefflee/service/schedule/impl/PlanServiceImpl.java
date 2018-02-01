@@ -85,6 +85,7 @@ public class PlanServiceImpl implements PlanService {
 		return planMapper.selectOne(queryPlanPo);
 	}
 
+	// TODO 待改进
 	@Override
 	public CourseView gnrCourseView(Schedule schedule, Course course, Tclass tclass) {
 		CourseView courseView = new CourseView();
@@ -94,7 +95,7 @@ public class PlanServiceImpl implements PlanService {
 		queryRelationPo.setCourseId(course.courseId);
 		queryRelationPo.setTclassId(tclass.tclassId);
 		queryRelationPo.setScheduleId(schedule.scheduleId);
-		RelationPo relationPo = relationService.selectByCombinedId(queryRelationPo).get(0);
+		RelationPo relationPo = relationService.select(queryRelationPo).get(0);
 		Integer periodNum = selectByRelationId(relationPo.getRelationId()).getPeriodNum();
 
 		ArrangementPo queryArrangementPo = new ArrangementPo();

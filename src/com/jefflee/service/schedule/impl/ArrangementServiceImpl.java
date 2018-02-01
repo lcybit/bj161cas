@@ -8,14 +8,16 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Tclass;
-import com.jefflee.entity.schedule.Arrangement;
-import com.jefflee.entity.schedule.Day;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ArrangementMapper;
 import com.jefflee.po.information.PeriodPo;
 import com.jefflee.po.schedule.ArrangementPo;
+import com.jefflee.po.schedule.RelationPo;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.schedule.ArrangementService;
+import com.jefflee.service.schedule.RelationService;
+import com.jefflee.view.ArrangementView;
+import com.jefflee.view.DayView;
 
 @Service("arrangementService")
 public class ArrangementServiceImpl implements ArrangementService {
@@ -25,6 +27,9 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Resource(name = "periodService")
 	private PeriodService periodService;
+
+	@Resource(name = "relationService")
+	private RelationService relationService;
 
 	@Override
 	public String insert(ArrangementPo arrangementPo) {
@@ -83,25 +88,61 @@ public class ArrangementServiceImpl implements ArrangementService {
 	}
 
 	@Override
-	public List<Day> gnrDayList(Schedule schedule, Tclass tclass) {
-		List<Day> dayList = new ArrayList<Day>();
+	public List<DayView> gnrDayViewList(Schedule schedule, Tclass tclass) {
+		List<DayView> dayViewList = new ArrayList<DayView>();
 		for (int i = 0; i < schedule.days; i++) {
-			dayList.add(gnrDay(schedule, tclass, i + 1));
+			dayViewList.add(gnrDayView(schedule, tclass, i + 1));
 		}
-		return dayList;
+		return dayViewList;
 	}
 
-	private Day gnrDay(Schedule schedule, Tclass tclass, Integer dayOfWeek) {
+	private DayView gnrDayView(Schedule schedule, Tclass tclass, Integer dayOfWeek) {
 		Integer periodPerDay = schedule.forenoon + schedule.afternoon + schedule.evening;
-		List<Arrangement> arrangementList = new ArrayList<Arrangement>();
+		DayView dayView = new DayView();
+		dayView.setArrangementViewList(gnrArrangementViewList(schedule, tclass, dayOfWeek, periodPerDay));
+		return dayView;
+	}
+
+	private List<ArrangementView> gnrArrangementViewList(Schedule schedule, Tclass tclass, Integer dayOfWeek,
+			Integer periodPerDay) {
+		List<ArrangementView> arrangementViewList = new ArrayList<ArrangementView>();
 		for (int i = 0; i < periodPerDay; i++) {
 			Integer orderOfDay = i + 1;
-			PeriodPo queryPeriodPo = new PeriodPo();
-			queryPeriodPo.setOrderOfDay(orderOfDay);
-			queryPeriodPo.setDayOfWeek(dayOfWeek);
-			PeriodPo periodPo = periodService.select(queryPeriodPo).get(0);
-
+			arrangementViewList.add(gnrArrangementView(schedule, tclass, dayOfWeek, orderOfDay));
 		}
-		return null;
+		return arrangementViewList;
+	}
+
+	private ArrangementView gnrArrangementView(Schedule schedule, Tclass tclass, Integer dayOfWeek,
+			Integer orderOfDay) {
+		ArrangementView arrangementView = new ArrangementView();
+
+		PeriodPo periodPo = periodService.selectByOrder(dayOfWeek, orderOfDay);
+		arrangementView.setPeriodId(periodPo.getPeriodId());
+
+		RelationPo queryRelationPo = new RelationPo();
+		queryRelationPo.setScheduleId(schedule.scheduleId);
+		queryRelationPo.setTclassId(tclass.tclassId);
+		List<RelationPo> relationPoList = relationService.select(queryRelationPo);
+
+		ArrangementPo queryArrangementPo = new ArrangementPo();
+		queryArrangementPo.setPeriodId(periodPo.getPeriodId());
+		queryArrangementPo.setArranged(1);
+		List<ArrangementPo> arrangementPoList = arrangementMapper.select(queryArrangementPo);
+		for (RelationPo relationPo : relationPoList) {
+			for (ArrangementPo arrangementPo : arrangementPoList) {
+				if (relationPo.getRelationId().equals(arrangementPo.getRelationId())) {
+					arrangementView.setArrangementId(arrangementPo.getArrangementId());
+					arrangementView.setCourseId(relationPo.getCourseId());
+					arrangementView.setRoomId(relationPo.getRoomId());
+					arrangementView.setTclassId(relationPo.getTclassId());
+					arrangementView.setTeacherId(relationPo.getTeacherId());
+					arrangementView.setArranged(arrangementPo.getArranged());
+					arrangementView.setPriority(arrangementPo.getPriority());
+					break;
+				}
+			}
+		}
+		return arrangementView;
 	}
 }

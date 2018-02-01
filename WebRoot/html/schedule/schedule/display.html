@@ -11,10 +11,13 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-    <div class="layui-row" id="scheduleGroup">
+    <div class="layui-row" id="scheduleView">
     </div>
   </div>
-  <script id="tmpl-singleSchedule" type="text/x-jsrender">
+  <script id="tmpl-scheduleView" type="text/x-jsrender">
+    {{for weekViewList tmpl="tmpl-weekView" /}}
+  </script>
+  <script id="tmpl-weekView" type="text/x-jsrender">
     <div class="layui-col-md3">
       <table class="layui-table" lay-size="sm">
         <tbody>
@@ -33,49 +36,36 @@
             <td>6</td>
             <td>7</td>
           </tr>
-			{{for week tmpl="#tmpl-singleDay"/}}
+			{{for dayViewList tmpl="#tmpl-dayView"/}}
         </tbody>
       </table>
     </div>
   </script>
-  <script id="tmpl-singleDay" type="text/x-jsrender">
+  <script id="tmpl-dayView" type="text/x-jsrender">
     <tr>
-      <td>{{:weekName}}</td>
-      {{for day tmpl="#tmpl-singlePeriod"/}}
+      <td></td>
+      {{for arrangementViewList tmpl="#tmpl-arrangementView"/}}
     </tr>
   </script>
-  <script id="tmpl-singlePeriod" type="text/x-jsrender">
-	<td style="cursor:pointer" onclick="alert()">{{:period.courseName}}</td>
+  <script id="tmpl-arrangementView" type="text/x-jsrender">
+	<td id="{{arrangementView.arrangementId}}" style="cursor:pointer" onclick="alert()">{{:arrangementView.courseId}}</td>
   </script>
   <script>
     $(document).ready(function() {
-      var weekName = ['一','二','三','四','五'];
-      var period = {'courseName':'语'};
-      var day = [];
-      var week = [];
-      for (var i=0;i<8;i++){
-      	day.push({'period':period});
-      }
-      for (var i=0;i<5;i++){
-      	week.push({'day':day,'weekName':weekName[i]});
-      }
-      
-      for(var i=0; i<12; i++) {
-        $('#scheduleGroup').append($.templates('#tmpl-singleSchedule').render({'week':week}));
-      }
-    })
-
-    function list() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
       $.ajax({
         async : false,
-        type : 'GET',
-        url : '/teacher/find',
-        success : function(teacherList) {
-          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+        url : '/schedule/schedule/' + scheduleId,
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#schedule').serializeJSON()),
+        success : function(scheduleView) {
+          $.('#scheduleView').append($.templates('#tmpl-scheduleView').render(scheduleView));
         }
       });
-    }
-  
+    })
+
   </script>
 </body>
 

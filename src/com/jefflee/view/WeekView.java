@@ -2,21 +2,11 @@ package com.jefflee.view;
 
 import java.util.List;
 
-import com.jefflee.entity.schedule.Day;
-
 public class WeekView {
 	private String type;
 	private Integer typeId;
-	private List<Day> dayList;
+	private List<DayView> dayViewList;
 	private List<CourseView> courseViewList;
-
-	public List<Day> getDayList() {
-		return dayList;
-	}
-
-	public void setDayList(List<Day> dayList) {
-		this.dayList = dayList;
-	}
 
 	public List<CourseView> getCourseViewList() {
 		return courseViewList;
@@ -40,6 +30,14 @@ public class WeekView {
 
 	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
+	}
+
+	public List<DayView> getDayViewList() {
+		return dayViewList;
+	}
+
+	public void setDayViewList(List<DayView> dayViewList) {
+		this.dayViewList = dayViewList;
 	}
 
 }

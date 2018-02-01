@@ -18,6 +18,6 @@ public interface RelationService {
 
 	public List<RelationPo> selectByScheduleId(Integer scheduleId);
 
-	public List<RelationPo> selectByCombinedId(RelationPo relationPo);
+	public List<RelationPo> select(RelationPo relationPo);
 
 }

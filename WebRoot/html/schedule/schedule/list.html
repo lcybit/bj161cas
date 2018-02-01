@@ -44,6 +44,7 @@
       <td>
         <button class="layui-btn" onclick="goModify('{{:scheduleId}}')">修改</button>
         <button class="layui-btn" onclick="remove('{{:scheduleId}}')">删除</button>
+        <button class="layui-btn" onclick="choose('{{:scheduleId}}')">选择</button>
       </td>
     </tr>
   </script>
@@ -99,6 +100,10 @@
         });
     }
 
+    function choose(scheduleId) {
+      sessionStorage.setItem('currentScheduleId', scheduleId)
+    }
+    
     function list() {
       $.ajax({
         async : false,

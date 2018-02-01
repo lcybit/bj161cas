@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Course;
 import com.jefflee.entity.information.Tclass;
-import com.jefflee.entity.schedule.Day;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ScheduleMapper;
 import com.jefflee.po.information.CoursePo;
@@ -21,6 +20,7 @@ import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.ScheduleService;
 import com.jefflee.view.CourseView;
+import com.jefflee.view.DayView;
 import com.jefflee.view.ScheduleView;
 import com.jefflee.view.WeekView;
 
@@ -122,9 +122,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 		weekView.setTypeId(tclass.tclassId);
 
 		// TODO
-		List<Day> dayList = new ArrayList<Day>();
-		dayList = arrangementService.gnrDayList(schedule, tclass);
-		weekView.setDayList(dayList);
+		List<DayView> dayViewList = new ArrayList<DayView>();
+		dayViewList = arrangementService.gnrDayViewList(schedule, tclass);
+		weekView.setDayViewList(dayViewList);
 
 		List<CourseView> courseViewList = new ArrayList<CourseView>();
 		for (Course course : courseList) {

@@ -18,4 +18,6 @@ public interface PeriodService {
 
 	public List<PeriodPo> select(PeriodPo queryPeriodPo);
 
+	public PeriodPo selectByOrder(Integer dayOfWeek, Integer orderOfDay);
+
 }
