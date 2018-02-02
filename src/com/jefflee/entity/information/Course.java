@@ -5,6 +5,8 @@ import com.jefflee.po.information.CoursePo;
 public class Course {
 	public Integer courseId;
 	public String courseNo;
+	public String name;
+	public Integer type;
 
 	public Course() {
 	}

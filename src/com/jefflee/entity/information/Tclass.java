@@ -5,6 +5,12 @@ import com.jefflee.po.information.TclassPo;
 public class Tclass {
 	public Integer tclassId;
 	public String tclassNo;
+	public String name;
+	public Integer type;
+	public Integer year;
+	public Integer level;
+	public Integer semester;
+	public Integer grade;
 
 	public Tclass() {
 	}

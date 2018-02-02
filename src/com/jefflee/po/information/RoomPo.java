@@ -13,6 +13,8 @@ public class RoomPo {
 	private Integer roomId;
 	@OrderBy
 	private String roomNo;
+	private String name;
+	private Integer type;
 
 	public Integer getRoomId() {
 		return roomId;
@@ -29,4 +31,21 @@ public class RoomPo {
 	public void setRoomNo(String roomNo) {
 		this.roomNo = roomNo;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 }

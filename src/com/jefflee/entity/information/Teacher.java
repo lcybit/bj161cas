@@ -5,6 +5,8 @@ import com.jefflee.po.information.TeacherPo;
 public class Teacher {
 	public Integer teacherId;
 	public String teacherNo;
+	public String name;
+	public Integer type;
 
 	public Teacher() {
 	}

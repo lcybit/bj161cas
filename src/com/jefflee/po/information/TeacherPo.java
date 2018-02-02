@@ -13,6 +13,8 @@ public class TeacherPo {
 	private Integer teacherId;
 	@OrderBy
 	private String teacherNo;
+	private String name;
+	private Integer type;
 
 	public Integer getTeacherId() {
 		return teacherId;
@@ -29,4 +31,21 @@ public class TeacherPo {
 	public void setTeacherNo(String teacherNo) {
 		this.teacherNo = teacherNo;
 	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
 }

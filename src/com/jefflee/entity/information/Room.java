@@ -5,6 +5,8 @@ import com.jefflee.po.information.RoomPo;
 public class Room {
 	public Integer roomId;
 	public String roomNo;
+	public String name;
+	public Integer type;
 
 	public Room() {
 	}
