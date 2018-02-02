@@ -9,8 +9,6 @@ public class Tclass {
 	public Integer type;
 	public Integer year;
 	public Integer level;
-	public Integer semester;
-	public Integer grade;
 
 	public Tclass() {
 	}
