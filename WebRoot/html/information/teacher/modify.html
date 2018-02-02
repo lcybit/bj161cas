@@ -13,16 +13,25 @@
 <body>
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="teacher" method="post">
-      <div class="layui-form-item">
-        <label class="layui-form-label">教师ID:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="teacherId" id="teacherId" type="text" />
-        </div>
-      </div>
+      <!-- 隐藏教师ID -->
+          <input class="layui-input" name="teacherId" id="teacherId" type="hidden" />
       <div class="layui-form-item">
         <label class="layui-form-label">教师工号:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="teacherNo" id="teacherNo" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">教师姓名:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="name" id="name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">教师类型:</label>
+        <div class="layui-input-block">
+          <input type="radio" name="type" id="type" value="0" title="男" checked="">
+          <input type="radio" name="type" id="type" value="1" title="女">
         </div>
       </div>
       <div class="layui-form-item">
@@ -43,6 +52,8 @@
         url : '/teacher/find/' + teacherId,
         success : function(teacher) {
           $('#teacherNo').attr('value', teacher.teacherNo);
+          $('#name').attr('value',teacher.name);
+          $(":radio[name='type'][value='"+teacher.type+"']").prop("checked","checked");
         }
       });
       layui.use('form', function() {

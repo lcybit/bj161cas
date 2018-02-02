@@ -16,6 +16,8 @@
         <tr>
           <th>教师ID</th>
           <th>教师工号</th>
+          <th>教师姓名</th>
+          <th>教师类型</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -31,9 +33,11 @@
     <tr>
       <td>{{:teacherId}}</td>
       <td>{{:teacherNo}}</td>
+      <td>{{:name}}</td>
+      <td>{{:type}}</td>
       <td>
-        <button class="layui-btn" onclick="goModify('{{:teacherId}}')">修改</button>
-        <button class="layui-btn" onclick="remove('{{:teacherId}}')">删除</button>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:teacherId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="remove('{{:teacherId}}')">删除</button>
       </td>
     </tr>
   </script>

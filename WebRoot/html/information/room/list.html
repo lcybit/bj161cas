@@ -16,6 +16,8 @@
         <tr>
           <th>教室ID</th>
           <th>教室编号</th>
+          <th>教室名称</th>
+          <th>教室类型</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -31,9 +33,11 @@
     <tr>
       <td>{{:roomId}}</td>
       <td>{{:roomNo}}</td>
+	  <td>{{:name}}</td>
+      <td>{{:type}}</td>
       <td>
-        <button class="layui-btn" onclick="goModify('{{:roomId}}')">修改</button>
-        <button class="layui-btn" onclick="remove('{{:roomId}}')">删除</button>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:roomId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="remove('{{:roomId}}')">删除</button>
       </td>
     </tr>
   </script>

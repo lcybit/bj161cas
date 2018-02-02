@@ -16,6 +16,8 @@
         <tr>
           <th>课程ID</th>
           <th>课程编号</th>
+          <th>课程名称</th>
+          <th>课程类型</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -31,9 +33,11 @@
     <tr>
       <td>{{:courseId}}</td>
       <td>{{:courseNo}}</td>
+      <td>{{:name}}</td>
+      <td>{{:type}}</td>
       <td>
-        <button class="layui-btn" onclick="goModify('{{:courseId}}')">修改</button>
-        <button class="layui-btn" onclick="remove('{{:courseId}}')">删除</button>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:courseId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="remove('{{:courseId}}')">删除</button>
       </td>
     </tr>
   </script>
