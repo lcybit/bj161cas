@@ -1,6 +1,5 @@
 package com.jefflee.service.schedule.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -13,10 +12,8 @@ import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.PlanMapper;
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.po.schedule.PlanPo;
-import com.jefflee.po.schedule.RelationPo;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
-import com.jefflee.service.schedule.RelationService;
 import com.jefflee.view.CourseView;
 
 @Service("planService")
@@ -25,8 +22,6 @@ public class PlanServiceImpl implements PlanService {
 	@Resource(name = "planMapper")
 	private PlanMapper planMapper;
 
-	@Resource(name = "relationService")
-	private RelationService relationService;
 	@Resource(name = "arrangementService")
 	private ArrangementService arrangementService;
 
@@ -70,19 +65,9 @@ public class PlanServiceImpl implements PlanService {
 	// TODO
 	@Override
 	public List<PlanPo> selectByScheduleId(Integer scheduleId) {
-		List<PlanPo> planPoList = new ArrayList<PlanPo>();
-		List<RelationPo> relationPoList = relationService.selectByScheduleId(scheduleId);
-		for (RelationPo relation : relationPoList) {
-			planPoList.add(selectByRelationId(relation.getRelationId()));
-		}
-		return planPoList;
-	}
-
-	@Override
-	public PlanPo selectByRelationId(Integer relationId) {
-		PlanPo queryPlanPo = new PlanPo();
-		queryPlanPo.setRelationId(relationId);
-		return planMapper.selectOne(queryPlanPo);
+		PlanPo selectPlanPo = new PlanPo();
+		selectPlanPo.setScheduleId(scheduleId);
+		return planMapper.select(selectPlanPo);
 	}
 
 	// TODO 待改进
@@ -91,17 +76,18 @@ public class PlanServiceImpl implements PlanService {
 		CourseView courseView = new CourseView();
 		courseView.setCourse(course);
 
-		RelationPo queryRelationPo = new RelationPo();
-		queryRelationPo.setCourseId(course.courseId);
-		queryRelationPo.setTclassId(tclass.tclassId);
-		queryRelationPo.setScheduleId(schedule.scheduleId);
-		RelationPo relationPo = relationService.select(queryRelationPo).get(0);
-		Integer periodNum = selectByRelationId(relationPo.getRelationId()).getPeriodNum();
+		PlanPo selectPlanPo = new PlanPo();
+		selectPlanPo.setScheduleId(schedule.scheduleId);
+		selectPlanPo.setCourseId(course.courseId);
+		selectPlanPo.setTclassId(tclass.tclassId);
+		Integer periodNum = planMapper.selectOne(selectPlanPo).getPeriodNum();
 
-		ArrangementPo queryArrangementPo = new ArrangementPo();
-		queryArrangementPo.setArranged(1);
-		queryArrangementPo.setRelationId(relationPo.getRelationId());
-		Integer arrangedNum = arrangementService.selectCount(queryArrangementPo);
+		ArrangementPo selectArrangementPo = new ArrangementPo();
+		selectArrangementPo.setArranged(1);
+		selectArrangementPo.setScheduleId(schedule.scheduleId);
+		selectArrangementPo.setCourseId(course.courseId);
+		selectArrangementPo.setTclassId(tclass.tclassId);
+		Integer arrangedNum = arrangementService.selectCount(selectArrangementPo);
 
 		courseView.setUnArrangedNum(periodNum - arrangedNum);
 

@@ -2,7 +2,6 @@ package com.jefflee.service.schedule.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -10,13 +9,12 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Period;
 import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ArrangementMapper;
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.schedule.ArrangementService;
-import com.jefflee.service.schedule.RelationService;
-import com.jefflee.view.ArrangementView;
 import com.jefflee.view.DayView;
 
 @Service("arrangementService")
@@ -27,9 +25,6 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Resource(name = "periodService")
 	private PeriodService periodService;
-
-	@Resource(name = "relationService")
-	private RelationService relationService;
 
 	@Override
 	public Integer insert(ArrangementPo arrangementPo) {
@@ -75,16 +70,9 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public List<ArrangementPo> selectByPeriodId(Integer periodId) {
-		ArrangementPo queryArrangementPo = new ArrangementPo();
-		queryArrangementPo.setPeriodId(periodId);
-		return arrangementMapper.select(queryArrangementPo);
-	}
-
-	@Override
-	public List<ArrangementPo> selectByRelationId(Integer relationId) {
-		ArrangementPo queryArrangementPo = new ArrangementPo();
-		queryArrangementPo.setRelationId(relationId);
-		return arrangementMapper.select(queryArrangementPo);
+		ArrangementPo selectArrangementPo = new ArrangementPo();
+		selectArrangementPo.setPeriodId(periodId);
+		return arrangementMapper.select(selectArrangementPo);
 	}
 
 	@Override
@@ -99,32 +87,30 @@ public class ArrangementServiceImpl implements ArrangementService {
 	private DayView gnrDayView(Schedule schedule, Tclass tclass, Integer dayOfWeek) {
 		Integer periodPerDay = schedule.forenoon + schedule.afternoon + schedule.evening;
 		DayView dayView = new DayView();
-		dayView.setArrangementViewList(gnrArrangementViewList(schedule, tclass, dayOfWeek, periodPerDay));
+		dayView.setArrangementList(selectArrangementList(schedule, tclass, dayOfWeek, periodPerDay));
 		return dayView;
 	}
 
-	private List<ArrangementView> gnrArrangementViewList(Schedule schedule, Tclass tclass, Integer dayOfWeek,
+	private List<Arrangement> selectArrangementList(Schedule schedule, Tclass tclass, Integer dayOfWeek,
 			Integer periodPerDay) {
-		List<ArrangementView> arrangementViewList = new ArrayList<ArrangementView>();
+		List<Arrangement> arrangementList = new ArrayList<Arrangement>();
 		for (int i = 0; i < periodPerDay; i++) {
 			Integer orderOfDay = i + 1;
-			arrangementViewList.add(gnrArrangementView(schedule, tclass, dayOfWeek, orderOfDay));
+			Period period = new Period(periodService.selectByOrder(dayOfWeek, orderOfDay));
+			arrangementList.add(selectArrangementByPeriodTclass(schedule, period, tclass));
 		}
-		return arrangementViewList;
+		return arrangementList;
 	}
 
-	private ArrangementView gnrArrangementView(Schedule schedule, Tclass tclass, Integer dayOfWeek,
-			Integer orderOfDay) {
-		List<ArrangementView> arrangementViewList = arrangementMapper
-				.gnrArrangementViewListByScheduleId(schedule.scheduleId);
-		for (ArrangementView arrangementView : arrangementViewList) {
-			Period period = arrangementView.getPeriod();
-			if (period.dayOfWeek == dayOfWeek && period.orderOfDay == orderOfDay
-					&& arrangementView.getTclass().tclassId == tclass.tclassId && arrangementView.getArranged() == 1) {
-				return arrangementView;
+	private Arrangement selectArrangementByPeriodTclass(Schedule schedule, Period period, Tclass tclass) {
+		List<Arrangement> arrangementList = arrangementMapper.selectEntityByScheduleId(schedule.scheduleId);
+		for (Arrangement arrangement : arrangementList) {
+			if (arrangement.period.periodId == period.periodId && arrangement.tclass.tclassId == tclass.tclassId
+					&& arrangement.arranged == 1) {
+				return arrangement;
 			}
 		}
-		return new ArrangementView();
+		return new Arrangement();
 	}
 
 	@Override
@@ -136,25 +122,17 @@ public class ArrangementServiceImpl implements ArrangementService {
 	}
 
 	@Override
-	public void excuteArrangement(Map<String, String> view) {
-		Integer arrangementId = null;
-		List<ArrangementView> arrangementViewList = arrangementMapper
-				.gnrArrangementViewListByScheduleId(Integer.parseInt(view.get("currentScheduleId")));
-		for (ArrangementView arrangementView : arrangementViewList) {
-			if (view.get("chosenPeriodId").equals(arrangementView.getPeriod().periodId.toString())
-					&& view.get("chosenTclassId").equals(arrangementView.getTclass().tclassId.toString())
-					&& view.get("chosenCourse").equals(arrangementView.getCourse().courseId.toString())) {
-				arrangementId = arrangementView.getArrangementId();
-			}
+	public void excuteArrangement(ArrangementPo arrangementPo) {
+		List<ArrangementPo> updateArrangementPoList = arrangementMapper.select(arrangementPo);
+		for (ArrangementPo updateArrangementPo : updateArrangementPoList) {
+			updateArrangementPo.setArranged(1);
+			arrangementMapper.updateByPrimaryKeySelective(updateArrangementPo);
 		}
-		ArrangementPo updateArrangementPo = arrangementMapper.selectByPrimaryKey(arrangementId);
-		updateArrangementPo.setArranged(1);
-		arrangementMapper.updateByPrimaryKeySelective(updateArrangementPo);
 	}
 
 	@Override
-	public ArrangementView gnrArrangementViewById(Integer arrangementId) {
-		return arrangementMapper.gnrArrangementViewById(arrangementId);
+	public Arrangement selectArrangementById(Integer arrangementId) {
+		return arrangementMapper.selectEntityById(arrangementId);
 	}
 
 }

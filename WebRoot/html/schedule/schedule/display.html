@@ -15,29 +15,29 @@
     </div>
   </div>
   <script id="tmpl-scheduleView" type="text/x-jsrender">
-    <form class="layui-form layui-form-pane" id="chosenArrangementView" method="get">
+    <form class="layui-form layui-form-pane" id="arrangement" method="get">
       <div class="layui-form-item">
         <label class="layui-form-label">当前课表ID:</label>
 		<div class="layui-input-block">
-          <input class="layui-input" type="text" name="currentScheduleId" id="currentScheduleId">
+          <input class="layui-input" type="text" name="scheduleId" id="currentScheduleId">
         </div>
       </div>
       <div class="layui-form-item">
         <label class="layui-form-label">选中课时ID:</label>
 		<div class="layui-input-block">
-          <input class="layui-input" type="text" name="chosenPeriodId" id="chosenPeriodId">
+          <input class="layui-input" type="text" name="periodId" id="chosenPeriodId">
         </div>
       </div>
       <div class="layui-form-item">
         <label class="layui-form-label">选中班级ID:</label>
 		<div class="layui-input-block">
-          <input class="layui-input" type="text" name="chosenTclassId" id="chosenTclassId">
+          <input class="layui-input" type="text" name="tclassId" id="chosenTclassId">
         </div>
       </div>
       <div class="layui-form-item">
         <label class="layui-form-label">选中课程ID:</label>
 		<div class="layui-input-block">
-          <input class="layui-input" type="text" name="chosenCourseId" id="chosenCourseId">
+          <input class="layui-input" type="text" name="courseId" id="chosenCourseId">
         </div>
       </div>
       <div class="layui-form-item">
@@ -50,7 +50,7 @@
     {{for weekViewList tmpl="#tmpl-weekView" /}}
   </script>
   <script id="tmpl-course" type="text/x-jsrender">
-    <input type="radio" name="chosenCourse" id="{{:courseId}}" value="{{:courseId}}" title="{{:courseNo}}">
+    <input type="radio" name="chosenCourse" value="{{:courseId}}" title="{{:courseNo}}">
   </script>
   <script id="tmpl-weekView" type="text/x-jsrender">
     <div class="layui-col-md3">
@@ -84,14 +84,14 @@
   <script id="tmpl-dayView" type="text/x-jsrender">
     <tr>
       <td>{{:#getIndex() +1}}</td>
-      {{for arrangementViewList tmpl="#tmpl-arrangementView" /}}
+      {{for arrangementList tmpl="#tmpl-arrangement" /}}
     </tr>
+  </script>
+  <script id="tmpl-arrangement" type="text/x-jsrender">
+	<td id="{{:arrangementId}}" style="cursor:pointer" onclick="clickTable({{:arrangementId}})">{{:course.courseNo}}</td>
   </script>
   <script id="tmpl-courseView" type="text/x-jsrender">
     <td>{{:course.courseNo+unArrangedNum}}</td>
-  </script>
-  <script id="tmpl-arrangementView" type="text/x-jsrender">
-	<td id="{{:arrangementId}}" style="cursor:pointer" onclick="clickTable({{:arrangementId}})">{{:course.courseNo}}</td>
   </script>
   <script>
     $(document).ready(function() {
@@ -138,11 +138,9 @@
         type : 'POST',
         dataType : 'json',
         contentType : 'application/json',
-        data : JSON.stringify($('#chosenArrangementView').serializeJSON()),
-        success : function(scheduleId) {
-          var index = parent.layer.getFrameIndex(window.name);
-          parent.layer.close(index);
-          parent.list();
+        data : JSON.stringify($('#arrangement').serializeJSON()),
+        success : function(result) {
+          display();
         }
       });      
     }
@@ -150,13 +148,13 @@
     function fetch(arrangementId) {
       $.ajax({
         async : false,
-        url : '/arrangement/findView/' + arrangementId,
+        url : '/arrangement/find/' + arrangementId,
         type : 'GET',
-        success : function(view) {
-          $('#chosenPeriodId').attr('value', view.period.periodId);
-          $('#chosenTclassId').attr('value', view.tclass.tclassId);
-          $('#chosenCourseId').attr('value', view.course.courseId);
-          $('[name="chosenCourse"][value="'+view.course.courseId+'"]').prop('checked', true);
+        success : function(arrangement) {
+          $('#chosenPeriodId').attr('value', arrangement.periodId);
+          $('#chosenTclassId').attr('value', arrangement.tclassId);
+          $('#chosenCourseId').attr('value', arrangement.courseId);
+          $('[name="chosenCourse"][value="'+arrangement.courseId+'"]').prop('checked', true);
           layui.form.render();
         }      
       });

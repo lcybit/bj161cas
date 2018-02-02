@@ -2,14 +2,16 @@ package com.jefflee.view;
 
 import java.util.List;
 
-public class DayView {
-	private List<ArrangementView> arrangementViewList;
+import com.jefflee.entity.schedule.Arrangement;
 
-	public List<ArrangementView> getArrangementViewList() {
-		return arrangementViewList;
+public class DayView {
+	private List<Arrangement> arrangementList;
+
+	public List<Arrangement> getArrangementList() {
+		return arrangementList;
 	}
 
-	public void setArrangementViewList(List<ArrangementView> arrangementViewList) {
-		this.arrangementViewList = arrangementViewList;
+	public void setArrangementList(List<Arrangement> arrangementList) {
+		this.arrangementList = arrangementList;
 	}
 }

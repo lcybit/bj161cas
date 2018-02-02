@@ -22,8 +22,6 @@ public interface PlanService {
 
 	public List<PlanPo> selectByScheduleId(Integer scheduleId);
 
-	public PlanPo selectByRelationId(Integer relationId);
-
 	public CourseView gnrCourseView(Schedule schedule, Course course, Tclass tclass);
 
 }
