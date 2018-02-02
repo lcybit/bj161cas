@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.schedule.ArrangementService;
+import com.jefflee.view.ArrangementView;
 
 @RestController
 @RequestMapping(value = "/arrangement")
@@ -62,4 +63,24 @@ public class ArrangementController {
 		return result;
 	}
 
+	@RequestMapping(value = "/arrange", method = RequestMethod.POST)
+	public Map<String, String> arrange(@RequestBody Map<String, String> arrangementView) {
+		Map<String, String> result = new HashMap<String, String>();
+		arrangementService.excuteArrangement(arrangementView);
+		result.put("done", "true");
+		return result;
+	}
+
+	@RequestMapping(value = "/cancel/{arrangementId}", method = RequestMethod.GET)
+	public Map<String, String> cancel(@PathVariable("arrangementId") Integer arrangementId) {
+		Map<String, String> result = new HashMap<String, String>();
+		arrangementService.cancelArrangement(arrangementId);
+		result.put("done", "true");
+		return result;
+	}
+
+	@RequestMapping(value = "/findView/{arrangementId}", method = RequestMethod.GET)
+	public ArrangementView findView(@PathVariable("arrangementId") Integer arrangementId) {
+		return arrangementService.gnrArrangementViewById(arrangementId);
+	}
 }

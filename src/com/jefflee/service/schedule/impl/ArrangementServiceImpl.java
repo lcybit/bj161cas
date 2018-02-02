@@ -2,17 +2,17 @@ package com.jefflee.service.schedule.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jefflee.entity.information.Period;
 import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ArrangementMapper;
-import com.jefflee.po.information.PeriodPo;
 import com.jefflee.po.schedule.ArrangementPo;
-import com.jefflee.po.schedule.RelationPo;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.RelationService;
@@ -115,34 +115,46 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	private ArrangementView gnrArrangementView(Schedule schedule, Tclass tclass, Integer dayOfWeek,
 			Integer orderOfDay) {
-		ArrangementView arrangementView = new ArrangementView();
-
-		PeriodPo periodPo = periodService.selectByOrder(dayOfWeek, orderOfDay);
-		arrangementView.setPeriodId(periodPo.getPeriodId());
-
-		RelationPo queryRelationPo = new RelationPo();
-		queryRelationPo.setScheduleId(schedule.scheduleId);
-		queryRelationPo.setTclassId(tclass.tclassId);
-		List<RelationPo> relationPoList = relationService.select(queryRelationPo);
-
-		ArrangementPo queryArrangementPo = new ArrangementPo();
-		queryArrangementPo.setPeriodId(periodPo.getPeriodId());
-		queryArrangementPo.setArranged(1);
-		List<ArrangementPo> arrangementPoList = arrangementMapper.select(queryArrangementPo);
-		for (RelationPo relationPo : relationPoList) {
-			for (ArrangementPo arrangementPo : arrangementPoList) {
-				if (relationPo.getRelationId().equals(arrangementPo.getRelationId())) {
-					arrangementView.setArrangementId(arrangementPo.getArrangementId());
-					arrangementView.setCourseId(relationPo.getCourseId());
-					arrangementView.setRoomId(relationPo.getRoomId());
-					arrangementView.setTclassId(relationPo.getTclassId());
-					arrangementView.setTeacherId(relationPo.getTeacherId());
-					arrangementView.setArranged(arrangementPo.getArranged());
-					arrangementView.setPriority(arrangementPo.getPriority());
-					break;
-				}
+		List<ArrangementView> arrangementViewList = arrangementMapper
+				.gnrArrangementViewListByScheduleId(schedule.scheduleId);
+		for (ArrangementView arrangementView : arrangementViewList) {
+			Period period = arrangementView.getPeriod();
+			if (period.dayOfWeek == dayOfWeek && period.orderOfDay == orderOfDay
+					&& arrangementView.getTclass().tclassId == tclass.tclassId && arrangementView.getArranged() == 1) {
+				return arrangementView;
 			}
 		}
-		return arrangementView;
+		return new ArrangementView();
 	}
+
+	@Override
+	public void cancelArrangement(Integer arrangementId) {
+		ArrangementPo updateArrangementPo = new ArrangementPo();
+		updateArrangementPo.setArrangementId(arrangementId);
+		updateArrangementPo.setArranged(0);
+		arrangementMapper.updateByPrimaryKeySelective(updateArrangementPo);
+	}
+
+	@Override
+	public void excuteArrangement(Map<String, String> view) {
+		Integer arrangementId = null;
+		List<ArrangementView> arrangementViewList = arrangementMapper
+				.gnrArrangementViewListByScheduleId(Integer.parseInt(view.get("currentScheduleId")));
+		for (ArrangementView arrangementView : arrangementViewList) {
+			if (view.get("chosenPeriodId").equals(arrangementView.getPeriod().periodId.toString())
+					&& view.get("chosenTclassId").equals(arrangementView.getTclass().tclassId.toString())
+					&& view.get("chosenCourse").equals(arrangementView.getCourse().courseId.toString())) {
+				arrangementId = arrangementView.getArrangementId();
+			}
+		}
+		ArrangementPo updateArrangementPo = arrangementMapper.selectByPrimaryKey(arrangementId);
+		updateArrangementPo.setArranged(1);
+		arrangementMapper.updateByPrimaryKeySelective(updateArrangementPo);
+	}
+
+	@Override
+	public ArrangementView gnrArrangementViewById(Integer arrangementId) {
+		return arrangementMapper.gnrArrangementViewById(arrangementId);
+	}
+
 }

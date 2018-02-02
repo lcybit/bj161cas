@@ -15,12 +15,42 @@
     </div>
   </div>
   <script id="tmpl-scheduleView" type="text/x-jsrender">
-    <table class="layui-table" lay=size="sm">
-      <tr>
-        {{for courseList tmpl="#tmpl-course" /}}
-      </tr>
-    </table>
+    <form class="layui-form layui-form-pane" id="chosenArrangementView" method="get">
+      <div class="layui-form-item">
+        <label class="layui-form-label">当前课表ID:</label>
+		<div class="layui-input-block">
+          <input class="layui-input" type="text" name="currentScheduleId" id="currentScheduleId">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">选中课时ID:</label>
+		<div class="layui-input-block">
+          <input class="layui-input" type="text" name="chosenPeriodId" id="chosenPeriodId">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">选中班级ID:</label>
+		<div class="layui-input-block">
+          <input class="layui-input" type="text" name="chosenTclassId" id="chosenTclassId">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">选中课程ID:</label>
+		<div class="layui-input-block">
+          <input class="layui-input" type="text" name="chosenCourseId" id="chosenCourseId">
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">选中课程:</label>
+        <div class="layui-input-block">
+          {{for courseList tmpl="#tmpl-course" /}}
+        </div>
+      </div>
+    </form>
     {{for weekViewList tmpl="#tmpl-weekView" /}}
+  </script>
+  <script id="tmpl-course" type="text/x-jsrender">
+    <input type="radio" name="chosenCourse" id="{{:courseId}}" value="{{:courseId}}" title="{{:courseNo}}">
   </script>
   <script id="tmpl-weekView" type="text/x-jsrender">
     <div class="layui-col-md3">
@@ -51,9 +81,6 @@
       </table>
     </div>
   </script>
-  <script id="tmpl-course" type="text/x-jsrender">
-    <td>{{:courseNo}}
-  </script>
   <script id="tmpl-dayView" type="text/x-jsrender">
     <tr>
       <td>{{:#getIndex() +1}}</td>
@@ -64,20 +91,87 @@
     <td>{{:course.courseNo+unArrangedNum}}</td>
   </script>
   <script id="tmpl-arrangementView" type="text/x-jsrender">
-	<td id="{{:arrangementId}}" style="cursor:pointer" onclick="alert()">{{:periodId}}</td>
+	<td id="{{:arrangementId}}" style="cursor:pointer" onclick="clickTable({{:arrangementId}})">{{:course.courseNo}}</td>
   </script>
   <script>
     $(document).ready(function() {
+      display();
+    })
+    
+    function display() {
       var scheduleId = sessionStorage.getItem('currentScheduleId');
       $.ajax({
         async : false,
         url : '/schedule/display/' + scheduleId,
         type : 'GET',
         success : function(scheduleView) {
-          $('#scheduleView').append($.templates('#tmpl-scheduleView').render(scheduleView));
+          $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
         }
       });
-    })
+      layui.form.render();
+    }
+    
+    function clickTable(arrangementId) {
+      var courseId = $('#chosenCourseId').val();
+      if(arrangementId == null) {
+        if(courseId == '') {
+          return;
+        } else {
+          arrange();
+        }
+      } else {
+        if(courseId == '') {
+          cancel(arrangementId);
+          fetch(arrangementId);
+        } else {
+          cancel(arrangementId);
+          arrange();
+          fetch(arrangementId);
+        }
+      }
+    }
+    
+    function arrange() {
+      $.ajax({
+        async : false,
+        url : '/arrangement/arrange',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#chosenArrangementView').serializeJSON()),
+        success : function(scheduleId) {
+          var index = parent.layer.getFrameIndex(window.name);
+          parent.layer.close(index);
+          parent.list();
+        }
+      });      
+    }
+    
+    function fetch(arrangementId) {
+      $.ajax({
+        async : false,
+        url : '/arrangement/findView/' + arrangementId,
+        type : 'GET',
+        success : function(view) {
+          $('#chosenPeriodId').attr('value', view.period.periodId);
+          $('#chosenTclassId').attr('value', view.tclass.tclassId);
+          $('#chosenCourseId').attr('value', view.course.courseId);
+          $('[name="chosenCourse"][value="'+view.course.courseId+'"]').prop('checked', true);
+          layui.form.render();
+        }      
+      });
+    }
+    
+    function cancel(arrangementId) {
+      $.ajax({
+        async : false,
+        url : '/arrangement/cancel/' + arrangementId,
+        type : 'GET',
+        success : function(result) {
+          display();
+        }
+      })
+    }
 
   </script>
 </body>
