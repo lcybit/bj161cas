@@ -67,9 +67,13 @@
         layui.laydate.render({
           elem: '#year'
           ,type: 'year'
-          ,change: function(value){
-            $('#year').attr('value',value);
-            $('.layui-laydate').remove(0);
+          ,change: function(value){            
+            $('.layui-laydate-content').click(function(){              
+              if($(this).attr('class') == 'layui-laydate-content'){
+                $('#year').attr('value',value);
+                $('.layui-laydate').remove(0);
+              }
+            })          
           }
         });
       });      
