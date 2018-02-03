@@ -78,4 +78,11 @@ public class ArrangementController {
 		return result;
 	}
 
+	@RequestMapping(value = "/check/schedule/{schedultId}/course/{courseId}", method = RequestMethod.GET)
+	public Map<String, Object> checkConfliction(@PathVariable("scheduleId") Integer scheduleId,
+			@PathVariable("courseId") Integer courseId) {
+		Map<String, Object> conflictionLists = arrangementService.gnrConflictionLists(scheduleId, courseId);
+		return conflictionLists;
+	}
+
 }

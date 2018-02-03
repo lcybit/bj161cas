@@ -6,15 +6,10 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.entity.information.Course;
-import com.jefflee.entity.information.Tclass;
-import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.PlanMapper;
-import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
-import com.jefflee.view.CourseView;
 
 @Service("planService")
 public class PlanServiceImpl implements PlanService {
@@ -70,27 +65,4 @@ public class PlanServiceImpl implements PlanService {
 		return planMapper.select(selectPlanPo);
 	}
 
-	// TODO 待改进
-	@Override
-	public CourseView gnrCourseView(Schedule schedule, Course course, Tclass tclass) {
-		CourseView courseView = new CourseView();
-		courseView.setCourse(course);
-
-		PlanPo selectPlanPo = new PlanPo();
-		selectPlanPo.setScheduleId(schedule.scheduleId);
-		selectPlanPo.setCourseId(course.courseId);
-		selectPlanPo.setTclassId(tclass.tclassId);
-		Integer periodNum = planMapper.selectOne(selectPlanPo).getPeriodNum();
-
-		ArrangementPo selectArrangementPo = new ArrangementPo();
-		selectArrangementPo.setArranged(1);
-		selectArrangementPo.setScheduleId(schedule.scheduleId);
-		selectArrangementPo.setCourseId(course.courseId);
-		selectArrangementPo.setTclassId(tclass.tclassId);
-		Integer arrangedNum = arrangementService.selectCount(selectArrangementPo);
-
-		courseView.setUnArrangedNum(periodNum - arrangedNum);
-
-		return courseView;
-	}
 }

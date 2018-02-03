@@ -1,12 +1,14 @@
 package com.jefflee.service.schedule;
 
 import java.util.List;
+import java.util.Map;
 
+import com.jefflee.entity.information.Course;
 import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.po.schedule.ArrangementPo;
-import com.jefflee.view.DayView;
+import com.jefflee.view.WeekView;
 
 public interface ArrangementService {
 
@@ -24,12 +26,14 @@ public interface ArrangementService {
 
 	public List<ArrangementPo> selectByPeriodId(Integer periodId);
 
-	public List<DayView> gnrDayViewList(Schedule schedule, Tclass tclass);
-
 	void cancelArrangement(Integer arrangementId);
 
 	void excuteArrangement(ArrangementPo arrangementPo);
 
 	public Arrangement selectArrangementById(Integer arrangementId);
+
+	public Map<String, Object> gnrConflictionLists(Integer scheduleId, Integer courseId);
+
+	public List<WeekView> gnrWeekViewList(Schedule schedule, List<Course> courseList, List<Tclass> tclassList);
 
 }

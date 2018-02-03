@@ -9,9 +9,10 @@ import javax.persistence.Table;
 @Table(name = "info_course")
 public class CoursePo {
 	@Id
+	// TODO 定好顺序
+	@OrderBy
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer courseId;
-	@OrderBy
 	private String courseNo;
 
 	public Integer getCourseId() {

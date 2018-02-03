@@ -32,6 +32,6 @@ public interface ArrangementMapper extends Mapper<ArrangementPo> {
 			@Result(column = "tclass_id", property = "tclass", one = @One(select = "com.jefflee.mapper.information.TclassMapper.selectEntityById") ),
 			@Result(column = "teacher_id", property = "teacher", one = @One(select = "com.jefflee.mapper.information.TeacherMapper.selectEntityById") ),
 			@Result(column = "arranged", property = "arranged"), @Result(column = "priority", property = "priority") })
-	public List<Arrangement> selectEntityByScheduleId(Integer scheduleId);
+	public List<Arrangement> selectEntityListByScheduleId(Integer scheduleId);
 
 }

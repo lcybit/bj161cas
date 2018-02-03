@@ -50,7 +50,7 @@
     {{for weekViewList tmpl="#tmpl-weekView" /}}
   </script>
   <script id="tmpl-course" type="text/x-jsrender">
-    <input type="radio" name="chosenCourse" value="{{:courseId}}" title="{{:courseNo}}">
+    <input type="radio" name="chosenCourse" value="{{:courseId}}" title="{{:courseNo}}" onclick="alert()">
   </script>
   <script id="tmpl-weekView" type="text/x-jsrender">
     <div class="layui-col-md3">
@@ -84,14 +84,14 @@
   <script id="tmpl-dayView" type="text/x-jsrender">
     <tr>
       <td>{{:#getIndex() +1}}</td>
-      {{for arrangementList tmpl="#tmpl-arrangement" /}}
+      {{for periodViewList tmpl="#tmpl-periodView" /}}
     </tr>
   </script>
-  <script id="tmpl-arrangement" type="text/x-jsrender">
-	<td id="{{:arrangementId}}" style="cursor:pointer" onclick="clickTable({{:arrangementId}})">{{:course.courseNo}}</td>
+  <script id="tmpl-periodView" type="text/x-jsrender">
+	<td id="{{:'period'+periodId+'tclass'+tclassId}}" style="cursor:pointer" onclick="clickTable({{:arrangement.arrangementId}})">{{:arrangement.course.courseNo}}</td>
   </script>
   <script id="tmpl-courseView" type="text/x-jsrender">
-    <td>{{:course.courseNo+unArrangedNum}}</td>
+    <td>{{:course.courseNo+arrangedNum}}</td>
   </script>
   <script>
     $(document).ready(function() {
@@ -170,7 +170,18 @@
         }
       })
     }
-
+    
+    function checkConfliction(scheduleId, courseId) {
+      $.ajsx({
+        async : false,
+        url : '/arrangement/check/schedule/' + scheduleId + '/course/' + courseId,
+        type : 'GET',
+        success : function(conflictionList) {
+          display();
+        }
+      })
+    }
+    
   </script>
 </body>
 

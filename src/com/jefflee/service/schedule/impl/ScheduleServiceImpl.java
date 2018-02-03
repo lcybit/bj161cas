@@ -19,8 +19,6 @@ import com.jefflee.service.information.TclassService;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.ScheduleService;
-import com.jefflee.view.CourseView;
-import com.jefflee.view.DayView;
 import com.jefflee.view.ScheduleView;
 import com.jefflee.view.WeekView;
 
@@ -86,7 +84,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		List<Course> courseList = new ArrayList<Course>();
 		// TODO part of
-		List<CoursePo> coursePoList = courseService.selectAll();
+		List<CoursePo> coursePoList = courseService.selectAll().subList(0, 3);
 		for (CoursePo coursePo : coursePoList) {
 			courseList.add(new Course(coursePo));
 		}
@@ -94,44 +92,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		List<Tclass> tclassList = new ArrayList<Tclass>();
 		// TODO part of
-		List<TclassPo> tclassPoList = tclassService.selectAll();
+		List<TclassPo> tclassPoList = tclassService.selectAll().subList(0, 1);
 		for (TclassPo tclassPo : tclassPoList) {
 			tclassList.add(new Tclass(tclassPo));
 		}
 
-		List<WeekView> weekViewList = gnrWeekViewList(schedule, courseList, tclassList);
+		List<WeekView> weekViewList = arrangementService.gnrWeekViewList(schedule, courseList, tclassList);
 		scheduleView.setWeekViewList(weekViewList);
 
 		return scheduleView;
 	}
 
-	private List<WeekView> gnrWeekViewList(Schedule schedule, List<Course> courseList, List<Tclass> tclassList) {
-		List<WeekView> weekViewList = new ArrayList<WeekView>();
-
-		for (Tclass tclass : tclassList) {
-			weekViewList.add(gnrWeekView(schedule, courseList, tclass));
-		}
-
-		return weekViewList;
-	}
-
-	private WeekView gnrWeekView(Schedule schedule, List<Course> courseList, Tclass tclass) {
-		WeekView weekView = new WeekView();
-
-		weekView.setType("tclass");
-		weekView.setTypeId(tclass.tclassId);
-
-		// TODO
-		List<DayView> dayViewList = new ArrayList<DayView>();
-		dayViewList = arrangementService.gnrDayViewList(schedule, tclass);
-		weekView.setDayViewList(dayViewList);
-
-		List<CourseView> courseViewList = new ArrayList<CourseView>();
-		for (Course course : courseList) {
-			courseViewList.add(planService.gnrCourseView(schedule, course, tclass));
-		}
-		weekView.setCourseViewList(courseViewList);
-
-		return weekView;
-	}
 }
