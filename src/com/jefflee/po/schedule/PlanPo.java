@@ -10,7 +10,11 @@ public class PlanPo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer planId;
-	private Integer relationId;
+	private Integer scheduleId;
+	private Integer courseId;
+	private Integer roomId;
+	private Integer tclassId;
+	private Integer teacherId;
 	private Integer periodNum;
 
 	public Integer getPlanId() {
@@ -21,12 +25,44 @@ public class PlanPo {
 		this.planId = planId;
 	}
 
-	public Integer getRelationId() {
-		return relationId;
+	public Integer getScheduleId() {
+		return scheduleId;
 	}
 
-	public void setRelationId(Integer relationId) {
-		this.relationId = relationId;
+	public void setScheduleId(Integer scheduleId) {
+		this.scheduleId = scheduleId;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	public Integer getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(Integer roomId) {
+		this.roomId = roomId;
+	}
+
+	public Integer getTclassId() {
+		return tclassId;
+	}
+
+	public void setTclassId(Integer tclassId) {
+		this.tclassId = tclassId;
+	}
+
+	public Integer getTeacherId() {
+		return teacherId;
+	}
+
+	public void setTeacherId(Integer teacherId) {
+		this.teacherId = teacherId;
 	}
 
 	public Integer getPeriodNum() {

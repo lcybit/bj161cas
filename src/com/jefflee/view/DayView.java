@@ -3,13 +3,13 @@ package com.jefflee.view;
 import java.util.List;
 
 public class DayView {
-	private List<ArrangementView> arrangementViewList;
+	private List<PeriodView> periodViewList;
 
-	public List<ArrangementView> getArrangementViewList() {
-		return arrangementViewList;
+	public List<PeriodView> getPeriodViewList() {
+		return periodViewList;
 	}
 
-	public void setArrangementViewList(List<ArrangementView> arrangementViewList) {
-		this.arrangementViewList = arrangementViewList;
+	public void setPeriodViewList(List<PeriodView> periodViewList) {
+		this.periodViewList = periodViewList;
 	}
 }

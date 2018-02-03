@@ -39,5 +39,4 @@ public class WeekView {
 	public void setDayViewList(List<DayView> dayViewList) {
 		this.dayViewList = dayViewList;
 	}
-
 }

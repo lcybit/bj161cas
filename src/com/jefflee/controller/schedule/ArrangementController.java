@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.schedule.ArrangementService;
-import com.jefflee.view.ArrangementView;
 
 @RestController
 @RequestMapping(value = "/arrangement")
@@ -64,9 +63,9 @@ public class ArrangementController {
 	}
 
 	@RequestMapping(value = "/arrange", method = RequestMethod.POST)
-	public Map<String, String> arrange(@RequestBody Map<String, String> arrangementView) {
+	public Map<String, String> arrange(@RequestBody ArrangementPo arrangementPo) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.excuteArrangement(arrangementView);
+		arrangementService.excuteArrangement(arrangementPo);
 		result.put("done", "true");
 		return result;
 	}
@@ -79,8 +78,11 @@ public class ArrangementController {
 		return result;
 	}
 
-	@RequestMapping(value = "/findView/{arrangementId}", method = RequestMethod.GET)
-	public ArrangementView findView(@PathVariable("arrangementId") Integer arrangementId) {
-		return arrangementService.gnrArrangementViewById(arrangementId);
+	@RequestMapping(value = "/check/schedule/{schedultId}/course/{courseId}", method = RequestMethod.GET)
+	public Map<String, Object> checkConfliction(@PathVariable("scheduleId") Integer scheduleId,
+			@PathVariable("courseId") Integer courseId) {
+		Map<String, Object> conflictionLists = arrangementService.gnrConflictionLists(scheduleId, courseId);
+		return conflictionLists;
 	}
+
 }

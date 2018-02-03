@@ -4,7 +4,8 @@ import com.jefflee.entity.information.Course;
 
 public class CourseView {
 	private Course course;
-	private Integer unArrangedNum;
+	private Integer periodNum;
+	private Integer arrangedNum;
 
 	public Course getCourse() {
 		return course;
@@ -14,11 +15,19 @@ public class CourseView {
 		this.course = course;
 	}
 
-	public Integer getUnArrangedNum() {
-		return unArrangedNum;
+	public Integer getPeriodNum() {
+		return periodNum;
 	}
 
-	public void setUnArrangedNum(Integer unArrangedNum) {
-		this.unArrangedNum = unArrangedNum;
+	public void setPeriodNum(Integer periodNum) {
+		this.periodNum = periodNum;
+	}
+
+	public Integer getArrangedNum() {
+		return arrangedNum;
+	}
+
+	public void setArrangedNum(Integer arrangedNum) {
+		this.arrangedNum = arrangedNum;
 	}
 }

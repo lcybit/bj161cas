@@ -1,23 +1,15 @@
 package com.jefflee.service.schedule.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import com.jefflee.entity.information.Course;
-import com.jefflee.entity.information.Tclass;
-import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.PlanMapper;
-import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.po.schedule.PlanPo;
-import com.jefflee.po.schedule.RelationPo;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
-import com.jefflee.service.schedule.RelationService;
-import com.jefflee.view.CourseView;
 
 @Service("planService")
 public class PlanServiceImpl implements PlanService {
@@ -25,8 +17,6 @@ public class PlanServiceImpl implements PlanService {
 	@Resource(name = "planMapper")
 	private PlanMapper planMapper;
 
-	@Resource(name = "relationService")
-	private RelationService relationService;
 	@Resource(name = "arrangementService")
 	private ArrangementService arrangementService;
 
@@ -70,41 +60,9 @@ public class PlanServiceImpl implements PlanService {
 	// TODO
 	@Override
 	public List<PlanPo> selectByScheduleId(Integer scheduleId) {
-		List<PlanPo> planPoList = new ArrayList<PlanPo>();
-		List<RelationPo> relationPoList = relationService.selectByScheduleId(scheduleId);
-		for (RelationPo relation : relationPoList) {
-			planPoList.add(selectByRelationId(relation.getRelationId()));
-		}
-		return planPoList;
+		PlanPo selectPlanPo = new PlanPo();
+		selectPlanPo.setScheduleId(scheduleId);
+		return planMapper.select(selectPlanPo);
 	}
 
-	@Override
-	public PlanPo selectByRelationId(Integer relationId) {
-		PlanPo queryPlanPo = new PlanPo();
-		queryPlanPo.setRelationId(relationId);
-		return planMapper.selectOne(queryPlanPo);
-	}
-
-	// TODO 待改进
-	@Override
-	public CourseView gnrCourseView(Schedule schedule, Course course, Tclass tclass) {
-		CourseView courseView = new CourseView();
-		courseView.setCourse(course);
-
-		RelationPo queryRelationPo = new RelationPo();
-		queryRelationPo.setCourseId(course.courseId);
-		queryRelationPo.setTclassId(tclass.tclassId);
-		queryRelationPo.setScheduleId(schedule.scheduleId);
-		RelationPo relationPo = relationService.select(queryRelationPo).get(0);
-		Integer periodNum = selectByRelationId(relationPo.getRelationId()).getPeriodNum();
-
-		ArrangementPo queryArrangementPo = new ArrangementPo();
-		queryArrangementPo.setArranged(1);
-		queryArrangementPo.setRelationId(relationPo.getRelationId());
-		Integer arrangedNum = arrangementService.selectCount(queryArrangementPo);
-
-		courseView.setUnArrangedNum(periodNum - arrangedNum);
-
-		return courseView;
-	}
 }
