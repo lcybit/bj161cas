@@ -15,10 +15,14 @@
       <thead>
         <tr>
           <th>排课ID</th>
+          <th>课表ID</th>
           <th>课时ID</th>
-          <th>教学关系ID</th>
-          <th>是否排课</th>
+          <th>课程ID</th>
+          <th>教室ID</th>
+          <th>班级ID</th>
+          <th>教师ID</th>
           <th>排课优先级</th>
+          <th>是否排课</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -33,10 +37,14 @@
   <script id="tmpl-arrangementList" type="text/x-jsrender">
     <tr>
       <td>{{:arrangementId}}</td>
+      <td>{{:scheduleId}}</td>
       <td>{{:periodId}}</td>
-      <td>{{:relationId}}</td>
-      <td>{{:arranged}}</td>
+      <td>{{:courseId}}</td>
+      <td>{{:roomId}}</td>
+      <td>{{:tclassId}}</td>
+      <td>{{:teacherId}}</td>
       <td>{{:priority}}</td>
+      <td>{{:arranged}}</td>
       <td>
         <button class="layui-btn layui-btn-sm" onclick="goModify('{{:arrangementId}}')">修改</button>
         <button class="layui-btn layui-btn-sm" onclick="remove('{{:arrangementId}}')">删除</button>

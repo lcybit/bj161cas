@@ -15,7 +15,11 @@
       <thead>
         <tr>
           <th>计划课时ID</th>
-          <th>教学关系ID</th>
+          <th>课表ID</th>
+          <th>课程ID</th>
+          <th>教室ID</th>
+          <th>班级ID</th>
+          <th>教师ID</th>
           <th>计划课时数</th>
           <th>操作</th>
         </tr>
@@ -31,10 +35,14 @@
   <script id="tmpl-planList" type="text/x-jsrender">
     <tr>
       <td>{{:planId}}</td>
-      <td>{{:relationId}}</td>
+      <td>{{:scheduleId}}</td>
+      <td>{{:courseId}}</td>
+      <td>{{:roomId}}</td>
+      <td>{{:tclassId}}</td>
+      <td>{{:teacherId}}</td>
       <td>{{:periodNum}}</td>
       <td>
-        <button class="layui-btn layui-btn-sm onclick="goModify('{{:planId}}')">修改</button>
+        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:planId}}')">修改</button>
         <button class="layui-btn layui-btn-sm" onclick="remove('{{:planId}}')">删除</button>
       </td>
     </tr>

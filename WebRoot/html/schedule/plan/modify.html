@@ -16,9 +16,33 @@
       <!-- 隐藏计划课时ID -->        
           <input class="layui-input" name="planId" id="planId" type="hidden" />       
       <div class="layui-form-item">
-        <label class="layui-form-label">教学关系ID:</label>
+        <label class="layui-form-label">课表ID:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="relationId" id="relationId" type="text" />
+          <input class="layui-input" name="scheduleId" id="scheduleId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="courseId" id="courseId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">教室ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="roomId" id="roomId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">班级ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="tclassId" id="tclassId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">教师ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="teacherId" id="teacherId" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
@@ -44,7 +68,11 @@
         type : 'GET',
         url : '/plan/find/' + planId,
         success : function(plan) {
-          $('#relationId').attr('value', plan.relationId);
+          $('#scheduleId').attr('value', plan.scheduleId);
+          $('#courseId').attr('value', plan.courseId);
+          $('#roomId').attr('value', plan.roomId);
+          $('#tclassId').attr('value', plan.tclassId);
+          $('#teacherId').attr('value', plan.teacherId);
           $('#periodNum').attr('value', plan.periodNum);
          }
       });
