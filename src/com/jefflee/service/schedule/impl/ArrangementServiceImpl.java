@@ -239,9 +239,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 		if (first.period.periodId != second.period.periodId) {
 			return false;
 		}
-		if (first.course.courseId == second.course.courseId || first.room.roomId == second.room.roomId
-				|| first.tclass.tclassId == second.tclass.tclassId
-				|| first.teacher.teacherId == second.teacher.teacherId) {
+		if (first.teacher.teacherId == second.teacher.teacherId) {
 			return true;
 		}
 		return false;

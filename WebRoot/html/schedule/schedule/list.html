@@ -30,6 +30,7 @@
     <div class="layui-input-inline">
       <button class="layui-btn" onclick="goBack()">返回</button>
       <button class="layui-btn" onclick="goCreate()">新增</button>
+      <button class="layui-btn" onclick="generate()">生成</button>
     </div>
   </div>
   <script id="tmpl-scheduleList" type="text/x-jsrender">
@@ -114,7 +115,18 @@
         }
       });
     }
-  
+
+    function generate() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/schedule/generate/' + scheduleId,
+        success : function() {
+        }
+      });
+    }
+
     function goBack() {
       jump('html/schedule/schedule/list.html');
     }

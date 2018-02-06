@@ -120,10 +120,10 @@
   
     function clickTable(periodView) {
       $('#chosenPeriodViewId').attr('value', periodView.periodViewId);
-      var courseId = $('#chosenCourseId').attr('value');
+      var chosenCourseId = $('#chosenCourseId').attr('value');
       var scheduleId = $('#currentScheduleId').attr('value');
       var clickedCourseId = periodView.courseId;
-      if (null == courseId || '' == courseId) {
+      if (null == chosenCourseId || '' == chosenCourseId) {
         if (null != clickedCourseId && '' != clickedCourseId) {
           alert("course0click1")
           $('#chosenCourseId').attr('value', periodView.courseId);
@@ -140,7 +140,7 @@
         } else {
           alert("course1click0")
           arrange();
-          checkConflict(scheduleId, clickedCourseId);
+          checkConflict(scheduleId, chosenCourseId);
         }
       }
     }
@@ -180,9 +180,7 @@
         type : 'GET',
         success : function(conflictList) {
           $.each(conflictList, function(index, conflict) {
-            alert(conflict.periodViewId);
-            alert(conflict.conflictValue);
-            $('#' + conflict.periodViewId).addClass(conflict.conflictValue);
+            $('#' + conflict.periodViewId).attr('class', conflict.conflictValue);
           });
         }
       })

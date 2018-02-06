@@ -12,9 +12,13 @@ import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ScheduleMapper;
 import com.jefflee.po.information.CoursePo;
+import com.jefflee.po.information.PeriodPo;
 import com.jefflee.po.information.TclassPo;
+import com.jefflee.po.schedule.ArrangementPo;
+import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.po.schedule.SchedulePo;
 import com.jefflee.service.information.CourseService;
+import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.information.TclassService;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
@@ -33,6 +37,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Resource(name = "arrangementService")
 	private ArrangementService arrangementService;
 
+	@Resource(name = "periodService")
+	private PeriodService periodService;
 	@Resource(name = "courseService")
 	private CourseService courseService;
 	@Resource(name = "tclassService")
@@ -84,7 +90,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		List<Course> courseList = new ArrayList<Course>();
 		// TODO part of
-		List<CoursePo> coursePoList = courseService.selectAll().subList(0, 4);
+		List<CoursePo> coursePoList = courseService.selectAll();
 		for (CoursePo coursePo : coursePoList) {
 			courseList.add(new Course(coursePo));
 		}
@@ -92,7 +98,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		List<Tclass> tclassList = new ArrayList<Tclass>();
 		// TODO part of
-		List<TclassPo> tclassPoList = tclassService.selectAll().subList(0, 2);
+		List<TclassPo> tclassPoList = tclassService.selectAll().subList(0, 8);
 		for (TclassPo tclassPo : tclassPoList) {
 			tclassList.add(new Tclass(tclassPo));
 		}
@@ -101,6 +107,26 @@ public class ScheduleServiceImpl implements ScheduleService {
 		scheduleView.setWeekViewList(weekViewList);
 
 		return scheduleView;
+	}
+
+	@Override
+	public void gnrAllArrangementList(Integer scheduleId) {
+		List<PeriodPo> periodPoList = periodService.selectAll();
+		List<PlanPo> planPoList = planService.selectAll();
+		for (PlanPo planPo : planPoList) {
+			for (PeriodPo periodPo : periodPoList) {
+				ArrangementPo arrangementPo = new ArrangementPo();
+				arrangementPo.setScheduleId(scheduleId);
+				arrangementPo.setPeriodId(periodPo.getPeriodId());
+				arrangementPo.setCourseId(planPo.getCourseId());
+				arrangementPo.setRoomId(planPo.getRoomId());
+				arrangementPo.setTclassId(planPo.getTclassId());
+				arrangementPo.setTeacherId(planPo.getTeacherId());
+				arrangementPo.setArranged(0);
+				arrangementPo.setPriority(2);
+				arrangementService.insert(arrangementPo);
+			}
+		}
 	}
 
 }

@@ -68,4 +68,9 @@ public class ScheduleController {
 		return scheduleService.gnrScheduleView(scheduleId);
 	}
 
+	@RequestMapping(value = "/generate/{scheduleId}", method = RequestMethod.GET)
+	public void generate(@PathVariable("scheduleId") Integer scheduleId) {
+		scheduleService.gnrAllArrangementList(scheduleId);
+	}
+
 }
