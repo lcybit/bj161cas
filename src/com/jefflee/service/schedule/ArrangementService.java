@@ -8,6 +8,7 @@ import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.po.schedule.ArrangementPo;
+import com.jefflee.view.TclassPeriodView;
 import com.jefflee.view.WeekView;
 
 public interface ArrangementService {
@@ -26,13 +27,11 @@ public interface ArrangementService {
 
 	public List<ArrangementPo> selectByPeriodId(Integer periodId);
 
-	void cancelArrangement(Integer arrangementId);
-
-	void excuteArrangement(ArrangementPo arrangementPo);
+	void updateArrangement(TclassPeriodView tclassPeriodView, Integer arranged, Integer prioriry);
 
 	public Arrangement selectArrangementById(Integer arrangementId);
 
-	public Map<String, Object> gnrConflictionLists(Integer scheduleId, Integer courseId);
+	public List<Map<String, String>> gnrConflictMap(Integer scheduleId, Integer courseId);
 
 	public List<WeekView> gnrWeekViewList(Schedule schedule, List<Course> courseList, List<Tclass> tclassList);
 

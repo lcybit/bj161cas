@@ -15,7 +15,8 @@ public interface RoomMapper extends Mapper<RoomPo> {
 
 	@Select("select * from info_room where room_id = #{roomId}")
 	@Results({ @Result(id = true, column = "room_id", property = "roomId"),
-			@Result(column = "room_no", property = "roomNo") })
+			@Result(column = "room_no", property = "roomNo"), @Result(column = "name", property = "name"),
+			@Result(column = "type", property = "type") })
 	public Room selectEntityById(Integer roomId);
 
 }

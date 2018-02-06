@@ -15,7 +15,9 @@ public interface TclassMapper extends Mapper<TclassPo> {
 
 	@Select("select * from info_tclass where tclass_id = #{tclassId}")
 	@Results({ @Result(id = true, column = "tclass_id", property = "tclassId"),
-			@Result(column = "tclass_no", property = "tclassNo") })
+			@Result(column = "tclass_no", property = "tclassNo"), @Result(column = "name", property = "name"),
+			@Result(column = "type", property = "type"), @Result(column = "year", property = "year"),
+			@Result(column = "level", property = "level") })
 	public Tclass selectEntityById(Integer tclassId);
 
 }

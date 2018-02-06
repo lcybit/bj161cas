@@ -14,7 +14,11 @@ public interface PlanMapper extends Mapper<PlanPo> {
 
 	@Select("select * from info_plan where plan_id = #{planId}")
 	@Results({ @Result(id = true, column = "plan_id", property = "planId"),
-			@Result(column = "relation_id", property = "relation", one = @One(select = "com.jefflee.mapper.schedule.RelationMapper.selectEntityById") ),
+			@Result(column = "period_id", property = "period", one = @One(select = "com.jefflee.mapper.information.PeriodMapper.selectEntityById") ),
+			@Result(column = "course_id", property = "course", one = @One(select = "com.jefflee.mapper.information.CourseMapper.selectEntityById") ),
+			@Result(column = "room_id", property = "room", one = @One(select = "com.jefflee.mapper.information.RoomMapper.selectEntityById") ),
+			@Result(column = "tclass_id", property = "tclass", one = @One(select = "com.jefflee.mapper.information.TclassMapper.selectEntityById") ),
+			@Result(column = "teacher_id", property = "teacher", one = @One(select = "com.jefflee.mapper.information.TeacherMapper.selectEntityById") ),
 			@Result(column = "period_num", property = "periodNum") })
 	public Plan selectEntityById(Integer planId);
 

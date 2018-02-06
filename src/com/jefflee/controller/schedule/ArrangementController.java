@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.schedule.ArrangementService;
+import com.jefflee.view.TclassPeriodView;
 
 @RestController
 @RequestMapping(value = "/arrangement")
@@ -63,26 +64,26 @@ public class ArrangementController {
 	}
 
 	@RequestMapping(value = "/arrange", method = RequestMethod.POST)
-	public Map<String, String> arrange(@RequestBody ArrangementPo arrangementPo) {
+	public Map<String, String> arrange(@RequestBody TclassPeriodView tclassPeriodView) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.excuteArrangement(arrangementPo);
+		arrangementService.updateArrangement(tclassPeriodView, 1, -1);
 		result.put("done", "true");
 		return result;
 	}
 
-	@RequestMapping(value = "/cancel/{arrangementId}", method = RequestMethod.GET)
-	public Map<String, String> cancel(@PathVariable("arrangementId") Integer arrangementId) {
+	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
+	public Map<String, String> cancel(@RequestBody TclassPeriodView tclassPeriodView) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.cancelArrangement(arrangementId);
+		arrangementService.updateArrangement(tclassPeriodView, 0, -1);
 		result.put("done", "true");
 		return result;
 	}
 
-	@RequestMapping(value = "/check/schedule/{schedultId}/course/{courseId}", method = RequestMethod.GET)
-	public Map<String, Object> checkConfliction(@PathVariable("scheduleId") Integer scheduleId,
+	@RequestMapping(value = "/check/schedule/{scheduleId}/course/{courseId}", method = RequestMethod.GET)
+	public List<Map<String, String>> checkConflict(@PathVariable("scheduleId") Integer scheduleId,
 			@PathVariable("courseId") Integer courseId) {
-		Map<String, Object> conflictionLists = arrangementService.gnrConflictionLists(scheduleId, courseId);
-		return conflictionLists;
+		List<Map<String, String>> conflictList = arrangementService.gnrConflictMap(scheduleId, courseId);
+		return conflictList;
 	}
 
 }

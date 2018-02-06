@@ -1,9 +1,9 @@
 package com.jefflee.view;
 
 public class PeriodView {
+	private String periodViewId;
+	private Integer scheduleId;
 	private Integer periodId;
-	private Integer dayOfWeek;
-	private Integer orderOfDay;
 
 	public Integer getPeriodId() {
 		return periodId;
@@ -13,19 +13,19 @@ public class PeriodView {
 		this.periodId = periodId;
 	}
 
-	public Integer getDayOfWeek() {
-		return dayOfWeek;
+	public String getPeriodViewId() {
+		return periodViewId;
 	}
 
-	public void setDayOfWeek(Integer dayOfWeek) {
-		this.dayOfWeek = dayOfWeek;
+	public void setPeriodViewId(String periodViewId) {
+		this.periodViewId = periodViewId;
 	}
 
-	public Integer getOrderOfDay() {
-		return orderOfDay;
+	public Integer getScheduleId() {
+		return scheduleId;
 	}
 
-	public void setOrderOfDay(Integer orderOfDay) {
-		this.orderOfDay = orderOfDay;
+	public void setScheduleId(Integer scheduleId) {
+		this.scheduleId = scheduleId;
 	}
 }

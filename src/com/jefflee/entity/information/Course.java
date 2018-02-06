@@ -18,12 +18,16 @@ public class Course {
 	public Course(CoursePo coursePo) {
 		courseId = coursePo.getCourseId();
 		courseNo = coursePo.getCourseNo();
+		name = coursePo.getName();
+		type = coursePo.getType();
 	}
 
 	public CoursePo toPo() {
 		CoursePo coursePo = new CoursePo();
 		coursePo.setCourseId(courseId);
 		coursePo.setCourseNo(courseNo);
+		coursePo.setName(name);
+		coursePo.setType(type);
 		return coursePo;
 	}
 }

@@ -20,12 +20,20 @@ public class Tclass {
 	public Tclass(TclassPo tclassPo) {
 		tclassId = tclassPo.getTclassId();
 		tclassNo = tclassPo.getTclassNo();
+		name = tclassPo.getName();
+		type = tclassPo.getType();
+		year = tclassPo.getYear();
+		level = tclassPo.getLevel();
 	}
 
 	public TclassPo toPo() {
 		TclassPo tclassPo = new TclassPo();
 		tclassPo.setTclassId(tclassId);
 		tclassPo.setTclassNo(tclassNo);
+		tclassPo.setName(name);
+		tclassPo.setType(type);
+		tclassPo.setYear(year);
+		tclassPo.setLevel(level);
 		return tclassPo;
 	}
 }

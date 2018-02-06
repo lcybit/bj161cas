@@ -84,7 +84,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		List<Course> courseList = new ArrayList<Course>();
 		// TODO part of
-		List<CoursePo> coursePoList = courseService.selectAll().subList(0, 3);
+		List<CoursePo> coursePoList = courseService.selectAll().subList(0, 4);
 		for (CoursePo coursePo : coursePoList) {
 			courseList.add(new Course(coursePo));
 		}
@@ -92,7 +92,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		List<Tclass> tclassList = new ArrayList<Tclass>();
 		// TODO part of
-		List<TclassPo> tclassPoList = tclassService.selectAll().subList(0, 1);
+		List<TclassPo> tclassPoList = tclassService.selectAll().subList(0, 2);
 		for (TclassPo tclassPo : tclassPoList) {
 			tclassList.add(new Tclass(tclassPo));
 		}

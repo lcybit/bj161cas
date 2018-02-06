@@ -15,7 +15,9 @@ public interface PeriodMapper extends Mapper<PeriodPo> {
 
 	@Select("select * from info_period where period_id = #{periodId}")
 	@Results({ @Result(id = true, column = "period_id", property = "periodId"),
-			@Result(column = "period_no", property = "periodNo") })
+			@Result(column = "period_no", property = "periodNo"),
+			@Result(column = "day_of_week", property = "dayOfWeek"),
+			@Result(column = "order_of_day", property = "orderOfDay") })
 	public Period selectEntityById(Integer periodId);
 
 }

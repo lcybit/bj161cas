@@ -15,7 +15,8 @@ public interface TeacherMapper extends Mapper<TeacherPo> {
 
 	@Select("select * from info_teacher where teacher_id = #{teacherId}")
 	@Results({ @Result(id = true, column = "teacher_id", property = "teacherId"),
-			@Result(column = "teacher_no", property = "teacherNo") })
+			@Result(column = "teacher_no", property = "teacherNo"), @Result(column = "name", property = "name"),
+			@Result(column = "type", property = "type") })
 	public Teacher selectEntityById(Integer teacherId);
 
 }

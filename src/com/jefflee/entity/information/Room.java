@@ -18,12 +18,16 @@ public class Room {
 	public Room(RoomPo roomPo) {
 		roomId = roomPo.getRoomId();
 		roomNo = roomPo.getRoomNo();
+		name = roomPo.getName();
+		type = roomPo.getType();
 	}
 
 	public RoomPo toPo() {
 		RoomPo roomPo = new RoomPo();
 		roomPo.setRoomId(roomId);
 		roomPo.setRoomNo(roomNo);
+		roomPo.setName(name);
+		roomPo.setType(type);
 		return roomPo;
 	}
 }
