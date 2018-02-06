@@ -127,7 +127,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return courseViewList;
 	}
 
-	public CourseView gnrCourseView(List<Arrangement> scheduleArrangementList, List<PlanPo> schedulePlanPoList,
+	private CourseView gnrCourseView(List<Arrangement> scheduleArrangementList, List<PlanPo> schedulePlanPoList,
 			Course course, Tclass tclass) {
 		CourseView courseView = new CourseView();
 
@@ -140,7 +140,8 @@ public class ArrangementServiceImpl implements ArrangementService {
 		}
 		Integer arrangedNum = 0;
 		for (Arrangement arrangement : scheduleArrangementList) {
-			if (arrangement.course.courseId == course.courseId && arrangement.tclass.tclassId == tclass.tclassId) {
+			if (arrangement.course.courseId == course.courseId && arrangement.tclass.tclassId == tclass.tclassId
+					&& arrangement.arranged == 1) {
 				arrangedNum++;
 			}
 		}
@@ -223,10 +224,10 @@ public class ArrangementServiceImpl implements ArrangementService {
 			Integer periodId = courseArrangement.period.periodId;
 			Integer tclassId = courseArrangement.tclass.tclassId;
 			conflictMap.put("periodViewId", concatenateViewId("period", periodId, "tclass", tclassId));
-			conflictMap.put("conflictValue", "layui-bg-green");
+			conflictMap.put("conflictValue", "0");
 			for (Arrangement arrangedArrangement : arrangedArrangementList) {
 				if (isConflictive(courseArrangement, arrangedArrangement)) {
-					conflictMap.put("conflictValue", "layui-bg-red");
+					conflictMap.put("conflictValue", "1");
 					break;
 				}
 			}

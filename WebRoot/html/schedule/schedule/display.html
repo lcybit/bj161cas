@@ -88,7 +88,7 @@
       {{:arrangement.course.name}}</td>
   </script>
   <script id="tmpl-courseView" type="text/x-jsrender">
-    <td>{{:course.name+arrangedNum}}</td>
+    <td>{{:course.name}}{{:periodNum-arrangedNum}}</td>
   </script>
   <script>
     $(document).ready(function() {
@@ -180,7 +180,13 @@
         type : 'GET',
         success : function(conflictList) {
           $.each(conflictList, function(index, conflict) {
-            $('#' + conflict.periodViewId).attr('class', conflict.conflictValue);
+            var periodViewId = $('#' + conflict.periodViewId);
+            if(conflict.conflictValue == 0) {
+              periodViewId.attr('class', 'layui-bg-green');
+            } else if(conflict.conflictValue == 1) {
+              periodViewId.removeAttr('onclick');
+              periodViewId.attr('class', 'layui-disabled layui-bg-red');
+            }
           });
         }
       })
