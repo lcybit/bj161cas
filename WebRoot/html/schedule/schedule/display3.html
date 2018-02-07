@@ -103,9 +103,22 @@
       });
       $('#currentScheduleId').attr('value', scheduleId);
       display();
+      $('input:radio[name="arrangement\[course\]\[courseId\]"]').change(function(periodView){       
+        if($(this).is(":checked")){  
+          chosenCourse(periodView);  
+        }else{  
+          alert(0);  
+        }        
+       }); 
       layui.form.render();
     })
-  
+      
+    function chosenCourse(periodView){
+      //$('#chosenPeriodViewId').attr('value', periodView.periodViewId);
+      var chosenCourseId = $('input:radio[name="arrangement\[course\]\[courseId\]"]:checked').val();
+      checkConflict(scheduleId, chosenCourseId);
+    }
+    
     function display() {
       var scheduleId = sessionStorage.getItem('currentScheduleId');
       $.ajax({
@@ -120,13 +133,15 @@
   
     function clickTable(periodView) {
       $('#chosenPeriodViewId').attr('value', periodView.periodViewId);
-      var chosenCourseId = $('#chosenCourseId').attr('value');
+      var chosenCourseId = $('input:radio[name="arrangement\[course\]\[courseId\]"]:checked').val();
+   
+      //var chosenCourseId = $('#chosenCourseId').attr('value');
       var scheduleId = $('#currentScheduleId').attr('value');
       var clickedCourseId = periodView.courseId;
       if (null == chosenCourseId || '' == chosenCourseId) {
         if (null != clickedCourseId && '' != clickedCourseId) {
           alert("course0:"+chosenCourseId+"click1:"+clickedCourseId)
-          $('#chosenCourseId').attr('value', periodView.courseId);
+        //  $('#chosenCourseId').attr('value', periodView.courseId);
           cancel();
           checkConflict(scheduleId, clickedCourseId);
         }
@@ -134,7 +149,7 @@
         if (null != clickedCourseId && '' != clickedCourseId) {
           alert("course1:"+chosenCourseId+"click1:"+clickedCourseId)
           arrange();
-          $('#chosenCourseId').attr('value', periodView.courseId);
+         // $('#chosenCourseId').attr('value', periodView.courseId);
           cancel();
           checkConflict(scheduleId, clickedCourseId);
         } else {
