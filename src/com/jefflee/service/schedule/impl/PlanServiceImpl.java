@@ -1,5 +1,6 @@
 package com.jefflee.service.schedule.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -8,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.mapper.schedule.PlanMapper;
 import com.jefflee.po.schedule.PlanPo;
-import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
 
 @Service("planService")
@@ -16,9 +16,6 @@ public class PlanServiceImpl implements PlanService {
 
 	@Resource(name = "planMapper")
 	private PlanMapper planMapper;
-
-	@Resource(name = "arrangementService")
-	private ArrangementService arrangementService;
 
 	@Override
 	public Integer insert(PlanPo planPo) {
@@ -63,6 +60,28 @@ public class PlanServiceImpl implements PlanService {
 		PlanPo selectPlanPo = new PlanPo();
 		selectPlanPo.setScheduleId(scheduleId);
 		return planMapper.select(selectPlanPo);
+	}
+
+	@Override
+	public List<PlanPo> selectByTclassId(List<PlanPo> planPoList, Integer tclassId) {
+		List<PlanPo> selectedPlanPoList = new ArrayList<PlanPo>();
+		for (PlanPo planPo : planPoList) {
+			if (planPo.getTclassId() == tclassId) {
+				selectedPlanPoList.add(planPo);
+			}
+		}
+		return selectedPlanPoList;
+	}
+
+	@Override
+	public List<PlanPo> selectByCourseId(List<PlanPo> planPoList, Integer courseId) {
+		List<PlanPo> selectedPlanPoList = new ArrayList<PlanPo>();
+		for (PlanPo planPo : planPoList) {
+			if (planPo.getCourseId() == courseId) {
+				selectedPlanPoList.add(planPo);
+			}
+		}
+		return selectedPlanPoList;
 	}
 
 }

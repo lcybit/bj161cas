@@ -110,7 +110,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	}
 
 	@Override
-	public void gnrAllArrangementList(Integer scheduleId) {
+	public void gnrEmptyArrangementList(Integer scheduleId) {
 		List<PeriodPo> periodPoList = periodService.selectAll();
 		List<PlanPo> planPoList = planService.selectAll();
 		for (PlanPo planPo : planPoList) {
@@ -127,6 +127,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 				arrangementService.insert(arrangementPo);
 			}
 		}
+	}
+
+	@Override
+	public void gnrSchedule(Integer scheduleId) {
+		arrangementService.gnrArrangementList(scheduleId);
 	}
 
 }

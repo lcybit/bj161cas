@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javax.annotation.Resource;
 
@@ -216,7 +217,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 		List<Map<String, String>> conflictList = new ArrayList<Map<String, String>>();
 
 		List<Arrangement> scheduleArrangementList = arrangementMapper.selectEntityListByScheduleId(scheduleId);
-		List<Arrangement> arrangedArrangementList = selectArrangementListByArranged(scheduleArrangementList);
+		List<Arrangement> arrangedArrangementList = selectArrangementListByArranged(scheduleArrangementList, 1);
 		List<Arrangement> courseArrangementList = selectArrangementListByCourse(scheduleArrangementList, courseId);
 
 		for (Arrangement courseArrangement : courseArrangementList) {
@@ -226,6 +227,10 @@ public class ArrangementServiceImpl implements ArrangementService {
 			conflictMap.put("periodViewId", concatenateViewId("period", periodId, "tclass", tclassId));
 			conflictMap.put("conflictValue", "0");
 			for (Arrangement arrangedArrangement : arrangedArrangementList) {
+				if (courseArrangement.period.periodId == arrangedArrangement.period.periodId
+						&& courseArrangement.tclass.tclassId == arrangedArrangement.tclass.tclassId) {
+					continue;
+				}
 				if (isConflictive(courseArrangement, arrangedArrangement)) {
 					conflictMap.put("conflictValue", "1");
 					break;
@@ -239,6 +244,12 @@ public class ArrangementServiceImpl implements ArrangementService {
 	private boolean isConflictive(Arrangement first, Arrangement second) {
 		if (first.period.periodId != second.period.periodId) {
 			return false;
+		}
+		if (first.room.roomId == second.room.roomId) {
+			return true;
+		}
+		if (first.tclass.tclassId == second.tclass.tclassId) {
+			return true;
 		}
 		if (first.teacher.teacherId == second.teacher.teacherId) {
 			return true;
@@ -262,10 +273,20 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return new Arrangement();
 	}
 
-	private List<Arrangement> selectArrangementListByArranged(List<Arrangement> arrangementList) {
+	private List<Arrangement> selectArrangementListByArranged(List<Arrangement> arrangementList, Integer arranged) {
 		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
 		for (Arrangement arrangement : arrangementList) {
-			if (arrangement.arranged == 1) {
+			if (arrangement.arranged == arranged) {
+				selectedArrangementList.add(arrangement);
+			}
+		}
+		return selectedArrangementList;
+	}
+
+	private List<Arrangement> selectArrangementListByPriority(List<Arrangement> arrangementList, Integer priority) {
+		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
+		for (Arrangement arrangement : arrangementList) {
+			if (arrangement.priority == priority) {
 				selectedArrangementList.add(arrangement);
 			}
 		}
@@ -282,7 +303,75 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return selectedArrangementList;
 	}
 
+	private List<Arrangement> selectArrangementListByTclass(List<Arrangement> arrangementList, Integer tclassId) {
+		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
+		for (Arrangement arrangement : arrangementList) {
+			if (arrangement.tclass.tclassId == tclassId) {
+				selectedArrangementList.add(arrangement);
+			}
+		}
+		return selectedArrangementList;
+	}
+
 	/* Select Block End */
+
+	/* Arrange Block Start */
+
+	@Override
+	public void gnrArrangementList(Integer scheduleId) {
+		ArrangementPo arrangementPo = new ArrangementPo();
+		arrangementPo.setArranged(0);
+		Example example = new Example(ArrangementPo.class);
+		arrangementMapper.updateByExampleSelective(arrangementPo, example);
+
+		List<Arrangement> scheduleArrangementList = arrangementMapper.selectEntityListByScheduleId(scheduleId);
+		List<Arrangement> unarrangedArrangementList = selectArrangementListByArranged(scheduleArrangementList, 0);
+		List<PlanPo> schedulePlanPoList = planService.selectByScheduleId(scheduleId);
+
+		while (!unarrangedArrangementList.isEmpty()) {
+			for (int priority = 4; priority > 0; priority--) {
+				List<Arrangement> priorityArrangementList = selectArrangementListByPriority(unarrangedArrangementList,
+						priority);
+				if (!priorityArrangementList.isEmpty()) {
+					Arrangement chosenArrangement = chooseRandomly(priorityArrangementList);
+					Integer courseId = chosenArrangement.course.courseId;
+					Integer tclassId = chosenArrangement.tclass.tclassId;
+					Integer arrangedNum = selectArrangementListByCourse(selectArrangementListByTclass(
+							selectArrangementListByArranged(scheduleArrangementList, 1), tclassId), courseId).size();
+					Integer periodNum = planService
+							.selectByCourseId(planService.selectByTclassId(schedulePlanPoList, tclassId), courseId)
+							.get(0).getPeriodNum();
+					if (periodNum - arrangedNum <= 0) {
+						chosenArrangement.arranged = -1;
+						break;
+					}
+					for (Arrangement arrangement : unarrangedArrangementList) {
+						if (isConflictive(chosenArrangement, arrangement)) {
+							arrangement.arranged = -1;
+						}
+					}
+					chosenArrangement.arranged = 1;
+					break;
+				}
+			}
+			unarrangedArrangementList = selectArrangementListByArranged(unarrangedArrangementList, 0);
+		}
+		for (Arrangement arrangement : scheduleArrangementList) {
+			updateArrangement(arrangement);
+		}
+	}
+
+	/* Arrange Block End */
+
+	/* Tool Block Start */
+
+	private <T> T chooseRandomly(List<T> tList) {
+		Random random = new Random();
+		T t = tList.get(random.nextInt(tList.size()));
+		return t;
+	}
+
+	/* Tool Block End */
 
 	@Override
 	public Integer selectCount(ArrangementPo arrangementPo) {
@@ -313,6 +402,11 @@ public class ArrangementServiceImpl implements ArrangementService {
 		criteria.andEqualTo("courseId", tclassPeriodView.getArrangement().course.courseId);
 		criteria.andEqualTo("tclassId", idList.get(1));
 		arrangementMapper.updateByExampleSelective(updateArrangementPo, example);
+	}
+
+	private void updateArrangement(Arrangement arrangement) {
+		ArrangementPo arrangementPo = arrangement.toPo();
+		arrangementMapper.updateByPrimaryKeySelective(arrangementPo);
 	}
 
 	@Override

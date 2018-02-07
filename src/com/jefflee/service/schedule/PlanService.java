@@ -18,4 +18,8 @@ public interface PlanService {
 
 	public List<PlanPo> selectByScheduleId(Integer scheduleId);
 
+	public List<PlanPo> selectByTclassId(List<PlanPo> planPoList, Integer tclassId);
+
+	public List<PlanPo> selectByCourseId(List<PlanPo> planPoList, Integer courseId);
+
 }

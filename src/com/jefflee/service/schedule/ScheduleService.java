@@ -19,6 +19,8 @@ public interface ScheduleService {
 
 	public ScheduleView gnrScheduleView(Integer scheduleId);
 
-	public void gnrAllArrangementList(Integer scheduleId);
+	public void gnrEmptyArrangementList(Integer scheduleId);
+
+	public void gnrSchedule(Integer scheduleId);
 
 }

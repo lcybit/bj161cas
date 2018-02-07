@@ -35,4 +35,6 @@ public interface ArrangementService {
 
 	public List<WeekView> gnrWeekViewList(Schedule schedule, List<Course> courseList, List<Tclass> tclassList);
 
+	public void gnrArrangementList(Integer scheduleId);
+
 }

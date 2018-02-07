@@ -70,7 +70,12 @@ public class ScheduleController {
 
 	@RequestMapping(value = "/generate/{scheduleId}", method = RequestMethod.GET)
 	public void generate(@PathVariable("scheduleId") Integer scheduleId) {
-		scheduleService.gnrAllArrangementList(scheduleId);
+		scheduleService.gnrEmptyArrangementList(scheduleId);
+	}
+
+	@RequestMapping(value = "/arrange/{scheduleId}", method = RequestMethod.GET)
+	public void arrange(@PathVariable("scheduleId") Integer scheduleId) {
+		scheduleService.gnrSchedule(scheduleId);
 	}
 
 }
