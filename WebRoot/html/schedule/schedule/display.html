@@ -30,11 +30,11 @@
     <div class="layui-form-item">
       <label class="layui-form-label">选中课程ID:</label>
       <div class="layui-input-block">
-        <input class="layui-input" type="text" name="arrangement[course][courseId]" id="chosenCourseId">
+        <input class="layui-input" type="text">
       </div>
     </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">选中课程:</label>
+    <div class="layui-form-item" pane="">
+      <label class="layui-form-label">display3选中课程:</label>
       <div class="layui-input-block">
         {{for courseList tmpl="#tmpl-course" /}}
       </div>
@@ -44,7 +44,7 @@
     {{for weekViewList tmpl="#tmpl-weekView" /}}
   </script>
   <script id="tmpl-course" type="text/x-jsrender">
-    <input type="radio" name="chosenCourse" value="{{:courseId}}" title="{{:name}}" onclick="alert()">
+    <input type="radio" name="arrangement[course][courseId]" id="chosenCourseId" lay-filter="chosenCourse" value="{{:courseId}}" title="{{:name}}" onclick="alert()">
   </script>
   <script id="tmpl-weekView" type="text/x-jsrender">
     <div class="layui-col-md3">
@@ -102,10 +102,23 @@
         }
       });
       $('#currentScheduleId').attr('value', scheduleId);
-      display();
+      display();            
       layui.form.render();
+      
+      layui.use('form', function() {
+        layui.form.on('radio(chosenCourse)',function(periodView){         
+            chosenCourse(periodView); 
+        })
+      });            
     })
-  
+      
+    function chosenCourse(periodView){      
+      var chosenCourseId = $('input:radio[name="arrangement[course][courseId]"]:checked').val();
+      var scheduleId = $('#currentScheduleId').attr('value');
+      $('#chosenPeriodViewId').attr('value', periodView.periodViewId);    
+      checkConflict(scheduleId, chosenCourseId);      
+    }
+    
     function display() {
       var scheduleId = sessionStorage.getItem('currentScheduleId');
       $.ajax({
@@ -120,25 +133,27 @@
   
     function clickTable(periodView) {
       $('#chosenPeriodViewId').attr('value', periodView.periodViewId);
-      var chosenCourseId = $('#chosenCourseId').attr('value');
+      var chosenCourseId = $('input:radio[name="arrangement[course][courseId]"]:checked').val();
       var scheduleId = $('#currentScheduleId').attr('value');
       var clickedCourseId = periodView.courseId;
       if (null == chosenCourseId || '' == chosenCourseId) {
         if (null != clickedCourseId && '' != clickedCourseId) {
-          alert("course0click1")
-          $('#chosenCourseId').attr('value', periodView.courseId);
+          alert("course0:"+chosenCourseId+"click1:"+clickedCourseId)
+          $("input:radio[name='arrangement[course][courseId]'][value='"+clickedCourseId+"']").prop("checked",true); 
+          layui.form.render();
           cancel();
           checkConflict(scheduleId, clickedCourseId);
         }
       } else {
         if (null != clickedCourseId && '' != clickedCourseId) {
-          alert("course1click1")
-          arrange();
-          $('#chosenCourseId').attr('value', periodView.courseId);
-          cancel();
+          alert("course1:"+chosenCourseId+"click1:"+clickedCourseId+"pV:"+periodView.courseId);           
+          arrange();         
+          $("input:radio[name='arrangement[course][courseId]'][value='"+clickedCourseId+"']").prop("checked",true); 
+          layui.form.render();          
+          cancel();                   
           checkConflict(scheduleId, clickedCourseId);
         } else {
-          alert("course1click0")
+          alert("course1:"+chosenCourseId+"click0:"+clickedCourseId);
           arrange();
           checkConflict(scheduleId, chosenCourseId);
         }
