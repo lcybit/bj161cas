@@ -8,7 +8,7 @@ import com.jefflee.po.schedule.PlanPo;
 
 public class Plan {
 	public Integer planId;
-	public Schedule schedule;
+	public Integer scheduleId;
 	public Course course;
 	public Room room;
 	public Tclass tclass;
@@ -16,7 +16,6 @@ public class Plan {
 	public Integer periodNum;
 
 	public Plan() {
-		this.schedule = new Schedule();
 		this.course = new Course();
 		this.room = new Room();
 		this.tclass = new Tclass();
@@ -25,7 +24,6 @@ public class Plan {
 
 	public Plan(Integer planId) {
 		this.planId = planId;
-		this.schedule = new Schedule();
 		this.course = new Course();
 		this.room = new Room();
 		this.tclass = new Tclass();
@@ -34,7 +32,7 @@ public class Plan {
 
 	public Plan(PlanPo planPo) {
 		planId = planPo.getPlanId();
-		schedule = new Schedule(planPo.getScheduleId());
+		scheduleId = planPo.getScheduleId();
 		course = new Course(planPo.getCourseId());
 		room = new Room(planPo.getRoomId());
 		tclass = new Tclass(planPo.getTclassId());
@@ -45,7 +43,7 @@ public class Plan {
 	public PlanPo toPo() {
 		PlanPo planPo = new PlanPo();
 		planPo.setPlanId(planId);
-		planPo.setScheduleId(schedule.scheduleId);
+		planPo.setScheduleId(scheduleId);
 		planPo.setCourseId(course.courseId);
 		planPo.setRoomId(room.roomId);
 		planPo.setTclassId(tclass.tclassId);

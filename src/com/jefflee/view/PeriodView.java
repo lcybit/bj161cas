@@ -1,17 +1,11 @@
 package com.jefflee.view;
 
+import com.jefflee.entity.schedule.Arrangement;
+
 public class PeriodView {
 	private String periodViewId;
 	private Integer scheduleId;
-	private Integer periodId;
-
-	public Integer getPeriodId() {
-		return periodId;
-	}
-
-	public void setPeriodId(Integer periodId) {
-		this.periodId = periodId;
-	}
+	private Arrangement arrangement;
 
 	public String getPeriodViewId() {
 		return periodViewId;
@@ -28,4 +22,13 @@ public class PeriodView {
 	public void setScheduleId(Integer scheduleId) {
 		this.scheduleId = scheduleId;
 	}
+
+	public Arrangement getArrangement() {
+		return arrangement;
+	}
+
+	public void setArrangement(Arrangement arrangement) {
+		this.arrangement = arrangement;
+	}
+
 }

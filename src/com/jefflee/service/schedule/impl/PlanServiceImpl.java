@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jefflee.entity.schedule.Plan;
 import com.jefflee.mapper.schedule.PlanMapper;
 import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.service.schedule.PlanService;
@@ -82,6 +83,11 @@ public class PlanServiceImpl implements PlanService {
 			}
 		}
 		return selectedPlanPoList;
+	}
+
+	@Override
+	public List<Plan> selectPlanListByScheduleId(Integer scheduleId) {
+		return planMapper.selectEntityListByScheduleId(scheduleId);
 	}
 
 }

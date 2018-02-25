@@ -9,17 +9,20 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Course;
 import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.information.Teacher;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ScheduleMapper;
 import com.jefflee.po.information.CoursePo;
 import com.jefflee.po.information.PeriodPo;
 import com.jefflee.po.information.TclassPo;
+import com.jefflee.po.information.TeacherPo;
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.po.schedule.SchedulePo;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.information.TclassService;
+import com.jefflee.service.information.TeacherService;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.ScheduleService;
@@ -43,6 +46,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 	private CourseService courseService;
 	@Resource(name = "tclassService")
 	private TclassService tclassService;
+	@Resource(name = "teacherService")
+	private TeacherService teacherService;
 
 	@Override
 	public Integer insert(SchedulePo schedulePo) {
@@ -102,9 +107,22 @@ public class ScheduleServiceImpl implements ScheduleService {
 		for (TclassPo tclassPo : tclassPoList) {
 			tclassList.add(new Tclass(tclassPo));
 		}
+		scheduleView.setTclassList(tclassList);
 
-		List<WeekView> weekViewList = arrangementService.gnrWeekViewList(schedule, courseList, tclassList);
-		scheduleView.setWeekViewList(weekViewList);
+		List<Teacher> teacherList = new ArrayList<Teacher>();
+		// TODO part of
+		List<TeacherPo> teacherPoList = teacherService.selectAll();
+		for (TeacherPo teacherPo : teacherPoList) {
+			teacherList.add(new Teacher(teacherPo));
+		}
+
+		List<WeekView> tclassWeekViewList = arrangementService.gnrWeekViewListByCourseTclass(schedule, courseList,
+				tclassList);
+		scheduleView.setTclassWeekViewList(tclassWeekViewList);
+
+		List<WeekView> teacherWeekViewList = arrangementService.gnrWeekViewListByTclassTeacher(schedule, tclassList,
+				teacherList);
+		scheduleView.setTeacherWeekViewList(teacherWeekViewList);
 
 		return scheduleView;
 	}

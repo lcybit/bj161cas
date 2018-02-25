@@ -6,15 +6,7 @@ public class WeekView {
 	private String type;
 	private Integer typeId;
 	private List<DayView> dayViewList;
-	private List<CourseView> courseViewList;
-
-	public List<CourseView> getCourseViewList() {
-		return courseViewList;
-	}
-
-	public void setCourseViewList(List<CourseView> courseViewList) {
-		this.courseViewList = courseViewList;
-	}
+	private List<PlanView> planViewList;
 
 	public String getType() {
 		return type;
@@ -39,4 +31,13 @@ public class WeekView {
 	public void setDayViewList(List<DayView> dayViewList) {
 		this.dayViewList = dayViewList;
 	}
+
+	public List<PlanView> getPlanViewList() {
+		return planViewList;
+	}
+
+	public void setPlanViewList(List<PlanView> planViewList) {
+		this.planViewList = planViewList;
+	}
+
 }

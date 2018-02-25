@@ -5,10 +5,11 @@ import java.util.Map;
 
 import com.jefflee.entity.information.Course;
 import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.information.Teacher;
 import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.po.schedule.ArrangementPo;
-import com.jefflee.view.TclassPeriodView;
+import com.jefflee.view.ArrangementView;
 import com.jefflee.view.WeekView;
 
 public interface ArrangementService {
@@ -27,14 +28,20 @@ public interface ArrangementService {
 
 	public List<ArrangementPo> selectByPeriodId(Integer periodId);
 
-	void updateArrangement(TclassPeriodView tclassPeriodView, Integer arranged, Integer prioriry);
-
 	public Arrangement selectArrangementById(Integer arrangementId);
 
-	public List<Map<String, String>> gnrConflictMap(Integer scheduleId, Integer courseId);
+	public List<Map<String, String>> gnrConflictList(Integer scheduleId, String type, Integer typeId);
 
-	public List<WeekView> gnrWeekViewList(Schedule schedule, List<Course> courseList, List<Tclass> tclassList);
+	public List<WeekView> gnrWeekViewListByCourseTclass(Schedule schedule, List<Course> courseList,
+			List<Tclass> tclassList);
 
 	public void gnrArrangementList(Integer scheduleId);
+
+	public List<WeekView> gnrWeekViewListByTclassTeacher(Schedule schedule, List<Tclass> tclassList,
+			List<Teacher> teacherList);
+
+	public void arrange(ArrangementView arrangementView);
+
+	public void cancel(ArrangementView arrangementView);
 
 }

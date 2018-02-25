@@ -1,30 +1,20 @@
-package com.jefflee.po.schedule;
+package com.jefflee.view;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
-@Table(name = "schd_arrangement")
-public class ArrangementPo {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer arrangementId;
+public class ArrangementView {
+	private String type;
 	private Integer scheduleId;
 	private Integer periodId;
 	private Integer courseId;
 	private Integer roomId;
 	private Integer tclassId;
 	private Integer teacherId;
-	private Integer arranged;
-	private Integer priority;
 
-	public Integer getArrangementId() {
-		return arrangementId;
+	public String getType() {
+		return type;
 	}
 
-	public void setArrangementId(Integer arrangementId) {
-		this.arrangementId = arrangementId;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public Integer getScheduleId() {
@@ -73,22 +63,6 @@ public class ArrangementPo {
 
 	public void setTeacherId(Integer teacherId) {
 		this.teacherId = teacherId;
-	}
-
-	public Integer getArranged() {
-		return arranged;
-	}
-
-	public void setArranged(Integer arranged) {
-		this.arranged = arranged;
-	}
-
-	public Integer getPriority() {
-		return priority;
-	}
-
-	public void setPriority(Integer priority) {
-		this.priority = priority;
 	}
 
 }

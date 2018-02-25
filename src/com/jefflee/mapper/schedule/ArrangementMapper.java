@@ -16,6 +16,7 @@ public interface ArrangementMapper extends Mapper<ArrangementPo> {
 
 	@Select("select * from schd_arrangement where arrangement_id = #{arrangementId}")
 	@Results({ @Result(id = true, column = "arrangement_id", property = "arrangementId"),
+			@Result(column = "schedule_id", property = "scheduleId"),
 			@Result(column = "period_id", property = "period", one = @One(select = "com.jefflee.mapper.information.PeriodMapper.selectEntityById") ),
 			@Result(column = "course_id", property = "course", one = @One(select = "com.jefflee.mapper.information.CourseMapper.selectEntityById") ),
 			@Result(column = "room_id", property = "room", one = @One(select = "com.jefflee.mapper.information.RoomMapper.selectEntityById") ),
@@ -26,6 +27,7 @@ public interface ArrangementMapper extends Mapper<ArrangementPo> {
 
 	@Select("select * from schd_arrangement where schedule_id = #{scheduleId}")
 	@Results({ @Result(id = true, column = "arrangement_id", property = "arrangementId"),
+			@Result(column = "schedule_id", property = "scheduleId"),
 			@Result(column = "period_id", property = "period", one = @One(select = "com.jefflee.mapper.information.PeriodMapper.selectEntityById") ),
 			@Result(column = "course_id", property = "course", one = @One(select = "com.jefflee.mapper.information.CourseMapper.selectEntityById") ),
 			@Result(column = "room_id", property = "room", one = @One(select = "com.jefflee.mapper.information.RoomMapper.selectEntityById") ),

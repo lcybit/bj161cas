@@ -12,7 +12,9 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Course;
 import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.information.Teacher;
 import com.jefflee.entity.schedule.Arrangement;
+import com.jefflee.entity.schedule.Plan;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ArrangementMapper;
 import com.jefflee.po.information.PeriodPo;
@@ -21,10 +23,10 @@ import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
-import com.jefflee.view.CourseView;
+import com.jefflee.view.ArrangementView;
 import com.jefflee.view.DayView;
 import com.jefflee.view.PeriodView;
-import com.jefflee.view.TclassPeriodView;
+import com.jefflee.view.PlanView;
 import com.jefflee.view.WeekView;
 
 import tk.mybatis.mapper.entity.Example;
@@ -86,69 +88,113 @@ public class ArrangementServiceImpl implements ArrangementService {
 	/* Display Block Start */
 
 	@Override
-	public List<WeekView> gnrWeekViewList(Schedule schedule, List<Course> courseList, List<Tclass> tclassList) {
+	public List<WeekView> gnrWeekViewListByCourseTclass(Schedule schedule, List<Course> courseList,
+			List<Tclass> tclassList) {
 		List<WeekView> weekViewList = new ArrayList<WeekView>();
 
 		List<Arrangement> scheduleArrangementList = arrangementMapper.selectEntityListByScheduleId(schedule.scheduleId);
-		List<PlanPo> schedulePlanPoList = planService.selectByScheduleId(schedule.scheduleId);
+		List<Plan> schedulePlanList = planService.selectPlanListByScheduleId(schedule.scheduleId);
 		Integer daysPerWeek = schedule.days;
 		Integer periodsPerDay = schedule.forenoon + schedule.afternoon + schedule.evening;
 
 		for (Tclass tclass : tclassList) {
-			weekViewList.add(gnrWeekView(scheduleArrangementList, schedulePlanPoList, courseList, tclass, daysPerWeek,
+			weekViewList.add(gnrWeekView(scheduleArrangementList, schedulePlanList, courseList, tclass, daysPerWeek,
 					periodsPerDay));
 		}
 
 		return weekViewList;
 	}
 
-	private WeekView gnrWeekView(List<Arrangement> scheduleArrangementList, List<PlanPo> schedulePlanPoList,
+	@Override
+	public List<WeekView> gnrWeekViewListByTclassTeacher(Schedule schedule, List<Tclass> tclassList,
+			List<Teacher> teacherList) {
+		List<WeekView> weekViewList = new ArrayList<WeekView>();
+
+		List<Arrangement> scheduleArrangementList = arrangementMapper.selectEntityListByScheduleId(schedule.scheduleId);
+		List<Plan> schedulePlanList = planService.selectPlanListByScheduleId(schedule.scheduleId);
+		Integer daysPerWeek = schedule.days;
+		Integer periodsPerDay = schedule.forenoon + schedule.afternoon + schedule.evening;
+
+		for (Teacher teacher : teacherList) {
+			weekViewList.add(gnrWeekView(scheduleArrangementList, schedulePlanList, tclassList, teacher, daysPerWeek,
+					periodsPerDay));
+		}
+
+		return weekViewList;
+	}
+
+	private WeekView gnrWeekView(List<Arrangement> scheduleArrangementList, List<Plan> schedulePlanList,
 			List<Course> courseList, Tclass tclass, Integer daysPerWeek, Integer periodsPerDay) {
 		WeekView weekView = new WeekView();
 
 		weekView.setType("tclass");
 		weekView.setTypeId(tclass.tclassId);
-		List<CourseView> courseViewList = gnrCourseViewList(scheduleArrangementList, schedulePlanPoList, courseList,
-				tclass);
-		weekView.setCourseViewList(courseViewList);
+		List<PlanView> planViewList = gnrPlanViewList(scheduleArrangementList, schedulePlanList, courseList, tclass);
+		weekView.setPlanViewList(planViewList);
 		List<DayView> dayViewList = gnrDayViewList(scheduleArrangementList, tclass, daysPerWeek, periodsPerDay);
 		weekView.setDayViewList(dayViewList);
 
 		return weekView;
 	}
 
-	private List<CourseView> gnrCourseViewList(List<Arrangement> scheduleArrangementList,
-			List<PlanPo> schedulePlanPoList, List<Course> courseList, Tclass tclass) {
-		List<CourseView> courseViewList = new ArrayList<CourseView>();
+	private WeekView gnrWeekView(List<Arrangement> scheduleArrangementList, List<Plan> schedulePlanList,
+			List<Tclass> tclassList, Teacher teacher, Integer daysPerWeek, Integer periodsPerDay) {
+		WeekView weekView = new WeekView();
 
-		for (Course course : courseList) {
-			courseViewList.add(gnrCourseView(scheduleArrangementList, schedulePlanPoList, course, tclass));
-		}
+		weekView.setType("teacher");
+		weekView.setTypeId(teacher.teacherId);
+		List<PlanView> planViewList = gnrPlanViewList(scheduleArrangementList, schedulePlanList, tclassList, teacher);
+		weekView.setPlanViewList(planViewList);
+		List<DayView> dayViewList = gnrDayViewList(scheduleArrangementList, teacher, daysPerWeek, periodsPerDay);
+		weekView.setDayViewList(dayViewList);
 
-		return courseViewList;
+		return weekView;
 	}
 
-	private CourseView gnrCourseView(List<Arrangement> scheduleArrangementList, List<PlanPo> schedulePlanPoList,
-			Course course, Tclass tclass) {
-		CourseView courseView = new CourseView();
+	private List<PlanView> gnrPlanViewList(List<Arrangement> scheduleArrangementList, List<Plan> schedulePlanList,
+			List<Course> courseList, Tclass tclass) {
+		List<PlanView> planViewList = new ArrayList<PlanView>();
 
-		courseView.setCourse(course);
-		for (PlanPo planPo : schedulePlanPoList) {
-			if (planPo.getCourseId() == course.courseId && planPo.getTclassId() == tclass.tclassId) {
-				courseView.setPeriodNum(planPo.getPeriodNum());
-				break;
+		for (Plan plan : schedulePlanList) {
+			if (plan.tclass.tclassId == tclass.tclassId) {
+				planViewList.add(gnrPlanView(scheduleArrangementList, plan, tclass));
 			}
 		}
-		Integer arrangedNum = 0;
-		for (Arrangement arrangement : scheduleArrangementList) {
-			if (arrangement.course.courseId == course.courseId && arrangement.tclass.tclassId == tclass.tclassId
-					&& arrangement.arranged == 1) {
-				arrangedNum++;
+		return planViewList;
+	}
+
+	private List<PlanView> gnrPlanViewList(List<Arrangement> scheduleArrangementList, List<Plan> schedulePlanList,
+			List<Tclass> tclassList, Teacher teacher) {
+		List<PlanView> planViewList = new ArrayList<PlanView>();
+
+		for (Plan plan : schedulePlanList) {
+			if (plan.teacher.teacherId == teacher.teacherId) {
+				planViewList.add(gnrPlanView(scheduleArrangementList, plan, teacher));
 			}
 		}
-		courseView.setArrangedNum(arrangedNum);
+		return planViewList;
+	}
 
-		return courseView;
+	private PlanView gnrPlanView(List<Arrangement> arrangementList, Plan plan, Tclass tclass) {
+		PlanView planView = new PlanView();
+
+		planView.setPlan(plan);
+		List<Arrangement> arrangedList = getByArranged(
+				getByTclass(getByCourse(arrangementList, plan.course.courseId), tclass.tclassId), 1);
+		planView.setArrangedNum(arrangedList.size());
+		return planView;
+	}
+
+	private PlanView gnrPlanView(List<Arrangement> arrangementList, Plan plan, Teacher teacher) {
+		PlanView planView = new PlanView();
+
+		planView.setPlan(plan);
+		List<Arrangement> arrangedList = getByArranged(
+				getByCourse(getByTeacher(getByTclass(arrangementList, plan.tclass.tclassId), teacher.teacherId),
+						plan.course.courseId),
+				1);
+		planView.setArrangedNum(arrangedList.size());
+		return planView;
 	}
 
 	private List<DayView> gnrDayViewList(List<Arrangement> scheduleArrangementList, Tclass tclass, Integer daysPerWeek,
@@ -162,11 +208,31 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return dayViewList;
 	}
 
+	private List<DayView> gnrDayViewList(List<Arrangement> scheduleArrangementList, Teacher teacher,
+			Integer daysPerWeek, Integer periodsPerDay) {
+		List<DayView> dayViewList = new ArrayList<DayView>();
+
+		for (int i = 0; i < daysPerWeek; i++) {
+			dayViewList.add(gnrDayView(scheduleArrangementList, teacher, i + 1, periodsPerDay));
+		}
+
+		return dayViewList;
+	}
+
 	private DayView gnrDayView(List<Arrangement> scheduleArrangementList, Tclass tclass, Integer dayOfWeek,
 			Integer periodsPerDay) {
 		DayView dayView = new DayView();
 
 		dayView.setPeriodViewList(gnrPeriodViewList(scheduleArrangementList, tclass, dayOfWeek, periodsPerDay));
+
+		return dayView;
+	}
+
+	private DayView gnrDayView(List<Arrangement> scheduleArrangementList, Teacher teacher, Integer dayOfWeek,
+			Integer periodsPerDay) {
+		DayView dayView = new DayView();
+
+		dayView.setPeriodViewList(gnrPeriodViewList(scheduleArrangementList, teacher, dayOfWeek, periodsPerDay));
 
 		return dayView;
 	}
@@ -182,61 +248,114 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return periodViewList;
 	}
 
+	private List<PeriodView> gnrPeriodViewList(List<Arrangement> scheduleArrangementList, Teacher teacher,
+			Integer dayOfWeek, Integer periodsPerDay) {
+		List<PeriodView> periodViewList = new ArrayList<PeriodView>();
+
+		for (int i = 0; i < periodsPerDay; i++) {
+			periodViewList.add(gnrPeriodView(scheduleArrangementList, teacher, dayOfWeek, i + 1));
+		}
+
+		return periodViewList;
+	}
+
 	private PeriodView gnrPeriodView(List<Arrangement> scheduleArrangementList, Tclass tclass, Integer dayOfWeek,
 			Integer orderOfDay) {
-		TclassPeriodView tclassPeriodView = new TclassPeriodView();
+		PeriodView periodView = new PeriodView();
 
 		PeriodPo periodPo = periodService.selectByOrder(dayOfWeek, orderOfDay);
 		Integer periodId = periodPo.getPeriodId();
 		Integer tclassId = tclass.tclassId;
 		String periodViewId = concatenateViewId("period", periodId, "tclass", tclassId);
-		tclassPeriodView.setPeriodViewId(periodViewId);
-		tclassPeriodView
-				.setArrangement(selectArrangedArrangementByPeriodTclass(scheduleArrangementList, periodId, tclassId));
+		periodView.setPeriodViewId(periodViewId);
+		List<Arrangement> periodViewArrangementList = getByArranged(
+				getByPeriod(getByTclass(scheduleArrangementList, tclassId), periodId), 1);
 
-		return (PeriodView) tclassPeriodView;
+		// TODO 未来直接考虑列表情况
+		if (!periodViewArrangementList.isEmpty()) {
+			periodView.setArrangement(periodViewArrangementList.get(0));
+		} else {
+			Arrangement arrangement = new Arrangement();
+			arrangement.period.periodId = periodId;
+			arrangement.tclass.tclassId = tclassId;
+			periodView.setArrangement(arrangement);
+		}
+
+		return periodView;
 	}
 
-	private String concatenateViewId(String firstName, Integer firstId, String secondName, Integer secondId) {
-		return firstName + "-" + firstId + "-" + secondName + "-" + secondId;
-	}
+	private PeriodView gnrPeriodView(List<Arrangement> scheduleArrangementList, Teacher teacher, Integer dayOfWeek,
+			Integer orderOfDay) {
+		PeriodView periodView = new PeriodView();
 
-	private List<Integer> splitViewId(String viewId) {
-		List<Integer> idList = new ArrayList<Integer>();
-		String[] viewIdArray = viewId.split("-");
-		idList.add(0, Integer.parseInt(viewIdArray[1]));
-		idList.add(1, Integer.parseInt(viewIdArray[3]));
-		return idList;
+		PeriodPo periodPo = periodService.selectByOrder(dayOfWeek, orderOfDay);
+		Integer periodId = periodPo.getPeriodId();
+		Integer teacherId = teacher.teacherId;
+		String periodViewId = concatenateViewId("period", periodId, "teacher", teacherId);
+		periodView.setPeriodViewId(periodViewId);
+		List<Arrangement> periodViewArrangementList = getByArranged(
+				getByPeriod(getByTeacher(scheduleArrangementList, teacherId), periodId), 1);
+		if (!periodViewArrangementList.isEmpty()) {
+			periodView.setArrangement(periodViewArrangementList.get(0));
+		} else {
+			Arrangement arrangement = new Arrangement();
+			arrangement.period.periodId = periodId;
+			arrangement.teacher.teacherId = teacherId;
+			periodView.setArrangement(arrangement);
+		}
+		return periodView;
 	}
 
 	/* Display Block End */
 
 	/* Conflict Block Start */
 	@Override
-	public List<Map<String, String>> gnrConflictMap(Integer scheduleId, Integer courseId) {
+	public List<Map<String, String>> gnrConflictList(Integer scheduleId, String type, Integer typeId) {
 		List<Map<String, String>> conflictList = new ArrayList<Map<String, String>>();
 
 		List<Arrangement> scheduleArrangementList = arrangementMapper.selectEntityListByScheduleId(scheduleId);
-		List<Arrangement> arrangedArrangementList = selectArrangementListByArranged(scheduleArrangementList, 1);
-		List<Arrangement> courseArrangementList = selectArrangementListByCourse(scheduleArrangementList, courseId);
-
-		for (Arrangement courseArrangement : courseArrangementList) {
-			Map<String, String> conflictMap = new HashMap<String, String>();
-			Integer periodId = courseArrangement.period.periodId;
-			Integer tclassId = courseArrangement.tclass.tclassId;
-			conflictMap.put("periodViewId", concatenateViewId("period", periodId, "tclass", tclassId));
-			conflictMap.put("conflictValue", "0");
-			for (Arrangement arrangedArrangement : arrangedArrangementList) {
-				if (courseArrangement.period.periodId == arrangedArrangement.period.periodId
-						&& courseArrangement.tclass.tclassId == arrangedArrangement.tclass.tclassId) {
-					continue;
+		List<Arrangement> arrangedArrangementList = getByArranged(scheduleArrangementList, 1);
+		List<Arrangement> typeArrangementList = new ArrayList<Arrangement>();
+		if ("course".equals(type)) {
+			typeArrangementList = getByCourse(scheduleArrangementList, typeId);
+			for (Arrangement typeArrangement : typeArrangementList) {
+				Map<String, String> conflict = new HashMap<String, String>();
+				Integer periodId = typeArrangement.period.periodId;
+				Integer tclassId = typeArrangement.tclass.tclassId;
+				conflict.put("periodViewId", concatenateViewId("period", periodId, "tclass", tclassId));
+				conflict.put("conflictValue", "0");
+				for (Arrangement arrangedArrangement : arrangedArrangementList) {
+					if (typeArrangement.period.periodId == arrangedArrangement.period.periodId
+							&& typeArrangement.tclass.tclassId == arrangedArrangement.tclass.tclassId) {
+						continue;
+					}
+					if (isConflictive(typeArrangement, arrangedArrangement)) {
+						conflict.put("conflictValue", "1");
+						break;
+					}
 				}
-				if (isConflictive(courseArrangement, arrangedArrangement)) {
-					conflictMap.put("conflictValue", "1");
-					break;
-				}
+				conflictList.add(conflict);
 			}
-			conflictList.add(conflictMap);
+		} else if ("tclass".equals(type)) {
+			typeArrangementList = getByTclass(scheduleArrangementList, typeId);
+			for (Arrangement typeArrangement : typeArrangementList) {
+				Map<String, String> conflict = new HashMap<String, String>();
+				Integer periodId = typeArrangement.period.periodId;
+				Integer teacherId = typeArrangement.teacher.teacherId;
+				conflict.put("periodViewId", concatenateViewId("period", periodId, "teacher", teacherId));
+				conflict.put("conflictValue", "0");
+				for (Arrangement arrangedArrangement : arrangedArrangementList) {
+					if (typeArrangement.period.periodId == arrangedArrangement.period.periodId
+							&& typeArrangement.teacher.teacherId == arrangedArrangement.teacher.teacherId) {
+						continue;
+					}
+					if (isConflictive(typeArrangement, arrangedArrangement)) {
+						conflict.put("conflictValue", "1");
+						break;
+					}
+				}
+				conflictList.add(conflict);
+			}
 		}
 		return conflictList;
 	}
@@ -261,39 +380,17 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	/* Select Block Start */
 
-	private Arrangement selectArrangedArrangementByPeriodTclass(List<Arrangement> scheduleArrangementList,
-			Integer periodId, Integer tclassId) {
-
-		for (Arrangement arrangement : scheduleArrangementList) {
-			if (arrangement.period.periodId == periodId && arrangement.tclass.tclassId == tclassId
-					&& arrangement.arranged == 1) {
-				return arrangement;
-			}
-		}
-		return new Arrangement();
-	}
-
-	private List<Arrangement> selectArrangementListByArranged(List<Arrangement> arrangementList, Integer arranged) {
+	private List<Arrangement> getByPeriod(List<Arrangement> arrangementList, Integer periodId) {
 		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
 		for (Arrangement arrangement : arrangementList) {
-			if (arrangement.arranged == arranged) {
+			if (arrangement.period.periodId == periodId) {
 				selectedArrangementList.add(arrangement);
 			}
 		}
 		return selectedArrangementList;
 	}
 
-	private List<Arrangement> selectArrangementListByPriority(List<Arrangement> arrangementList, Integer priority) {
-		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
-		for (Arrangement arrangement : arrangementList) {
-			if (arrangement.priority == priority) {
-				selectedArrangementList.add(arrangement);
-			}
-		}
-		return selectedArrangementList;
-	}
-
-	private List<Arrangement> selectArrangementListByCourse(List<Arrangement> arrangementList, Integer courseId) {
+	private List<Arrangement> getByCourse(List<Arrangement> arrangementList, Integer courseId) {
 		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
 		for (Arrangement arrangement : arrangementList) {
 			if (arrangement.course.courseId == courseId) {
@@ -303,10 +400,50 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return selectedArrangementList;
 	}
 
-	private List<Arrangement> selectArrangementListByTclass(List<Arrangement> arrangementList, Integer tclassId) {
+	private List<Arrangement> getByRoom(List<Arrangement> arrangementList, Integer roomId) {
+		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
+		for (Arrangement arrangement : arrangementList) {
+			if (arrangement.room.roomId == roomId) {
+				selectedArrangementList.add(arrangement);
+			}
+		}
+		return selectedArrangementList;
+	}
+
+	private List<Arrangement> getByTclass(List<Arrangement> arrangementList, Integer tclassId) {
 		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
 		for (Arrangement arrangement : arrangementList) {
 			if (arrangement.tclass.tclassId == tclassId) {
+				selectedArrangementList.add(arrangement);
+			}
+		}
+		return selectedArrangementList;
+	}
+
+	private List<Arrangement> getByTeacher(List<Arrangement> arrangementList, Integer teacherId) {
+		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
+		for (Arrangement arrangement : arrangementList) {
+			if (arrangement.teacher.teacherId == teacherId) {
+				selectedArrangementList.add(arrangement);
+			}
+		}
+		return selectedArrangementList;
+	}
+
+	private List<Arrangement> getByArranged(List<Arrangement> arrangementList, Integer arranged) {
+		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
+		for (Arrangement arrangement : arrangementList) {
+			if (arrangement.arranged == arranged) {
+				selectedArrangementList.add(arrangement);
+			}
+		}
+		return selectedArrangementList;
+	}
+
+	private List<Arrangement> getByPriority(List<Arrangement> arrangementList, Integer priority) {
+		List<Arrangement> selectedArrangementList = new ArrayList<Arrangement>();
+		for (Arrangement arrangement : arrangementList) {
+			if (arrangement.priority == priority) {
 				selectedArrangementList.add(arrangement);
 			}
 		}
@@ -325,19 +462,18 @@ public class ArrangementServiceImpl implements ArrangementService {
 		arrangementMapper.updateByExampleSelective(arrangementPo, example);
 
 		List<Arrangement> scheduleArrangementList = arrangementMapper.selectEntityListByScheduleId(scheduleId);
-		List<Arrangement> unarrangedArrangementList = selectArrangementListByArranged(scheduleArrangementList, 0);
+		List<Arrangement> unarrangedArrangementList = getByArranged(scheduleArrangementList, 0);
 		List<PlanPo> schedulePlanPoList = planService.selectByScheduleId(scheduleId);
 
 		while (!unarrangedArrangementList.isEmpty()) {
 			for (int priority = 4; priority > 0; priority--) {
-				List<Arrangement> priorityArrangementList = selectArrangementListByPriority(unarrangedArrangementList,
-						priority);
+				List<Arrangement> priorityArrangementList = getByPriority(unarrangedArrangementList, priority);
 				if (!priorityArrangementList.isEmpty()) {
 					Arrangement chosenArrangement = chooseRandomly(priorityArrangementList);
 					Integer courseId = chosenArrangement.course.courseId;
 					Integer tclassId = chosenArrangement.tclass.tclassId;
-					Integer arrangedNum = selectArrangementListByCourse(selectArrangementListByTclass(
-							selectArrangementListByArranged(scheduleArrangementList, 1), tclassId), courseId).size();
+					Integer arrangedNum = getByCourse(getByTclass(getByArranged(scheduleArrangementList, 1), tclassId),
+							courseId).size();
 					Integer periodNum = planService
 							.selectByCourseId(planService.selectByTclassId(schedulePlanPoList, tclassId), courseId)
 							.get(0).getPeriodNum();
@@ -354,7 +490,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 					break;
 				}
 			}
-			unarrangedArrangementList = selectArrangementListByArranged(unarrangedArrangementList, 0);
+			unarrangedArrangementList = getByArranged(unarrangedArrangementList, 0);
 		}
 		for (Arrangement arrangement : scheduleArrangementList) {
 			updateArrangement(arrangement);
@@ -371,6 +507,18 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return t;
 	}
 
+	private String concatenateViewId(String firstName, Integer firstId, String secondName, Integer secondId) {
+		return firstName + "-" + firstId + "-" + secondName + "-" + secondId;
+	}
+
+	private List<Integer> splitViewId(String viewId) {
+		List<Integer> idList = new ArrayList<Integer>();
+		String[] viewIdArray = viewId.split("-");
+		idList.add(0, Integer.parseInt(viewIdArray[1]));
+		idList.add(1, Integer.parseInt(viewIdArray[3]));
+		return idList;
+	}
+
 	/* Tool Block End */
 
 	@Override
@@ -385,9 +533,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return arrangementMapper.select(selectArrangementPo);
 	}
 
-	@Override
-	public void updateArrangement(TclassPeriodView tclassPeriodView, Integer arranged, Integer priority) {
-		List<Integer> idList = splitViewId(tclassPeriodView.getPeriodViewId());
+	private void updateArrangement(ArrangementView arrangementView, Integer arranged, Integer priority) {
 		ArrangementPo updateArrangementPo = new ArrangementPo();
 		if (arranged >= 0) {
 			updateArrangementPo.setArranged(arranged);
@@ -397,10 +543,15 @@ public class ArrangementServiceImpl implements ArrangementService {
 		}
 		Example example = new Example(ArrangementPo.class);
 		Criteria criteria = example.createCriteria();
-		criteria.andEqualTo("scheduleId", tclassPeriodView.getScheduleId());
-		criteria.andEqualTo("periodId", idList.get(0));
-		criteria.andEqualTo("courseId", tclassPeriodView.getArrangement().course.courseId);
-		criteria.andEqualTo("tclassId", idList.get(1));
+		criteria.andEqualTo("scheduleId", arrangementView.getScheduleId());
+		criteria.andEqualTo("periodId", arrangementView.getPeriodId());
+		if (arrangementView.getType().equals("tclass")) {
+			criteria.andEqualTo("courseId", arrangementView.getCourseId());
+			criteria.andEqualTo("tclassId", arrangementView.getTclassId());
+		} else if (arrangementView.getType().equals("teacher")) {
+			criteria.andEqualTo("tclassId", arrangementView.getTclassId());
+			criteria.andEqualTo("teacherId", arrangementView.getTeacherId());
+		}
 		arrangementMapper.updateByExampleSelective(updateArrangementPo, example);
 	}
 
@@ -412,6 +563,18 @@ public class ArrangementServiceImpl implements ArrangementService {
 	@Override
 	public Arrangement selectArrangementById(Integer arrangementId) {
 		return arrangementMapper.selectEntityById(arrangementId);
+	}
+
+	@Override
+	public void arrange(ArrangementView arrangementView) {
+		updateArrangement(arrangementView, 1, -1);
+		return;
+	}
+
+	@Override
+	public void cancel(ArrangementView arrangementView) {
+		updateArrangement(arrangementView, 0, -1);
+		return;
 	}
 
 }

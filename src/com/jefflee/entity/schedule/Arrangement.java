@@ -9,8 +9,8 @@ import com.jefflee.po.schedule.ArrangementPo;
 
 public class Arrangement {
 	public Integer arrangementId;
+	public Integer scheduleId;
 	public Period period;
-	public Schedule schedule;
 	public Course course;
 	public Room room;
 	public Tclass tclass;
@@ -20,7 +20,6 @@ public class Arrangement {
 
 	public Arrangement() {
 		this.period = new Period();
-		this.schedule = new Schedule();
 		this.course = new Course();
 		this.room = new Room();
 		this.tclass = new Tclass();
@@ -30,7 +29,6 @@ public class Arrangement {
 	public Arrangement(Integer arrangementId) {
 		this.arrangementId = arrangementId;
 		this.period = new Period();
-		this.schedule = new Schedule();
 		this.course = new Course();
 		this.room = new Room();
 		this.tclass = new Tclass();
@@ -39,8 +37,8 @@ public class Arrangement {
 
 	public Arrangement(ArrangementPo arrangementPo) {
 		arrangementId = arrangementPo.getArrangementId();
+		scheduleId = arrangementPo.getScheduleId();
 		period = new Period(arrangementPo.getPeriodId());
-		schedule = new Schedule(arrangementPo.getScheduleId());
 		course = new Course(arrangementPo.getCourseId());
 		room = new Room(arrangementPo.getRoomId());
 		tclass = new Tclass(arrangementPo.getTclassId());
@@ -52,8 +50,8 @@ public class Arrangement {
 	public ArrangementPo toPo() {
 		ArrangementPo arrangementPo = new ArrangementPo();
 		arrangementPo.setArrangementId(arrangementId);
+		arrangementPo.setScheduleId(scheduleId);
 		arrangementPo.setPeriodId(period.periodId);
-		arrangementPo.setScheduleId(schedule.scheduleId);
 		arrangementPo.setCourseId(course.courseId);
 		arrangementPo.setRoomId(room.roomId);
 		arrangementPo.setTclassId(tclass.tclassId);

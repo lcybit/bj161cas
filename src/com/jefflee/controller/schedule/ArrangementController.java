@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.schedule.ArrangementService;
-import com.jefflee.view.TclassPeriodView;
+import com.jefflee.view.ArrangementView;
 
 @RestController
 @RequestMapping(value = "/arrangement")
@@ -64,26 +64,25 @@ public class ArrangementController {
 	}
 
 	@RequestMapping(value = "/arrange", method = RequestMethod.POST)
-	public Map<String, String> arrange(@RequestBody TclassPeriodView tclassPeriodView) {
+	public Map<String, String> arrange(@RequestBody ArrangementView arrangementView) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.updateArrangement(tclassPeriodView, 1, -1);
+		arrangementService.arrange(arrangementView);
 		result.put("done", "true");
 		return result;
 	}
 
 	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
-	public Map<String, String> cancel(@RequestBody TclassPeriodView tclassPeriodView) {
+	public Map<String, String> cancel(@RequestBody ArrangementView arrangementView) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.updateArrangement(tclassPeriodView, 0, -1);
+		arrangementService.cancel(arrangementView);
 		result.put("done", "true");
 		return result;
 	}
 
-	@RequestMapping(value = "/check/schedule/{scheduleId}/course/{courseId}", method = RequestMethod.GET)
+	@RequestMapping(value = "/check/schedule/{scheduleId}/{type}/{typeId}", method = RequestMethod.GET)
 	public List<Map<String, String>> checkConflict(@PathVariable("scheduleId") Integer scheduleId,
-			@PathVariable("courseId") Integer courseId) {
-		List<Map<String, String>> conflictList = arrangementService.gnrConflictMap(scheduleId, courseId);
-		return conflictList;
+			@PathVariable("type") String type, @PathVariable("typeId") Integer typeId) {
+		return arrangementService.gnrConflictList(scheduleId, type, typeId);
 	}
 
 }
