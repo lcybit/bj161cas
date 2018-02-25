@@ -44,4 +44,5 @@ public interface ArrangementService {
 
 	public void cancel(ArrangementView arrangementView);
 
+	public Integer insertList(List<ArrangementPo> arrangementPoList);
 }

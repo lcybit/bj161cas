@@ -83,6 +83,11 @@ public class ArrangementServiceImpl implements ArrangementService {
 		}
 	}
 
+	@Override
+	public Integer insertList(List<ArrangementPo> arrangementPoList) {
+		return arrangementMapper.insertList(arrangementPoList);
+	}
+
 	/* CRUD Block End */
 
 	/* Display Block Start */

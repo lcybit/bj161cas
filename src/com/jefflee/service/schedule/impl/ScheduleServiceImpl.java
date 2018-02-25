@@ -131,6 +131,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public void gnrEmptyArrangementList(Integer scheduleId) {
 		List<PeriodPo> periodPoList = periodService.selectAll();
 		List<PlanPo> planPoList = planService.selectAll();
+		List<ArrangementPo> arrangementPoList = new ArrayList<ArrangementPo>();
 		for (PlanPo planPo : planPoList) {
 			for (PeriodPo periodPo : periodPoList) {
 				ArrangementPo arrangementPo = new ArrangementPo();
@@ -142,6 +143,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 				arrangementPo.setTeacherId(planPo.getTeacherId());
 				arrangementPo.setArranged(0);
 				arrangementPo.setPriority(2);
+				arrangementPoList.add(arrangementPo);
 				arrangementService.insert(arrangementPo);
 			}
 		}

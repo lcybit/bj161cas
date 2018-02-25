@@ -36,4 +36,6 @@ public interface ArrangementMapper extends Mapper<ArrangementPo> {
 			@Result(column = "arranged", property = "arranged"), @Result(column = "priority", property = "priority") })
 	public List<Arrangement> selectEntityListByScheduleId(Integer scheduleId);
 
+	public Integer insertList(List<ArrangementPo> arrangementPoList);
+
 }
