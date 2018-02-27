@@ -8,13 +8,9 @@
 </head>
 
 <body>
-  <div id="navigation" style="width:200px; float:left;"></div>
-  <div id="navdisplay" style="width:auto; margin-left:200px;">
-    <button class="layui-btn layui-btn-sm" id="displayButton" >
-      <i class="layui-icon">&#60;</i>
-    </button>
-  </div>
-  <div id="main" style="width:auto;margin-left:200px;"></div>
+  <div id="navigation" class="layui-side"></div>
+  <div id="navToggle" class="layui-bg-gray" style="width:5px; cursor:pointer; margin-left:200px; position:absolute; z-index:1000;"></div>
+  <div id="main" class="layui-body"></div>
   <script>
     $(document).ready(function() {
       $.ajaxSetup({
@@ -34,22 +30,21 @@
   </script>
   <!-- 收起侧边栏 -->
   <script>
-  	$(document).ready(function(){
-  		$('#displayButton').click(function(){
-  			if($('#navigation').css('display')=='none'){
-	  			$('#navigation').show();
-	  			$('#main').css('margin-left','200px');
-	  			$('#navdisplay').css('margin-left','200px');
-	  			$('#displayButton').text('<'); 
-  			}else{
-  				$('#navigation').hide();
-	  			$('#main').css('margin-left','0px');
-	  			$('#navdisplay').css('margin-left','0px');
-	  			$('#displayButton').text('>');  			
-  			}		  				
-  		});
-  	});
+    $(document).ready(function() {
+      $('#navToggle').css('height',$(document).height());
+      $('#navToggle').click(function() {
+        if ($('#navigation').css('display') == 'none') {
+          $('#navigation').show();
+          $('#navToggle').css('margin-left', '200px');
+          $('#main').css('margin-left', '0px');
+        } else {
+          $('#navigation').hide();
+          $('#navToggle').css('margin-left', '0px');
+          $('#main').css('margin-left', '-200px');
+        }
+      });
+    });
   </script>
- </body>
+</body>
 
 </html>

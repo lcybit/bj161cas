@@ -8,6 +8,8 @@ public class ArrangementView {
 	private Integer roomId;
 	private Integer tclassId;
 	private Integer teacherId;
+	private Integer arranged;
+	private Integer priority;
 
 	public String getType() {
 		return type;
@@ -63,6 +65,22 @@ public class ArrangementView {
 
 	public void setTeacherId(Integer teacherId) {
 		this.teacherId = teacherId;
+	}
+
+	public Integer getPriority() {
+		return priority;
+	}
+
+	public void setPriority(Integer priority) {
+		this.priority = priority;
+	}
+
+	public Integer getArranged() {
+		return arranged;
+	}
+
+	public void setArranged(Integer arranged) {
+		this.arranged = arranged;
 	}
 
 }

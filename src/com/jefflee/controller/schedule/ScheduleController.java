@@ -1,5 +1,7 @@
 package com.jefflee.controller.schedule;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -76,6 +78,11 @@ public class ScheduleController {
 	@RequestMapping(value = "/arrange/{scheduleId}", method = RequestMethod.GET)
 	public void arrange(@PathVariable("scheduleId") Integer scheduleId) {
 		scheduleService.gnrSchedule(scheduleId);
+	}
+
+	@RequestMapping(value = "/export/{scheduleId}", method = RequestMethod.GET)
+	public void export(@PathVariable("scheduleId") Integer scheduleId) throws FileNotFoundException, IOException {
+		scheduleService.gnrScheduleViewExcel(scheduleId);
 	}
 
 }

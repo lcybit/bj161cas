@@ -63,26 +63,32 @@ public class ArrangementController {
 		return result;
 	}
 
-	@RequestMapping(value = "/arrange", method = RequestMethod.POST)
-	public Map<String, String> arrange(@RequestBody ArrangementView arrangementView) {
+	@RequestMapping(value = "/setArranged", method = RequestMethod.POST)
+	public Map<String, String> setArranged(@RequestBody ArrangementView arrangementView) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.arrange(arrangementView);
+		arrangementService.setArranged(arrangementView);
 		result.put("done", "true");
 		return result;
 	}
 
-	@RequestMapping(value = "/cancel", method = RequestMethod.POST)
-	public Map<String, String> cancel(@RequestBody ArrangementView arrangementView) {
+	@RequestMapping(value = "/setPriority", method = RequestMethod.POST)
+	public Map<String, String> setPriority(@RequestBody ArrangementView arrangementView) {
 		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.cancel(arrangementView);
+		arrangementService.setPriority(arrangementView);
 		result.put("done", "true");
 		return result;
 	}
 
-	@RequestMapping(value = "/check/schedule/{scheduleId}/{type}/{typeId}", method = RequestMethod.GET)
-	public List<Map<String, String>> checkConflict(@PathVariable("scheduleId") Integer scheduleId,
+	@RequestMapping(value = "/conflict/schedule/{scheduleId}/{type}/{typeId}", method = RequestMethod.GET)
+	public List<Map<String, String>> getConflictList(@PathVariable("scheduleId") Integer scheduleId,
 			@PathVariable("type") String type, @PathVariable("typeId") Integer typeId) {
 		return arrangementService.gnrConflictList(scheduleId, type, typeId);
+	}
+
+	@RequestMapping(value = "/priority/schedule/{scheduleId}/{type}/{typeId}", method = RequestMethod.GET)
+	public List<Map<String, String>> getPriorityList(@PathVariable("scheduleId") Integer scheduleId,
+			@PathVariable("type") String type, @PathVariable("typeId") Integer typeId) {
+		return arrangementService.gnrPriorityList(scheduleId, type, typeId);
 	}
 
 }

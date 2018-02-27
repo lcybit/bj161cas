@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>排课信息展示</title>
+<title>设置优先级</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
@@ -11,54 +11,58 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-    <button class="layui-btn layui-btn-sm" id="exportExcel" onclick="exportExcel()">导出Excel</button>
-    <form class="layui-form layui-form-pane" id="arrangementView" method="get" style="display:none">
-      <div class="layui-form-item">
+    <button class="layui-btn layui-btn-sm" onclick="display()">刷新</button>
+    <form class="layui-form layui-form-pane" id="arrangementView" method="get">
+      <div class="layui-form-item" style="display:none">
         <label class="layui-form-label">当前类型:</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="type" id="currentType">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" style="display:none">
         <label class="layui-form-label">当前课表ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="scheduleId" id="currentScheduleId">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" style="display:none">
         <label class="layui-form-label">当前课时ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="periodId" id="currentPeriodId">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" style="display:none">
         <label class="layui-form-label">当前课程ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="courseId" id="currentCourseId">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" style="display:none">
         <label class="layui-form-label">当前教室ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="roomId" id="currentRoomId">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" style="display:none">
         <label class="layui-form-label">当前班级ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="tclassId" id="currentTclassId">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" style="display:none">
         <label class="layui-form-label">当前教师ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="teacherId" id="currentTeacherId">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前安排情况:</label>
+        <label class="layui-form-label">优先级:</label>
         <div class="layui-input-block">
-          <input class="layui-input" type="text" name="arranged" id="currentArranged">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="0" title="不">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="1" title="低">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="2" title="中">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="3" title="高">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="4" title="必">
         </div>
       </div>
     </form>
@@ -68,7 +72,6 @@
 	<div class="layui-col-md6">
       <p>班级课表</p>
       <div class="layui-input-inline layui-form">
-        <input class="layui-col-md2" type="radio" name="course" lay-filter="course" value="0" title="取消">
         {{for courseList tmpl="#tmpl-courseList" /}}
       </div>
       {{for tclassWeekViewList tmpl="#tmpl-tclassWeekView" /}}
@@ -76,7 +79,6 @@
 	<div class="layui-col-md6">
       <p>教师课表</p>
       <div class="layui-input-inline layui-form">
-        <input class="layui-col-md2" type="radio" name="tclass" lay-filter="tclass" value="0" title="取消">
         {{for tclassList tmpl="#tmpl-tclassList" /}}
       </div>
       {{for teacherWeekViewList tmpl="#tmpl-teacherWeekView" /}}
@@ -151,13 +153,13 @@
   <script id="tmpl-tclassDayView" type="text/x-jsrender">
     <tr>
       <td>{{:#getIndex() +1}}</td>
-      {{for arrangedPeriodViewList tmpl="#tmpl-tclassPeriodView" /}}
+      {{for highestPeriodViewList tmpl="#tmpl-tclassPeriodView" /}}
     </tr>
   </script>
   <script id="tmpl-teacherDayView" type="text/x-jsrender">
     <tr>
       <td>{{:#getIndex() +1}}</td>
-      {{for arrangedPeriodViewList tmpl="#tmpl-teacherPeriodView" /}}
+      {{for highestPeriodViewList tmpl="#tmpl-teacherPeriodView" /}}
     </tr>
   </script>
   <script id="tmpl-tclassPeriodView" type="text/x-jsrender">
@@ -179,11 +181,11 @@
     {{:arrangement.tclass.name}}</td>
   </script>
   <script id="tmpl-tclassPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2">{{:plan.course.name}}{{:plan.periodNum-arrangedNum}}</td>
+    <td class="layui-col-md2">{{:plan.course.name}}{{:plan.periodNum-highestNum}}</td>
     {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script id="tmpl-teacherPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2">{{:plan.tclass.name}}{{:plan.course.name}}{{:plan.periodNum-arrangedNum}}</td>
+    <td class="layui-col-md2">{{:plan.tclass.name}}{{:plan.course.name}}{{:plan.periodNum-highestNum}}</td>
     {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script>
@@ -194,11 +196,6 @@
         var scheduleId = sessionStorage.getItem('currentScheduleId');
         $('#currentScheduleId').attr('value', scheduleId);
         display();
-        $('#currentCourseId').attr('value', '0');
-        $('#currentTclassId').attr('value', '0');
-        $('input:radio[name="course"][value="0"]').attr('checked', true);
-        $('input:radio[name="tclass"][value="0"]').attr('checked', true);
-        form.render();
       });
   
       function display() {
@@ -212,117 +209,67 @@
             form.on('radio(course)', function(course) {
               var courseId = course.value;
               $('#currentCourseId').attr('value', courseId);
-              clearConflictList();
+              clearPriorityList();
               clearTclassList();
-              getConflictList(scheduleId, 'course', courseId);
+              getPriorityList(scheduleId, 'course', courseId);
             });
             form.on('radio(tclass)', function(tclass) {
               var tclassId = tclass.value;
               $('#currentTclassId').attr('value', tclassId);
-              clearConflictList();
+              clearPriorityList();
               clearCourseList();
-              getConflictList(scheduleId, 'tclass', tclassId);
+              getPriorityList(scheduleId, 'tclass', tclassId);
             });
             form.render();
           }
         });
       }
   
-      function clearConflictList() {
+      function clearPriorityList() {
         $('td[id]').each(function(index, elem) {
           td = $(elem);
-          td.attr('disabled', false);
-          td.removeAttr('class');
+          td.css('background-color', '#FFFFFF');
         });
       }
       
       function clearCourseList() {
-        $('#currentCourseId').attr('value', '0');
-        $('input:radio[name="course"][value="0"]').attr('checked', true);
+        var courseId = $('#currentCourseId').attr('value');
+        $('input:radio[name="course"][value="' + courseId + '"]').attr('checked', false);
         form.render();
+        $('#currentCourseId').attr('value', '0');
       }
       
       function clearTclassList() {
-        $('#currentTclassId').attr('value', '0');
-        $('input:radio[name="tclass"][value="0"]').attr('checked', true);
+        var tclassId = $('#currentTclassId').attr('value');
+        $('input:radio[name="tclass"][value="' + tclassId + '"]').attr('checked', false);
         form.render();
+        $('#currentTclassId').attr('value', '0');
       }
   
       function clickTable(arrangement) {
         $('#currentPeriodId').attr('value', arrangement.periodId);
         var scheduleId = $('#currentScheduleId').attr('value');
+        var priority = $('#currentPriority').attr('value');
         if(arrangement.type == 'tclass') {
           $('#currentType').attr('value', 'tclass');
           $('#currentTclassId').attr('value', arrangement.tclassId);
-          var currentCourseId = $('#currentCourseId').attr('value');
-          var clickedCourseId = arrangement.courseId;
-          if (isNull(currentCourseId) || currentCourseId == '0') {
-            if (!isNull(clickedCourseId)) {
-              //alert("current0:" + currentCourseId + "clicked1:" + clickedCourseId);
-              $('#currentCourseId').attr('value', clickedCourseId);
-              setArranged(-1);
-              display();
-              clearCourseList();
-            }
-          } else {
-            if (!isNull(clickedCourseId)) {
-              //alert("current1:" + currentCourseId + "clicked1:" + clickedCourseId);
-              setArranged(1);
-              $('#currentCourseId').attr('value', clickedCourseId);
-              setArranged(-1);
-              display();
-              $('input:radio[name="course"][value="' + clickedCourseId + '"]').attr('checked', true);
-              form.render();
-              getConflictList(scheduleId, 'course', clickedCourseId);
-            } else {
-              //alert("current1:" + currentCourseId + "clicked0:" + clickedCourseId);
-              setArranged(1);
-              display();
-              $('input:radio[name="course"][value="' + currentCourseId + '"]').attr('checked', true);
-              form.render();
-              getConflictList(scheduleId, 'course', currentCourseId);
-            }
-          }
+          var courseId = $('#currentCourseId').attr('value');
+          setPriority(priority);
+          getPriorityList(scheduleId, 'course', courseId);          
         } else if(arrangement.type == 'teacher') {
           $('#currentType').attr('value', 'teacher');
           $('#currentTeacherId').attr('value', arrangement.teacherId);
-          var currentTclassId = $('#currentTclassId').attr('value');
-          var clickedTclassId = arrangement.tclassId;
-          if (isNull(currentTclassId) || currentTclassId == '0') {
-            if (!isNull(clickedTclassId)) {
-              //alert("current0:" + currentTclassId + "clicked1:" + clickedTclassId);
-              $('#currentTclassId').attr('value', clickedTclassId);
-              setArranged(-1);
-              display();
-              clearTclassList();
-            }
-          } else {
-            if (!isNull(clickedTclassId)) {
-              //alert("current1:" + currentTclassId + "clicked1:" + clickedTclassId);
-              setArranged(1);
-              $('#currentTclassId').attr('value', clickedTclassId);
-              setArranged(-1);
-              display();
-              $('input:radio[name="tclass"][value="' + clickedTclassId + '"]').attr('checked', true);
-              form.render();
-              getConflictList(scheduleId, 'tclass', clickedTclassId);
-            } else {
-              //alert("current1:" + currentTclassId + "clicked0:" + clickedTclassId);
-              setArranged(1);
-              display();
-              $('input:radio[name="tclass"][value="' + currentTclassId + '"]').attr('checked', true);
-              form.render();
-              getConflictList(scheduleId, 'tclass', currentTclassId);
-            }
-          }
+          var tclassId = $('#currentTclassId').attr('value');
+          setPriority(priority);
+          getPriorityList(scheduleId, 'tclass', tclassId);
         }
       }
   
-      function setArranged(arranged) {
-        $('#currentArranged').attr('value', arranged);
+      function setPriority(priority) {
+        $('#currentPriority').attr('value', priority);
         $.ajax({
           async : false,
-          url : '/arrangement/setArranged',
+          url : '/arrangement/setPriority',
           type : 'POST',
           dataType : 'json',
           contentType : 'application/json',
@@ -332,20 +279,38 @@
         });
       }
   
-      function getConflictList(scheduleId, type, typeId) {
+      function getPriorityList(scheduleId, type, typeId) {
         $.ajax({
           async : false,
-          url : '/arrangement/conflict/schedule/' + scheduleId + '/' + type + '/' + typeId,
+          url : '/arrangement/priority/schedule/' + scheduleId + '/' + type + '/' + typeId,
           type : 'GET',
-          success : function(conflictList) {
-            $.each(conflictList, function(index, conflict) {
-              var periodView = $('#' + conflict.periodViewId);
-              if (conflict.conflictValue == 0) {
-                periodView.attr('disabled', false);
-                periodView.attr('class', 'layui-bg-green');
-              } else if (conflict.conflictValue == 1) {
-                periodView.attr('disabled', true);
-                periodView.attr('class', 'layui-disabled layui-bg-red');
+          success : function(priorityList) {
+            $.each(priorityList, function(index, priority) {
+              var periodView = $('#' + priority.periodViewId);
+              switch (priority.priorityValue) {
+                case '0':
+                  periodView.css('background-color', '#FF3300');
+                  periodView.css('color', '#FFFFFF');
+                  break;
+                case '1':
+                  periodView.css('background-color', '#FF9900');
+                  periodView.css('color', '#FFFFFF');
+                  break;
+                case '2':
+                  periodView.css('background-color', '#FFFF00');
+                  periodView.css('color', '#000000');
+                  break;
+                case '3':
+                  periodView.css('background-color', '#99FF00');
+                  periodView.css('color', '#000000');
+                  break;
+                case '4':
+                  periodView.css('background-color', '#33FF00');
+                  periodView.css('color', '#000000');
+                  break;
+                default:
+                  periodView.css('color', '#FFFFFF');
+                  break;
               }
             });
           }
@@ -356,16 +321,6 @@
         return null == obj || '' == obj;
       }
   
-      function exportExcel() {
-        var scheduleId = sessionStorage.getItem('currentScheduleId');
-        $.ajax({
-          async : false,
-          url : '/schedule/export/'+ scheduleId,
-          type : 'GET',
-          success : function(result){
-          }
-        })
-      }
   </script>
 </body>
 

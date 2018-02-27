@@ -1,5 +1,7 @@
 package com.jefflee.service.schedule;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import com.jefflee.po.schedule.SchedulePo;
@@ -23,4 +25,5 @@ public interface ScheduleService {
 
 	public void gnrSchedule(Integer scheduleId);
 
+	public void gnrScheduleViewExcel(Integer scheduleId) throws FileNotFoundException, IOException;
 }

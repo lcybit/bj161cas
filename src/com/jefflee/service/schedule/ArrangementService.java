@@ -32,6 +32,8 @@ public interface ArrangementService {
 
 	public List<Map<String, String>> gnrConflictList(Integer scheduleId, String type, Integer typeId);
 
+	public List<Map<String, String>> gnrPriorityList(Integer scheduleId, String type, Integer typeId);
+
 	public List<WeekView> gnrWeekViewListByCourseTclass(Schedule schedule, List<Course> courseList,
 			List<Tclass> tclassList);
 
@@ -40,9 +42,10 @@ public interface ArrangementService {
 	public List<WeekView> gnrWeekViewListByTclassTeacher(Schedule schedule, List<Tclass> tclassList,
 			List<Teacher> teacherList);
 
-	public void arrange(ArrangementView arrangementView);
+	public void setArranged(ArrangementView arrangementView);
 
-	public void cancel(ArrangementView arrangementView);
+	public void setPriority(ArrangementView arrangementView);
 
 	public Integer insertList(List<ArrangementPo> arrangementPoList);
+
 }
