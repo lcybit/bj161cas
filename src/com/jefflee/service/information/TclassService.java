@@ -2,6 +2,7 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
+import com.jefflee.entity.information.Tclass;
 import com.jefflee.po.information.TclassPo;
 
 public interface TclassService {
@@ -16,4 +17,7 @@ public interface TclassService {
 
 	public Integer deleteById(Integer tclassId);
 
+	public String gnrName(Tclass tclass);
+
+	public String gnrShortName(Tclass tclass);
 }

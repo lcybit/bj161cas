@@ -11,58 +11,65 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-    <button class="layui-btn layui-btn-sm" onclick="display()">刷新</button>
+    <button class="layui-btn layui-btn-normal" onclick="display()">
+      <i class="layui-icon">&#x1002;</i>刷新
+    </button>
     <form class="layui-form layui-form-pane" id="arrangementView" method="get">
       <div class="layui-form-item" style="display:none">
-        <label class="layui-form-label">当前类型:</label>
+        <label class="layui-form-label">当前类型</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="type" id="currentType">
         </div>
       </div>
       <div class="layui-form-item" style="display:none">
-        <label class="layui-form-label">当前课表ID:</label>
+        <label class="layui-form-label">当前课表ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="scheduleId" id="currentScheduleId">
         </div>
       </div>
       <div class="layui-form-item" style="display:none">
-        <label class="layui-form-label">当前课时ID:</label>
+        <label class="layui-form-label">当前课时ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="periodId" id="currentPeriodId">
         </div>
       </div>
       <div class="layui-form-item" style="display:none">
-        <label class="layui-form-label">当前课程ID:</label>
+        <label class="layui-form-label">当前课程ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="courseId" id="currentCourseId">
         </div>
       </div>
       <div class="layui-form-item" style="display:none">
-        <label class="layui-form-label">当前教室ID:</label>
+        <label class="layui-form-label">当前教室ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="roomId" id="currentRoomId">
         </div>
       </div>
       <div class="layui-form-item" style="display:none">
-        <label class="layui-form-label">当前班级ID:</label>
+        <label class="layui-form-label">当前班级ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="tclassId" id="currentTclassId">
         </div>
       </div>
       <div class="layui-form-item" style="display:none">
-        <label class="layui-form-label">当前教师ID:</label>
+        <label class="layui-form-label">当前教师ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="teacherId" id="currentTeacherId">
         </div>
       </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">优先级:</label>
+      <div class="layui-form-item" pane>
+        <label class="layui-form-label">优先级</label>
         <div class="layui-input-block">
-          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="0" title="不">
-          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="1" title="低">
-          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="2" title="中">
-          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="3" title="高">
-          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="4" title="必">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="0" title="不"
+            style="color:'#FF3300'">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="1" title="低"
+            style="color:'#FF9900'">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="2" title="中"
+            style="color:'#FFFF00'">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="3" title="高"
+            style="color:'#99FF00'">
+          <input class="layui-input" type="radio" name="priority" lay-filter="priority" value="4" title="必"
+            style="color:'#33FF00'">
         </div>
       </div>
     </form>
@@ -70,16 +77,27 @@
   </div>
   <script id="tmpl-scheduleView" type="text/x-jsrender">
 	<div class="layui-col-md6">
-      <p>班级课表</p>
-      <div class="layui-input-inline layui-form">
-        {{for courseList tmpl="#tmpl-courseList" /}}
+      <blockquote class="layui-elem-quote">班级课表</blockquote>
+      <div class="layui-form layui-form-pane">
+        <div class="layui-form-item" pane>
+          <label class="layui-form-label">课程</label>
+          <div class="layui-input-block">
+            {{for courseList tmpl="#tmpl-courseList" /}}
+          </div>
+        </div>
       </div>
       {{for tclassWeekViewList tmpl="#tmpl-tclassWeekView" /}}
 	</div>
 	<div class="layui-col-md6">
-      <p>教师课表</p>
-      <div class="layui-input-inline layui-form">
-        {{for tclassList tmpl="#tmpl-tclassList" /}}
+      <blockquote class="layui-elem-quote">教师课表</blockquote>
+      <div class="layui-form layui-form-pane">
+        <div class="layui-form-item" pane>
+          <label class="layui-form-label">班级/课程</label>
+          <div class="layui-input-block">
+            {{for tclassList tmpl="#tmpl-tclassList" /}}
+            {{for courseList tmpl="#tmpl-specialList" /}}
+          </div>
+        </div>
       </div>
       {{for teacherWeekViewList tmpl="#tmpl-teacherWeekView" /}}
 	</div>
@@ -89,6 +107,11 @@
   </script>
   <script id="tmpl-tclassList" type="text/x-jsrender">
     <input type="radio" name="tclass" lay-filter="tclass" value="{{:tclassId}}" title="{{:name}}">
+  </script>
+  <script id="tmpl-specialList" type="text/x-jsrender">
+    {{if type != 0}}
+      <input type="radio" name="special" lay-filter="special" value="{{:courseId}}" title="{{:name}}">
+    {{/if}}
   </script>
   <script id="tmpl-tclassWeekView" type="text/x-jsrender">
     <div class="layui-col-md6">
@@ -178,149 +201,201 @@
 							 'periodId':'{{:arrangement.period.periodId}}',
 							 'teacherId':'{{:arrangement.teacher.teacherId}}',
 							 'tclassId':'{{:arrangement.tclass.tclassId}}'})">
-    {{:arrangement.tclass.name}}</td>
+      {{if arrangement.course.type == 0}}
+        {{:arrangement.tclass.name}}
+      {{else}}
+        {{:arrangement.course.name}}
+      {{/if}}
+    </td>
   </script>
   <script id="tmpl-tclassPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2">{{:plan.course.name}}{{:plan.periodNum-highestNum}}</td>
+    <td class="layui-col-md2">{{:plan.course.name}} {{:plan.periodNum-highestNum}}</td>
     {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script id="tmpl-teacherPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2">{{:plan.tclass.name}}{{:plan.course.name}}{{:plan.periodNum-highestNum}}</td>
+    <td class="layui-col-md2">
+      {{if plan.course.type == 0}}
+        {{:plan.tclass.name}}
+      {{else}}
+        {{:plan.course.name}}
+      {{/if}}
+      {{:plan.periodNum-highestNum}}</td>
     {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script>
-      var form = layui.form;
-      var element = layui.element;
+    var form = layui.form;
+    var element = layui.element;
   
-      $(document).ready(function() {
-        var scheduleId = sessionStorage.getItem('currentScheduleId');
-        $('#currentScheduleId').attr('value', scheduleId);
-        display();
+    $(document).ready(function() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      $('#currentScheduleId').attr('value', scheduleId);
+      display();
+      $('#currentCourseId').attr('value', '0');
+      $('#currentTclassId').attr('value', '0');
+    });
+  
+    function display() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      $.ajax({
+        async : false,
+        url : '/schedule/display/' + scheduleId,
+        type : 'GET',
+        success : function(scheduleView) {
+          $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
+          form.on('radio(course)', function(course) {
+            clearPriorityList();
+            clearTclassList();
+            clearSpecialList();
+            var courseId = course.value;
+            $('#currentCourseId').attr('value', courseId);
+            getPriorityList(scheduleId, 'course', courseId);
+          });
+          form.on('radio(tclass)', function(tclass) {
+            clearPriorityList();
+            clearCourseList();
+            clearSpecialList();
+            var tclassId = tclass.value;
+            $('#currentTclassId').attr('value', tclassId);
+            getPriorityList(scheduleId, 'tclass', tclassId);
+          });
+          form.on('radio(special)', function(course) {
+            clearPriorityList();
+            clearCourseList();
+            clearTclassList();
+            var courseId = course.value;
+            $('#currentCourseId').attr('value', courseId);
+            getPriorityList(scheduleId, 'special', courseId);
+          });
+          form.render();
+        }
       });
+    }
   
-      function display() {
-        var scheduleId = sessionStorage.getItem('currentScheduleId');
-        $.ajax({
-          async : false,
-          url : '/schedule/display/' + scheduleId,
-          type : 'GET',
-          success : function(scheduleView) {
-            $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
-            form.on('radio(course)', function(course) {
-              var courseId = course.value;
-              $('#currentCourseId').attr('value', courseId);
-              clearPriorityList();
-              clearTclassList();
-              getPriorityList(scheduleId, 'course', courseId);
-            });
-            form.on('radio(tclass)', function(tclass) {
-              var tclassId = tclass.value;
-              $('#currentTclassId').attr('value', tclassId);
-              clearPriorityList();
-              clearCourseList();
-              getPriorityList(scheduleId, 'tclass', tclassId);
-            });
-            form.render();
-          }
-        });
-      }
+    function clearPriorityList() {
+      $('td[id]').each(function(index, elem) {
+        td = $(elem);
+        td.css('color', '#000000');
+        td.css('background-color', '#FFFFFF');
+      });
+    }
   
-      function clearPriorityList() {
-        $('td[id]').each(function(index, elem) {
-          td = $(elem);
-          td.css('background-color', '#FFFFFF');
-        });
-      }
-      
-      function clearCourseList() {
-        var courseId = $('#currentCourseId').attr('value');
-        $('input:radio[name="course"][value="' + courseId + '"]').attr('checked', false);
-        form.render();
-        $('#currentCourseId').attr('value', '0');
-      }
-      
-      function clearTclassList() {
-        var tclassId = $('#currentTclassId').attr('value');
-        $('input:radio[name="tclass"][value="' + tclassId + '"]').attr('checked', false);
-        form.render();
-        $('#currentTclassId').attr('value', '0');
-      }
+    function clearCourseList() {
+      $('input:radio[name="course"]').each(function(index, elem) {
+        $(elem).attr('checked', false);
+      });
+      form.render();
+      $('#currentCourseId').attr('value', '0');
+    }
   
-      function clickTable(arrangement) {
-        $('#currentPeriodId').attr('value', arrangement.periodId);
-        var scheduleId = $('#currentScheduleId').attr('value');
-        var priority = $('#currentPriority').attr('value');
-        if(arrangement.type == 'tclass') {
-          $('#currentType').attr('value', 'tclass');
-          $('#currentTclassId').attr('value', arrangement.tclassId);
+    function clearTclassList() {
+      $('input:radio[name="tclass"]').each(function(index, elem) {
+        $(elem).attr('checked', false);
+      });
+      form.render();
+      $('#currentTclassId').attr('value', '0');
+    }
+  
+    function clearSpecialList() {
+      $('input:radio[name="special"]').each(function(index, elem) {
+        $(elem).attr('checked', false);
+      });
+      form.render();
+      $('#currentCourseId').attr('value', '0');
+    }
+  
+    function clickTable(arrangement) {
+      $('#currentPeriodId').attr('value', arrangement.periodId);
+      var scheduleId = $('#currentScheduleId').attr('value');
+      var clickedRadio = getClickedRadio();
+      if (arrangement.type == 'tclass') {
+        $('#currentTclassId').attr('value', arrangement.tclassId);
+        if (clickedRadio == 'course') {
           var courseId = $('#currentCourseId').attr('value');
-          setPriority(priority);
-          getPriorityList(scheduleId, 'course', courseId);          
-        } else if(arrangement.type == 'teacher') {
-          $('#currentType').attr('value', 'teacher');
-          $('#currentTeacherId').attr('value', arrangement.teacherId);
+          $('#currentType').attr('value', 'tclass');
+          setPriority();
+          getPriorityList(scheduleId, 'course', courseId);
+        }
+      } else if (arrangement.type == 'teacher') {
+        $('#currentTeacherId').attr('value', arrangement.teacherId);
+        if (clickedRadio == 'tclass') {
           var tclassId = $('#currentTclassId').attr('value');
-          setPriority(priority);
+          $('#currentType').attr('value', 'teacher');
+          setPriority();
           getPriorityList(scheduleId, 'tclass', tclassId);
+        } else if (clickedRadio == 'special') {
+          var courseId = $('#currentCourseId').attr('value');
+          $('#currentType').attr('value', 'special');
+          setPriority();
+          getPriorityList(scheduleId, 'special', courseId);
         }
       }
+    }
   
-      function setPriority(priority) {
-        $('#currentPriority').attr('value', priority);
-        $.ajax({
-          async : false,
-          url : '/arrangement/setPriority',
-          type : 'POST',
-          dataType : 'json',
-          contentType : 'application/json',
-          data : JSON.stringify($('#arrangementView').serializeJSON()),
-          success : function(result) {
-          }
-        });
-      }
+    function getClickedRadio() {
+      var clickedType = '';
+      $('input:radio[name!="priority"]').each(function(index, elem) {
+        var radio = $(elem);
+        if (radio.prop('checked') == true) {
+          clickedType = radio.attr('name');
+          return false;
+        }
+      });
+      return clickedType;
+    }
   
-      function getPriorityList(scheduleId, type, typeId) {
-        $.ajax({
-          async : false,
-          url : '/arrangement/priority/schedule/' + scheduleId + '/' + type + '/' + typeId,
-          type : 'GET',
-          success : function(priorityList) {
-            $.each(priorityList, function(index, priority) {
-              var periodView = $('#' + priority.periodViewId);
-              switch (priority.priorityValue) {
-                case '0':
-                  periodView.css('background-color', '#FF3300');
-                  periodView.css('color', '#FFFFFF');
-                  break;
-                case '1':
-                  periodView.css('background-color', '#FF9900');
-                  periodView.css('color', '#FFFFFF');
-                  break;
-                case '2':
-                  periodView.css('background-color', '#FFFF00');
-                  periodView.css('color', '#000000');
-                  break;
-                case '3':
-                  periodView.css('background-color', '#99FF00');
-                  periodView.css('color', '#000000');
-                  break;
-                case '4':
-                  periodView.css('background-color', '#33FF00');
-                  periodView.css('color', '#000000');
-                  break;
-                default:
-                  periodView.css('color', '#FFFFFF');
-                  break;
-              }
-            });
-          }
-        })
-      }
+    function setPriority() {
+      $.ajax({
+        async : false,
+        url : '/arrangement/setPriority',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#arrangementView').serializeJSON()),
+        success : function(result) {}
+      });
+    }
   
-      function isNull(obj) {
-        return null == obj || '' == obj;
-      }
+    function getPriorityList(scheduleId, type, typeId) {
+      $.ajax({
+        async : false,
+        url : '/arrangement/priority/schedule/' + scheduleId + '/' + type + '/' + typeId,
+        type : 'GET',
+        success : function(priorityList) {
+          $.each(priorityList, function(index, priority) {
+            var periodView = $('#' + priority.periodViewId);
+            switch (priority.priorityValue) {
+            case '0':
+              periodView.css('background-color', '#DD3300');
+              periodView.css('color', '#FFFFFF');
+              break;
+            case '1':
+              periodView.css('background-color', '#FF9900');
+              periodView.css('color', '#FFFFFF');
+              break;
+            case '2':
+              periodView.css('background-color', '#FFFF00');
+              periodView.css('color', '#000000');
+              break;
+            case '3':
+              periodView.css('background-color', '#99EE00');
+              periodView.css('color', '#FFFFFF');
+              break;
+            case '4':
+              periodView.css('background-color', '#339900');
+              periodView.css('color', '#FFFFFF');
+              break;
+            default:
+              periodView.css('color', '#FFFFFF');
+              break;
+            }
+          });
+        }
+      })
+    }
   
+    function isNull(obj) {
+      return null == obj || '' == obj;
+    }
   </script>
 </body>
 

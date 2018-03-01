@@ -21,6 +21,7 @@ import com.jefflee.po.information.PeriodPo;
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.service.information.PeriodService;
+import com.jefflee.service.information.TclassService;
 import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.view.ArrangementView;
@@ -40,6 +41,8 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Resource(name = "periodService")
 	private PeriodService periodService;
+	@Resource(name = "tclassService")
+	private TclassService tclassService;
 
 	@Resource(name = "planService")
 	private PlanService planService;
@@ -134,7 +137,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 		weekView.setType("tclass");
 		weekView.setTypeId(tclass.tclassId);
-		weekView.setTypeName(tclass.name);
+		weekView.setTypeName(tclassService.gnrName(tclass));
 		List<PlanView> planViewList = gnrPlanViewList(scheduleArrangementList, schedulePlanList, courseList, tclass);
 		weekView.setPlanViewList(planViewList);
 		List<DayView> dayViewList = gnrDayViewList(scheduleArrangementList, tclass, daysPerWeek, periodsPerDay);
@@ -396,6 +399,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 	/* Display Block End */
 
 	/* Conflict Block Start */
+
 	@Override
 	public List<Map<String, String>> gnrConflictList(Integer scheduleId, String type, Integer typeId) {
 		List<Map<String, String>> conflictList = new ArrayList<Map<String, String>>();
@@ -448,6 +452,26 @@ public class ArrangementServiceImpl implements ArrangementService {
 				}
 				conflictList.add(conflict);
 			}
+		} else if ("special".equals(type)) {
+			typeArrangementList = getByCourse(scheduleArrangementList, typeId);
+			for (Arrangement typeArrangement : typeArrangementList) {
+				periodId = typeArrangement.period.periodId;
+				teacherId = typeArrangement.teacher.teacherId;
+				Map<String, String> conflict = new HashMap<String, String>();
+				conflict.put("periodViewId", concatenateViewId("period", periodId, "teacher", teacherId));
+				conflict.put("conflictValue", "0");
+				for (Arrangement arrangedArrangement : arrangedArrangementList) {
+					if (typeArrangement.period.periodId == arrangedArrangement.period.periodId
+							&& typeArrangement.tclass.tclassId == arrangedArrangement.tclass.tclassId) {
+						continue;
+					}
+					if (isConflictive(typeArrangement, arrangedArrangement)) {
+						conflict.put("conflictValue", "1");
+						break;
+					}
+				}
+				conflictList.add(conflict);
+			}
 		}
 		return conflictList;
 	}
@@ -466,6 +490,47 @@ public class ArrangementServiceImpl implements ArrangementService {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void setArranged(ArrangementView arrangementView) {
+		Integer arranged = arrangementView.getArranged();
+		if (arranged == -1) {
+			updateArrangement(arrangementView);
+			return;
+		}
+		List<Arrangement> conditionArrangementList = new ArrayList<Arrangement>();
+		Arrangement arrangement = new Arrangement();
+		String type = arrangementView.getType();
+		Integer periodId = arrangementView.getPeriodId();
+		Integer courseId = arrangementView.getCourseId();
+		Integer tclassId = arrangementView.getTclassId();
+		Integer teacherId = arrangementView.getTeacherId();
+
+		List<Arrangement> scheduleArrangementList = arrangementMapper
+				.selectEntityListByScheduleId(arrangementView.getScheduleId());
+		if ("tclass".equals(type)) {
+			// TODO 考虑列表情况
+			conditionArrangementList = getByPeriod(
+					getByTclass(getByCourse(scheduleArrangementList, courseId), tclassId), periodId);
+			arrangement = conditionArrangementList.get(0);
+		} else if ("teacher".equals(type)) {
+			conditionArrangementList = getByPeriod(
+					getByTeacher(getByTclass(scheduleArrangementList, tclassId), teacherId), periodId);
+			for (Arrangement conditionArrangement : conditionArrangementList) {
+				if (conditionArrangement.course.type == 0) {
+					arrangement = conditionArrangement;
+					break;
+				}
+			}
+		} else if ("special".equals(type)) {
+			conditionArrangementList = getByPeriod(
+					getByTeacher(getByCourse(scheduleArrangementList, courseId), teacherId), periodId);
+			arrangement = conditionArrangementList.get(0);
+		}
+		arrangement.arranged = arranged;
+		updateArrangement(arrangement);
+		return;
 	}
 
 	/* Conflict Block End */
@@ -496,6 +561,19 @@ public class ArrangementServiceImpl implements ArrangementService {
 		} else if ("tclass".equals(type)) {
 			typeArrangementList = getByTclass(scheduleArrangementList, typeId);
 			for (Arrangement typeArrangement : typeArrangementList) {
+				if (typeArrangement.course.type != 0) {
+					continue;
+				}
+				periodId = typeArrangement.period.periodId;
+				teacherId = typeArrangement.teacher.teacherId;
+				Map<String, String> priority = new HashMap<String, String>();
+				priority.put("periodViewId", concatenateViewId("period", periodId, "teacher", teacherId));
+				priority.put("priorityValue", String.valueOf(typeArrangement.priority));
+				priorityList.add(priority);
+			}
+		} else if ("special".equals(type)) {
+			typeArrangementList = getByCourse(scheduleArrangementList, typeId);
+			for (Arrangement typeArrangement : typeArrangementList) {
 				periodId = typeArrangement.period.periodId;
 				teacherId = typeArrangement.teacher.teacherId;
 				Map<String, String> priority = new HashMap<String, String>();
@@ -505,6 +583,52 @@ public class ArrangementServiceImpl implements ArrangementService {
 			}
 		}
 		return priorityList;
+	}
+
+	@Override
+	public void setPriority(ArrangementView arrangementView) {
+		Integer priority = arrangementView.getPriority();
+		List<Arrangement> conditionArrangementList = new ArrayList<Arrangement>();
+		Arrangement arrangement = new Arrangement();
+		String type = arrangementView.getType();
+		Integer periodId = arrangementView.getPeriodId();
+		Integer courseId = arrangementView.getCourseId();
+		Integer tclassId = arrangementView.getTclassId();
+		Integer teacherId = arrangementView.getTeacherId();
+
+		if (priority == 4) {
+			List<Arrangement> scheduleArrangementList = arrangementMapper
+					.selectEntityListByScheduleId(arrangementView.getScheduleId());
+			if ("tclass".equals(type)) {
+				// TODO 考虑列表情况
+				conditionArrangementList = getByPeriod(
+						getByTclass(getByCourse(scheduleArrangementList, courseId), tclassId), periodId);
+				arrangement = conditionArrangementList.get(0);
+			} else if ("teacher".equals(type)) {
+				conditionArrangementList = getByPeriod(
+						getByTeacher(getByTclass(scheduleArrangementList, tclassId), teacherId), periodId);
+				for (Arrangement conditionArrangement : conditionArrangementList) {
+					if (conditionArrangement.course.type == 0) {
+						arrangement = conditionArrangement;
+						break;
+					}
+				}
+			} else if ("special".equals(type)) {
+				conditionArrangementList = getByPeriod(
+						getByTeacher(getByCourse(scheduleArrangementList, courseId), teacherId), periodId);
+				arrangement = conditionArrangementList.get(0);
+			}
+			for (Arrangement scheduleArrangement : scheduleArrangementList) {
+				if (arrangement.arrangementId == scheduleArrangement.arrangementId) {
+					continue;
+				} else if (isConflictive(arrangement, scheduleArrangement)) {
+					scheduleArrangement.priority = 0;
+					updateArrangement(scheduleArrangement);
+				}
+			}
+		}
+		updateArrangement(arrangementView);
+		return;
 	}
 
 	/* Priority Block End */
@@ -670,6 +794,8 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 		Integer arranged = arrangementView.getArranged();
 		Integer priority = arrangementView.getPriority();
+		String type = arrangementView.getType();
+
 		if (null != arranged) {
 			updateArrangementPo.setArranged(arranged);
 		}
@@ -680,11 +806,14 @@ public class ArrangementServiceImpl implements ArrangementService {
 		Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("scheduleId", arrangementView.getScheduleId());
 		criteria.andEqualTo("periodId", arrangementView.getPeriodId());
-		if (arrangementView.getType().equals("tclass")) {
+		if ("tclass".equals(type)) {
 			criteria.andEqualTo("courseId", arrangementView.getCourseId());
 			criteria.andEqualTo("tclassId", arrangementView.getTclassId());
-		} else if (arrangementView.getType().equals("teacher")) {
+		} else if ("teacher".equals(type)) {
 			criteria.andEqualTo("tclassId", arrangementView.getTclassId());
+			criteria.andEqualTo("teacherId", arrangementView.getTeacherId());
+		} else if ("special".equals(type)) {
+			criteria.andEqualTo("courseId", arrangementView.getCourseId());
 			criteria.andEqualTo("teacherId", arrangementView.getTeacherId());
 		}
 		arrangementMapper.updateByExampleSelective(updateArrangementPo, example);
@@ -700,40 +829,6 @@ public class ArrangementServiceImpl implements ArrangementService {
 	@Override
 	public Arrangement selectArrangementById(Integer arrangementId) {
 		return arrangementMapper.selectEntityById(arrangementId);
-	}
-
-	@Override
-	public void setArranged(ArrangementView arrangementView) {
-		updateArrangement(arrangementView);
-		return;
-	}
-
-	@Override
-	public void setPriority(ArrangementView arrangementView) {
-		Integer priority = arrangementView.getPriority();
-		Arrangement arrangement = new Arrangement();
-
-		if (priority == 4) {
-			List<Arrangement> scheduleArrangementList = arrangementMapper
-					.selectEntityListByScheduleId(arrangementView.getScheduleId());
-			if (arrangementView.getType().equals("tclass")) {
-				// TODO 考虑列表情况
-				arrangement = getByPeriod(
-						getByTclass(getByCourse(scheduleArrangementList, arrangementView.getCourseId()),
-								arrangementView.getTclassId()),
-						arrangementView.getPeriodId()).get(0);
-			}
-			for (Arrangement scheduleArrangement : scheduleArrangementList) {
-				if (arrangement.arrangementId == scheduleArrangement.arrangementId) {
-					continue;
-				} else if (isConflictive(arrangement, scheduleArrangement)) {
-					scheduleArrangement.priority = 0;
-					updateArrangement(scheduleArrangement);
-				}
-			}
-		}
-		updateArrangement(arrangementView);
-		return;
 	}
 
 }

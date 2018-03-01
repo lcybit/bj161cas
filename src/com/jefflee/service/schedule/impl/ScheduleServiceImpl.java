@@ -228,8 +228,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 						tclassCell.setCellValue(String.valueOf(rowIdx - 2));
 						continue;
 					} else if (colIdx >= 1 && colIdx <= 8) {
-						tclassCell.setCellValue(tclassWeekView.getDayViewList().get(rowIdx - 3).getPeriodViewList()
-								.get(colIdx - 1).getArrangement().course.name);
+						tclassCell.setCellValue(tclassWeekView.getDayViewList().get(rowIdx - 3)
+								.getArrangedPeriodViewList().get(colIdx - 1).getArrangement().course.name);
 						continue;
 					}
 				}
@@ -276,8 +276,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 						teacherCell.setCellValue(String.valueOf(rowIdx - 2));
 						continue;
 					} else if (colIdx >= 1 && colIdx <= 8) {
-						teacherCell.setCellValue(teacherWeekView.getDayViewList().get(rowIdx - 3).getPeriodViewList()
-								.get(colIdx - 1).getArrangement().tclass.name);
+						teacherCell.setCellValue(teacherWeekView.getDayViewList().get(rowIdx - 3)
+								.getArrangedPeriodViewList().get(colIdx - 1).getArrangement().tclass.name);
 						continue;
 					}
 				}

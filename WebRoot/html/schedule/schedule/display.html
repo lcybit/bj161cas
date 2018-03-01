@@ -11,52 +11,54 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-    <button class="layui-btn layui-btn-sm" id="exportExcel" onclick="exportExcel()">导出Excel</button>
+    <button class="layui-btn layui-btn-normal" id="exportExcel" onclick="exportExcel()">
+      <i class="layui-icon">&#xe601;</i>导出
+    </button>
     <form class="layui-form layui-form-pane" id="arrangementView" method="get" style="display:none">
       <div class="layui-form-item">
-        <label class="layui-form-label">当前类型:</label>
+        <label class="layui-form-label">当前类型</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="type" id="currentType">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前课表ID:</label>
+        <label class="layui-form-label">当前课表ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="scheduleId" id="currentScheduleId">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前课时ID:</label>
+        <label class="layui-form-label">当前课时ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="periodId" id="currentPeriodId">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前课程ID:</label>
+        <label class="layui-form-label">当前课程ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="courseId" id="currentCourseId">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前教室ID:</label>
+        <label class="layui-form-label">当前教室ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="roomId" id="currentRoomId">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前班级ID:</label>
+        <label class="layui-form-label">当前班级ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="tclassId" id="currentTclassId">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前教师ID:</label>
+        <label class="layui-form-label">当前教师ID</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="teacherId" id="currentTeacherId">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">当前安排情况:</label>
+        <label class="layui-form-label">当前安排情况</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="arranged" id="currentArranged">
         </div>
@@ -66,18 +68,29 @@
   </div>
   <script id="tmpl-scheduleView" type="text/x-jsrender">
 	<div class="layui-col-md6">
-      <p>班级课表</p>
-      <div class="layui-input-inline layui-form">
-        <input class="layui-col-md2" type="radio" name="course" lay-filter="course" value="0" title="取消">
-        {{for courseList tmpl="#tmpl-courseList" /}}
+      <blockquote class="layui-elem-quote">班级课表</blockquote>
+      <div class="layui-form layui-form-pane">
+        <div class="layui-form-item" pane>
+          <label class="layui-form-label">课程</label>
+          <div class="layui-input-block">
+            <input class="layui-col-md2" type="radio" name="course" lay-filter="course" value="0" title="取消">
+            {{for courseList tmpl="#tmpl-courseList" /}}
+          </div>
+        </div>
       </div>
       {{for tclassWeekViewList tmpl="#tmpl-tclassWeekView" /}}
 	</div>
 	<div class="layui-col-md6">
-      <p>教师课表</p>
-      <div class="layui-input-inline layui-form">
-        <input class="layui-col-md2" type="radio" name="tclass" lay-filter="tclass" value="0" title="取消">
-        {{for tclassList tmpl="#tmpl-tclassList" /}}
+      <blockquote class="layui-elem-quote">教师课表</blockquote>
+      <div class="layui-form layui-form-pane">
+        <div class="layui-form-item" pane>
+          <label class="layui-form-label">班级/课程</label>
+          <div class="layui-input-block layui-form">
+            <input class="layui-col-md2" type="radio" name="tclass" lay-filter="tclass" value="0" title="取消">
+            {{for tclassList tmpl="#tmpl-tclassList" /}}
+            {{for courseList tmpl="#tmpl-specialList" /}}
+          </div>
+        </div>
       </div>
       {{for teacherWeekViewList tmpl="#tmpl-teacherWeekView" /}}
 	</div>
@@ -87,6 +100,11 @@
   </script>
   <script id="tmpl-tclassList" type="text/x-jsrender">
     <input type="radio" name="tclass" lay-filter="tclass" value="{{:tclassId}}" title="{{:name}}">
+  </script>
+  <script id="tmpl-specialList" type="text/x-jsrender">
+    {{if type != 0}}
+      <input type="radio" name="special" lay-filter="special" value="{{:courseId}}" title="{{:name}}">
+    {{/if}}
   </script>
   <script id="tmpl-tclassWeekView" type="text/x-jsrender">
     <div class="layui-col-md6">
@@ -176,106 +194,149 @@
 							 'periodId':'{{:arrangement.period.periodId}}',
 							 'teacherId':'{{:arrangement.teacher.teacherId}}',
 							 'tclassId':'{{:arrangement.tclass.tclassId}}'})">
-    {{:arrangement.tclass.name}}</td>
+      {{if arrangement.course.type == 0}}
+        {{:arrangement.tclass.name}}
+      {{else}}
+        {{:arrangement.course.name}}
+      {{/if}}
+    </td>
   </script>
   <script id="tmpl-tclassPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2">{{:plan.course.name}}{{:plan.periodNum-arrangedNum}}</td>
+    <td class="layui-col-md2">{{:plan.course.name}} {{:plan.periodNum-arrangedNum}}</td>
     {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script id="tmpl-teacherPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2">{{:plan.tclass.name}}{{:plan.course.name}}{{:plan.periodNum-arrangedNum}}</td>
+    <td class="layui-col-md2">
+      {{if plan.course.type == 0}}
+        {{:plan.tclass.name}}
+      {{else}}
+        {{:plan.course.name}}
+      {{/if}}
+      {{:plan.periodNum-arrangedNum}}</td>
     {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script>
-      var form = layui.form;
-      var element = layui.element;
+    var form = layui.form;
+    var element = layui.element;
   
-      $(document).ready(function() {
-        var scheduleId = sessionStorage.getItem('currentScheduleId');
-        $('#currentScheduleId').attr('value', scheduleId);
-        display();
-        $('#currentCourseId').attr('value', '0');
-        $('#currentTclassId').attr('value', '0');
-        $('input:radio[name="course"][value="0"]').attr('checked', true);
-        $('input:radio[name="tclass"][value="0"]').attr('checked', true);
-        form.render();
+    $(document).ready(function() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      $('#currentScheduleId').attr('value', scheduleId);
+      display();
+      $('#currentCourseId').attr('value', '0');
+      $('#currentTclassId').attr('value', '0');
+    });
+  
+    function display() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      $.ajax({
+        async : false,
+        url : '/schedule/display/' + scheduleId,
+        type : 'GET',
+        success : function(scheduleView) {
+          $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
+          form.on('radio(course)', function(course) {
+            clearConflictList();
+            clearTclassList();
+            clearSpecialList();
+            var courseId = course.value;
+            $('#currentCourseId').attr('value', courseId);
+            getConflictList(scheduleId, 'course', courseId);
+          });
+          form.on('radio(tclass)', function(tclass) {
+            clearConflictList();
+            clearCourseList();
+            clearSpecialList();
+            var tclassId = tclass.value;
+            $('#currentTclassId').attr('value', tclassId);
+            getConflictList(scheduleId, 'tclass', tclassId);
+          });
+          form.on('radio(special)', function(course) {
+            clearConflictList();
+            clearCourseList();
+            clearTclassList();
+            var courseId = course.value;
+            $('#currentCourseId').attr('value', courseId);
+            getConflictList(scheduleId, 'special', courseId);
+          });
+          form.render();
+        }
       });
+    }
   
-      function display() {
-        var scheduleId = sessionStorage.getItem('currentScheduleId');
-        $.ajax({
-          async : false,
-          url : '/schedule/display/' + scheduleId,
-          type : 'GET',
-          success : function(scheduleView) {
-            $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
-            form.on('radio(course)', function(course) {
-              var courseId = course.value;
-              $('#currentCourseId').attr('value', courseId);
-              clearConflictList();
-              clearTclassList();
-              getConflictList(scheduleId, 'course', courseId);
-            });
-            form.on('radio(tclass)', function(tclass) {
-              var tclassId = tclass.value;
-              $('#currentTclassId').attr('value', tclassId);
-              clearConflictList();
-              clearCourseList();
-              getConflictList(scheduleId, 'tclass', tclassId);
-            });
-            form.render();
-          }
-        });
-      }
+    function clearConflictList() {
+      $('td[id]').each(function(index, elem) {
+        var td = $(elem);
+        td.attr('disabled', false);
+        td.removeAttr('class');
+      });
+    }
   
-      function clearConflictList() {
-        $('td[id]').each(function(index, elem) {
-          td = $(elem);
-          td.attr('disabled', false);
-          td.removeAttr('class');
-        });
-      }
-      
-      function clearCourseList() {
-        $('#currentCourseId').attr('value', '0');
-        $('input:radio[name="course"][value="0"]').attr('checked', true);
-        form.render();
-      }
-      
-      function clearTclassList() {
-        $('#currentTclassId').attr('value', '0');
-        $('input:radio[name="tclass"][value="0"]').attr('checked', true);
-        form.render();
-      }
+    function clearCourseList() {
+      $('input:radio[name="course"]').each(function(index, elem) {
+        $(elem).attr('checked', false);
+      });
+      form.render();
+      $('#currentCourseId').attr('value', '0');
+    }
   
-      function clickTable(arrangement) {
-        $('#currentPeriodId').attr('value', arrangement.periodId);
-        var scheduleId = $('#currentScheduleId').attr('value');
-        if(arrangement.type == 'tclass') {
-          $('#currentType').attr('value', 'tclass');
-          $('#currentTclassId').attr('value', arrangement.tclassId);
+    function resetCourseList() {
+      $('input:radio[name="course"][value="0"]').attr('checked', true);
+      form.render();
+      $('#currentCourseId').attr('value', '0');
+    }
+  
+    function clearTclassList() {
+      $('input:radio[name="tclass"]').each(function(index, elem) {
+        $(elem).attr('checked', false);
+      });
+      form.render();
+      $('#currentTclassId').attr('value', '0');
+    }
+  
+    function resetTclassList() {
+      $('input:radio[name="tclass"][value="0"]').attr('checked', true);
+      form.render();
+      $('#currentTclassId').attr('value', '0');
+    }
+  
+    function clearSpecialList() {
+      $('input:radio[name="special"]').each(function(index, elem) {
+        $(elem).attr('checked', false);
+      });
+      form.render();
+      $('#currentCourseId').attr('value', '0');
+    }
+  
+    function clickTable(arrangement) {
+      $('#currentPeriodId').attr('value', arrangement.periodId);
+      var scheduleId = $('#currentScheduleId').attr('value');
+      var clickedRadio = getClickedRadio();
+      if (arrangement.type == 'tclass') {
+        $('#currentTclassId').attr('value', arrangement.tclassId);
+        if (clickedRadio == 'course') {
           var currentCourseId = $('#currentCourseId').attr('value');
           var clickedCourseId = arrangement.courseId;
+          $('#currentType').attr('value', 'tclass');
           if (isNull(currentCourseId) || currentCourseId == '0') {
             if (!isNull(clickedCourseId)) {
-              //alert("current0:" + currentCourseId + "clicked1:" + clickedCourseId);
               $('#currentCourseId').attr('value', clickedCourseId);
               setArranged(-1);
               display();
-              clearCourseList();
+              resetCourseList();
             }
           } else {
             if (!isNull(clickedCourseId)) {
-              //alert("current1:" + currentCourseId + "clicked1:" + clickedCourseId);
-              setArranged(1);
               $('#currentCourseId').attr('value', clickedCourseId);
               setArranged(-1);
+              $('#currentCourseId').attr('value', currentCourseId);
+              setArranged(1);
               display();
               $('input:radio[name="course"][value="' + clickedCourseId + '"]').attr('checked', true);
               form.render();
               getConflictList(scheduleId, 'course', clickedCourseId);
             } else {
-              //alert("current1:" + currentCourseId + "clicked0:" + clickedCourseId);
+              $('#currentCourseId').attr('value', currentCourseId);
               setArranged(1);
               display();
               $('input:radio[name="course"][value="' + currentCourseId + '"]').attr('checked', true);
@@ -283,31 +344,32 @@
               getConflictList(scheduleId, 'course', currentCourseId);
             }
           }
-        } else if(arrangement.type == 'teacher') {
-          $('#currentType').attr('value', 'teacher');
-          $('#currentTeacherId').attr('value', arrangement.teacherId);
+        }
+      } else if (arrangement.type == 'teacher') {
+        $('#currentTeacherId').attr('value', arrangement.teacherId);
+        if (clickedRadio == 'tclass') {
           var currentTclassId = $('#currentTclassId').attr('value');
           var clickedTclassId = arrangement.tclassId;
+          $('#currentType').attr('value', 'teacher');
           if (isNull(currentTclassId) || currentTclassId == '0') {
             if (!isNull(clickedTclassId)) {
-              //alert("current0:" + currentTclassId + "clicked1:" + clickedTclassId);
               $('#currentTclassId').attr('value', clickedTclassId);
               setArranged(-1);
               display();
-              clearTclassList();
+              resetTclassList();
             }
           } else {
             if (!isNull(clickedTclassId)) {
-              //alert("current1:" + currentTclassId + "clicked1:" + clickedTclassId);
-              setArranged(1);
               $('#currentTclassId').attr('value', clickedTclassId);
               setArranged(-1);
+              $('#currentTclassId').attr('value', currentTclassId);
+              setArranged(1);
               display();
               $('input:radio[name="tclass"][value="' + clickedTclassId + '"]').attr('checked', true);
               form.render();
               getConflictList(scheduleId, 'tclass', clickedTclassId);
             } else {
-              //alert("current1:" + currentTclassId + "clicked0:" + clickedTclassId);
+              $('#currentTclassId').attr('value', currentTclassId);
               setArranged(1);
               display();
               $('input:radio[name="tclass"][value="' + currentTclassId + '"]').attr('checked', true);
@@ -315,57 +377,94 @@
               getConflictList(scheduleId, 'tclass', currentTclassId);
             }
           }
+        } else if (clickedRadio == 'special') {
+          var currentCourseId = $('#currentCourseId').attr('value');
+          var clickedTclassId = arrangement.tclassId;
+          $('#currentType').attr('value', 'special');
+          if (!isNull(clickedTclassId)) {
+            $('#currentTclassId').attr('value', clickedTclassId);
+            $('#currentType').attr('value', 'teacher');
+            setArranged(-1);
+            $('#currentCourseId').attr('value', currentCourseId);
+            $('#currentType').attr('value', 'special');
+            setArranged(1);
+            display();
+            $('input:radio[name="tclass"][value="' + clickedTclassId + '"]').attr('checked', true);
+            form.render();
+            getConflictList(scheduleId, 'tclass', clickedTclassId);
+          } else {
+            $('#currentCourseId').attr('value', currentCourseId);
+            $('#currentType').attr('value', 'special');
+            setArranged(1);
+            display();
+            $('input:radio[name="special"][value="' + currentCourseId + '"]').attr('checked', true);
+            form.render();
+            getConflictList(scheduleId, 'special', currentCourseId);
+          }
         }
       }
+    }
   
-      function setArranged(arranged) {
-        $('#currentArranged').attr('value', arranged);
-        $.ajax({
-          async : false,
-          url : '/arrangement/setArranged',
-          type : 'POST',
-          dataType : 'json',
-          contentType : 'application/json',
-          data : JSON.stringify($('#arrangementView').serializeJSON()),
-          success : function(result) {
-          }
-        });
-      }
+    function getClickedRadio() {
+      var clickedType = '';
+      $('input:radio').each(function(index, elem) {
+        var radio = $(elem);
+        if (radio.prop('checked') == true) {
+          clickedType = radio.attr('name');
+          return false;
+        }
+      });
+      return clickedType;
+    }
   
-      function getConflictList(scheduleId, type, typeId) {
-        $.ajax({
-          async : false,
-          url : '/arrangement/conflict/schedule/' + scheduleId + '/' + type + '/' + typeId,
-          type : 'GET',
-          success : function(conflictList) {
-            $.each(conflictList, function(index, conflict) {
-              var periodView = $('#' + conflict.periodViewId);
-              if (conflict.conflictValue == 0) {
-                periodView.attr('disabled', false);
-                periodView.attr('class', 'layui-bg-green');
-              } else if (conflict.conflictValue == 1) {
-                periodView.attr('disabled', true);
-                periodView.attr('class', 'layui-disabled layui-bg-red');
-              }
-            });
-          }
-        })
-      }
+    function setArranged(arranged) {
+      $('#currentArranged').attr('value', arranged);
+      $.ajax({
+        async : false,
+        url : '/arrangement/setArranged',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#arrangementView').serializeJSON()),
+        success : function(result) {}
+      });
+    }
   
-      function isNull(obj) {
-        return null == obj || '' == obj;
-      }
+    function getConflictList(scheduleId, type, typeId) {
+      $.ajax({
+        async : false,
+        url : '/arrangement/conflict/schedule/' + scheduleId + '/' + type + '/' + typeId,
+        type : 'GET',
+        success : function(conflictList) {
+          $.each(conflictList, function(index, conflict) {
+            var periodView = $('#' + conflict.periodViewId);
+            if (conflict.conflictValue == 0) {
+              periodView.attr('disabled', false);
+              periodView.attr('class', 'layui-bg-green');
+            } else if (conflict.conflictValue == 1) {
+              periodView.attr('disabled', true);
+              periodView.attr('class', 'layui-disabled layui-bg-red');
+            }
+          });
+        }
+      })
+    }
   
-      function exportExcel() {
-        var scheduleId = sessionStorage.getItem('currentScheduleId');
-        $.ajax({
-          async : false,
-          url : '/schedule/export/'+ scheduleId,
-          type : 'GET',
-          success : function(result){
-          }
-        })
-      }
+    function isNull(obj) {
+      return null == obj || '' == obj;
+    }
+  
+    function exportExcel() {
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      $.ajax({
+        async : false,
+        url : '/schedule/export/' + scheduleId,
+        type : 'GET',
+        success : function(result) {
+          alert('导出成功！');
+        }
+      })
+    }
   </script>
 </body>
 
