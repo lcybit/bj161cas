@@ -6,6 +6,7 @@ public class Course {
 	public Integer courseId;
 	public String courseNo;
 	public String name;
+	public String shortName;
 	public Integer type;
 
 	public Course() {
@@ -19,6 +20,7 @@ public class Course {
 		courseId = coursePo.getCourseId();
 		courseNo = coursePo.getCourseNo();
 		name = coursePo.getName();
+		shortName = coursePo.getName();
 		type = coursePo.getType();
 	}
 
@@ -27,6 +29,7 @@ public class Course {
 		coursePo.setCourseId(courseId);
 		coursePo.setCourseNo(courseNo);
 		coursePo.setName(name);
+		coursePo.setShortName(shortName);
 		coursePo.setType(type);
 		return coursePo;
 	}

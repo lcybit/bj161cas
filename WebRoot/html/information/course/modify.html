@@ -13,8 +13,8 @@
 <body>
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="course" method="post">
-      <!-- 隐藏课程ID -->        
-          <input class="layui-input" name="courseId" id="courseId" type="hidden" />       
+      <!-- 隐藏课程ID -->
+      <input class="layui-input" name="courseId" id="courseId" type="hidden" />
       <div class="layui-form-item">
         <label class="layui-form-label">课程编号:</label>
         <div class="layui-input-block">
@@ -25,6 +25,12 @@
         <label class="layui-form-label">课程名称:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="name" id="name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程简称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="shortName" id="shortName" type="text" />
         </div>
       </div>
       <div class="layui-form-item" pane="">
@@ -53,7 +59,8 @@
         success : function(course) {
           $('#courseNo').attr('value', course.courseNo);
           $('#name').attr('value', course.name);
-          $(":radio[name='type'][value='"+course.type+"']").prop("checked","checked");
+          $('#shortName').attr('value', course.shortName);
+          $(":radio[name='type'][value='" + course.type + "']").prop("checked", true);
         }
       });
       layui.use('form', function() {

@@ -79,16 +79,14 @@ public class ArrangementController {
 		return result;
 	}
 
-	@RequestMapping(value = "/conflict/schedule/{scheduleId}/{type}/{typeId}", method = RequestMethod.GET)
-	public List<Map<String, String>> getConflictList(@PathVariable("scheduleId") Integer scheduleId,
-			@PathVariable("type") String type, @PathVariable("typeId") Integer typeId) {
-		return arrangementService.gnrConflictList(scheduleId, type, typeId);
+	@RequestMapping(value = "/getConflictList", method = RequestMethod.POST)
+	public Map<String, String> getConflictList(@RequestBody ArrangementView arrangementView) {
+		return arrangementService.gnrConflictList(arrangementView);
 	}
 
-	@RequestMapping(value = "/priority/schedule/{scheduleId}/{type}/{typeId}", method = RequestMethod.GET)
-	public List<Map<String, String>> getPriorityList(@PathVariable("scheduleId") Integer scheduleId,
-			@PathVariable("type") String type, @PathVariable("typeId") Integer typeId) {
-		return arrangementService.gnrPriorityList(scheduleId, type, typeId);
+	@RequestMapping(value = "/getPriorityList", method = RequestMethod.POST)
+	public Map<String, String> getPriorityList(@RequestBody ArrangementView arrangementView) {
+		return arrangementService.gnrPriorityList(arrangementView);
 	}
 
 }

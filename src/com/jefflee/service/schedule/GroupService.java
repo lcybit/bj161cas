@@ -2,6 +2,7 @@ package com.jefflee.service.schedule;
 
 import java.util.List;
 
+import com.jefflee.entity.schedule.Group;
 import com.jefflee.po.schedule.GroupPo;
 
 public interface GroupService {
@@ -16,4 +17,5 @@ public interface GroupService {
 
 	public Integer deleteById(Integer groupId);
 
+	public String gnrGradeName(Group group);
 }

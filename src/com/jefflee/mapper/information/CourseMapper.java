@@ -16,7 +16,7 @@ public interface CourseMapper extends Mapper<CoursePo> {
 	@Select("select * from info_course where course_id = #{courseId}")
 	@Results({ @Result(id = true, column = "course_id", property = "courseId"),
 			@Result(column = "course_no", property = "courseNo"), @Result(column = "name", property = "name"),
-			@Result(column = "type", property = "type") })
+			@Result(column = "short_name", property = "shortName"), @Result(column = "type", property = "type") })
 	public Course selectEntityById(Integer courseId);
 
 }

@@ -15,6 +15,7 @@ public class CoursePo {
 	private Integer courseId;
 	private String courseNo;
 	private String name;
+	private String shortName;
 	private Integer type;
 
 	public Integer getCourseId() {
@@ -47,6 +48,14 @@ public class CoursePo {
 
 	public void setType(Integer type) {
 		this.type = type;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
 	}
 
 }

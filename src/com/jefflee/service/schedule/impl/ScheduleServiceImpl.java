@@ -97,7 +97,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public ScheduleView gnrScheduleView(Integer scheduleId) {
 		ScheduleView scheduleView = new ScheduleView();
 
-		Schedule schedule = new Schedule(scheduleMapper.selectByPrimaryKey(scheduleId));
+		Schedule schedule = scheduleMapper.selectEntityById(scheduleId);
 		scheduleView.setSchedule(schedule);
 
 		List<Course> courseList = new ArrayList<Course>();
@@ -136,6 +136,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public void gnrEmptyArrangementList(Integer scheduleId) {
+		// TODO 根据课表上午、下午、晚上课时数生成课时列表
 		List<PeriodPo> periodPoList = periodService.selectAll();
 		List<PlanPo> planPoList = planService.selectAll();
 		List<ArrangementPo> arrangementPoList = new ArrayList<ArrangementPo>();
@@ -200,9 +201,19 @@ public class ScheduleServiceImpl implements ScheduleService {
 				}
 				tclassWeekView = tclassWeekViewList.get(weekViewIdx);
 				tclassCell = tclassRow.createCell(j);
-				if (rowIdx == 0 && colIdx == 0) {
-					tclassCell.setCellValue(tclassWeekView.getTypeName());
-					continue;
+				if (rowIdx == 0) {
+					if (colIdx == 0) {
+						tclassCell.setCellValue(tclassWeekView.getTitleView().getTclassName());
+						continue;
+					}
+					if (colIdx == 3) {
+						tclassCell.setCellValue(tclassWeekView.getTitleView().getTeacherName());
+						continue;
+					}
+					if (colIdx == 6) {
+						tclassCell.setCellValue(tclassWeekView.getTitleView().getStartDate());
+						continue;
+					}
 				}
 				if (rowIdx == 1) {
 					if (colIdx == 1) {
@@ -248,9 +259,19 @@ public class ScheduleServiceImpl implements ScheduleService {
 				}
 				teacherWeekView = teacherWeekViewList.get(weekViewIdx);
 				teacherCell = teacherRow.createCell(j);
-				if (rowIdx == 0 && colIdx == 0) {
-					teacherCell.setCellValue(teacherWeekView.getTypeName());
-					continue;
+				if (rowIdx == 0) {
+					if (colIdx == 0) {
+						teacherCell.setCellValue(teacherWeekView.getTitleView().getCourseGradeName());
+						continue;
+					}
+					if (colIdx == 3) {
+						teacherCell.setCellValue(teacherWeekView.getTitleView().getTeacherName());
+						continue;
+					}
+					if (colIdx == 6) {
+						teacherCell.setCellValue(teacherWeekView.getTitleView().getStartDate());
+						continue;
+					}
 				}
 				if (rowIdx == 1) {
 					if (colIdx == 1) {
