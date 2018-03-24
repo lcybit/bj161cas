@@ -84,9 +84,9 @@
         async : false,
         url : '/group/create',
         type : 'POST',
-        dataType : 'json',
+        dataType : 'json',//后台返回数据类型
         contentType : 'application/json',
-        data : JSON.stringify($('#group').serializeJSON()),
+        data : JSON.stringify($('#group').serializeJSON()),//前台上传数据类型
         success : function(groupId) {
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);

@@ -16,6 +16,7 @@ public interface GroupMapper extends Mapper<GroupPo> {
 			@Result(column = "year", property = "year"), @Result(column = "semester", property = "semester"),
 			@Result(column = "level", property = "level"), @Result(column = "grade", property = "grade"),
 			@Result(column = "start_date", property = "startDate") })
+	//column 是数据库表中字段，property 是对应实体的属性
 	public Group selectEntityById(Integer groupId);
 
 }

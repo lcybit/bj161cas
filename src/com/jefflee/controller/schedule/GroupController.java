@@ -19,6 +19,7 @@ import com.jefflee.service.schedule.GroupService;
 @RequestMapping(value = "/group")
 public class GroupController {
 
+
 	@Resource(name = "groupService")
 	GroupService groupService;
 
@@ -32,6 +33,7 @@ public class GroupController {
 		return result;
 	}
 
+	
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<GroupPo> listAll() {
 		return groupService.selectAll();
@@ -42,6 +44,7 @@ public class GroupController {
 		return groupService.selectById(groupId);
 	}
 
+	//@RequestBody 将请求的信息的json串转成GroupPo对象
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
 	public Map<String, String> modify(@RequestBody GroupPo groupPo) {
 		Map<String, String> result = new HashMap<String, String>();
