@@ -43,6 +43,7 @@ public class GroupServiceImpl implements GroupService {
 			return groupPo.getGroupId();
 		} else {
 			return null;
+			
 		}
 	}
 

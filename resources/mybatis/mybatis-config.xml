@@ -9,6 +9,7 @@
     <setting name="mapUnderscoreToCamelCase" value="true" />
   </settings>
   <typeAliases>
+  <!-- 为类起别名 -->
     <typeAlias type="com.jefflee.po.information.CoursePo" alias="Course" />
     <typeAlias type="com.jefflee.po.information.PeriodPo" alias="Period" />
     <typeAlias type="com.jefflee.po.information.RoomPo" alias="Room" />

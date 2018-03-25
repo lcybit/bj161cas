@@ -98,22 +98,24 @@
       });      
     });
   
+  
     function modify() {
       $.ajax({
-        async : false,
-        url : '/group/modify',
+        async : false,//同步请求（锁住浏览器，请求完毕后才可执行其他操作），true为异步请求
+        url : '/group/modify',//请求url
         type : 'POST',
-        dataType : 'json',
-        contentType : 'application/json',
-        data : JSON.stringify($('#group').serializeJSON()),
-        success : function(result) {
-          var index = parent.layer.getFrameIndex(window.name);
-          parent.layer.close(index);
-          parent.list();
+        dataType : 'json',//预期服务器返回的数据类型
+        contentType : 'application/json',//发送信息至服务器时内容编码类型
+        data : JSON.stringify($('#group').serializeJSON()),//发送到服务器的数据类型,序列化表格内容为字符串
+        success : function(result) {//请求成功后回调函数。这个方法有两个参数：服务器返回数据，返回状态
+          var index = parent.layer.getFrameIndex(window.name);//获取当前界面的url
+          parent.layer.close(index);//关闭当前界面
+          parent.list();// 调用该界面的父界面的函数  即 调用list.html中的list()函数
         }
       });
     }
   
+    
     function cancel() {
       var index = parent.layer.getFrameIndex(window.name);
       parent.layer.close(index);
