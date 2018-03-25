@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jefflee.entity.information.Course;
 import com.jefflee.mapper.information.CourseMapper;
 import com.jefflee.po.information.CoursePo;
 import com.jefflee.service.information.CourseService;
@@ -51,5 +52,10 @@ public class CourseServiceImpl implements CourseService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public List<Course> selectCourseList() {
+		return courseMapper.selectEntityList();
 	}
 }

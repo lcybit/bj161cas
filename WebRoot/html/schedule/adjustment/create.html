@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>新增教学关系信息</title>
+<title>新增调整信息</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jquery/jquery.js"></script>
@@ -12,35 +12,41 @@
 
 <body>
   <div class="layui-container" style="margin:30px;">
-    <form class="layui-form layui-form-pane" id="relation" method="post">
+    <form class="layui-form layui-form-pane" id="adjustment" method="post">
       <div class="layui-form-item">
-        <label class="layui-form-label">课表ID:</label>
+        <label class="layui-form-label">课表ID</label>
         <div class="layui-input-block">
           <input class="layui-input" name="scheduleId" id="scheduleId" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">课程ID:</label>
+        <label class="layui-form-label">起始教学周</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="courseId" id="courseId" type="text" />
+          <input class="layui-input" name="startWeek" id="startWeek" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">教室ID:</label>
+        <label class="layui-form-label">持续周数</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="roomId" id="roomId" type="text" />
+          <input class="layui-input" name="duration" id="duration" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">班级ID:</label>
+        <label class="layui-form-label">类型</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="tclassId" id="tclassId" type="text" />
+          <input class="layui-input" name="type" id="type" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">教师ID:</label>
+        <label class="layui-form-label">甲ID</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="teacherId" id="teacherId" type="text" />
+          <input class="layui-input" name="firstId" id="firstId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">乙ID</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="secondId" id="secondId" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
@@ -61,12 +67,12 @@
     function create() {
       $.ajax({
         async : false,
-        url : '/relation/create',
+        url : '/adjustments',
         type : 'POST',
         dataType : 'json',
         contentType : 'application/json',
-        data : JSON.stringify($('#relation').serializeJSON()),
-        success : function(relationId) {
+        data : JSON.stringify($('#adjustment').serializeJSON()),
+        success : function(response) {
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
           parent.list();

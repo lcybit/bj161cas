@@ -1,5 +1,7 @@
 package com.jefflee.mapper.information;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -15,9 +17,14 @@ public interface TclassMapper extends Mapper<TclassPo> {
 
 	@Select("select * from info_tclass where tclass_id = #{tclassId}")
 	@Results({ @Result(id = true, column = "tclass_id", property = "tclassId"),
-			@Result(column = "tclass_no", property = "tclassNo"), @Result(column = "name", property = "name"),
-			@Result(column = "type", property = "type"), @Result(column = "year", property = "year"),
-			@Result(column = "level", property = "level") })
+			@Result(column = "tclass_no", property = "tclassNo"), @Result(column = "type", property = "type"),
+			@Result(column = "year", property = "year"), @Result(column = "level", property = "level") })
 	public Tclass selectEntityById(Integer tclassId);
+
+	@Select("select * from info_tclass")
+	@Results({ @Result(id = true, column = "tclass_id", property = "tclassId"),
+			@Result(column = "tclass_no", property = "tclassNo"), @Result(column = "type", property = "type"),
+			@Result(column = "year", property = "year"), @Result(column = "level", property = "level") })
+	public List<Tclass> selectEntityList();
 
 }

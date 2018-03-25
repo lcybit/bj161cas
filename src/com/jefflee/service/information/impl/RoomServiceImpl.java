@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jefflee.entity.information.Room;
 import com.jefflee.mapper.information.RoomMapper;
 import com.jefflee.po.information.RoomPo;
 import com.jefflee.service.information.RoomService;
@@ -51,5 +52,10 @@ public class RoomServiceImpl implements RoomService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public List<Room> selectRoomList() {
+		return roomMapper.selectEntityList();
 	}
 }

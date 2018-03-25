@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jefflee.entity.information.Teacher;
 import com.jefflee.mapper.information.TeacherMapper;
 import com.jefflee.po.information.TeacherPo;
 import com.jefflee.service.information.TeacherService;
@@ -51,5 +52,10 @@ public class TeacherServiceImpl implements TeacherService {
 		} else {
 			return null;
 		}
+	}
+
+	@Override
+	public List<Teacher> selectTeacherList() {
+		return teacherMapper.selectEntityList();
 	}
 }

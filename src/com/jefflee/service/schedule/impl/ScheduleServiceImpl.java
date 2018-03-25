@@ -3,7 +3,6 @@ package com.jefflee.service.schedule.impl;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,15 +13,8 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.stereotype.Service;
 
-import com.jefflee.entity.information.Course;
-import com.jefflee.entity.information.Tclass;
-import com.jefflee.entity.information.Teacher;
-import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ScheduleMapper;
-import com.jefflee.po.information.CoursePo;
 import com.jefflee.po.information.PeriodPo;
-import com.jefflee.po.information.TclassPo;
-import com.jefflee.po.information.TeacherPo;
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.po.schedule.SchedulePo;
@@ -95,43 +87,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 	@Override
 	public ScheduleView gnrScheduleView(Integer scheduleId) {
-		ScheduleView scheduleView = new ScheduleView();
-
-		Schedule schedule = scheduleMapper.selectEntityById(scheduleId);
-		scheduleView.setSchedule(schedule);
-
-		List<Course> courseList = new ArrayList<Course>();
-		// TODO part of
-		List<CoursePo> coursePoList = courseService.selectAll();
-		for (CoursePo coursePo : coursePoList) {
-			courseList.add(new Course(coursePo));
-		}
-		scheduleView.setCourseList(courseList);
-
-		List<Tclass> tclassList = new ArrayList<Tclass>();
-		// TODO part of
-		List<TclassPo> tclassPoList = tclassService.selectAll().subList(0, 8);
-		for (TclassPo tclassPo : tclassPoList) {
-			tclassList.add(new Tclass(tclassPo));
-		}
-		scheduleView.setTclassList(tclassList);
-
-		List<Teacher> teacherList = new ArrayList<Teacher>();
-		// TODO part of
-		List<TeacherPo> teacherPoList = teacherService.selectAll();
-		for (TeacherPo teacherPo : teacherPoList) {
-			teacherList.add(new Teacher(teacherPo));
-		}
-
-		List<WeekView> tclassWeekViewList = arrangementService.gnrWeekViewListByCourseTclass(schedule, courseList,
-				tclassList);
-		scheduleView.setTclassWeekViewList(tclassWeekViewList);
-
-		List<WeekView> teacherWeekViewList = arrangementService.gnrWeekViewListByTclassTeacher(schedule, tclassList,
-				teacherList);
-		scheduleView.setTeacherWeekViewList(teacherWeekViewList);
-
-		return scheduleView;
+		return arrangementService.gnrScheduleView(scheduleMapper.selectEntityById(scheduleId));
 	}
 
 	@Override
@@ -139,7 +95,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 		// TODO 根据课表上午、下午、晚上课时数生成课时列表
 		List<PeriodPo> periodPoList = periodService.selectAll();
 		List<PlanPo> planPoList = planService.selectAll();
-		List<ArrangementPo> arrangementPoList = new ArrayList<ArrangementPo>();
 		for (PlanPo planPo : planPoList) {
 			for (PeriodPo periodPo : periodPoList) {
 				ArrangementPo arrangementPo = new ArrangementPo();
@@ -151,7 +106,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 				arrangementPo.setTeacherId(planPo.getTeacherId());
 				arrangementPo.setArranged(0);
 				arrangementPo.setPriority(2);
-				arrangementPoList.add(arrangementPo);
 				arrangementService.insert(arrangementPo);
 			}
 		}
@@ -165,8 +119,8 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public void gnrScheduleViewExcel(Integer scheduleId) throws FileNotFoundException, IOException {
 		ScheduleView scheduleView = gnrScheduleView(scheduleId);
-		List<WeekView> tclassWeekViewList = scheduleView.getTclassWeekViewList();
-		List<WeekView> teacherWeekViewList = scheduleView.getTeacherWeekViewList();
+		List<WeekView> tclassWeekViewList = (List<WeekView>) scheduleView.getTclassWeekViewMap().values();
+		List<WeekView> teacherWeekViewList = (List<WeekView>) scheduleView.getTeacherWeekViewMap().values();
 
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		HSSFSheet tclassSheet = workbook.createSheet("班级课表");
@@ -239,8 +193,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 						tclassCell.setCellValue(String.valueOf(rowIdx - 2));
 						continue;
 					} else if (colIdx >= 1 && colIdx <= 8) {
-						tclassCell.setCellValue(tclassWeekView.getDayViewList().get(rowIdx - 3)
-								.getArrangedPeriodViewList().get(colIdx - 1).getArrangement().course.name);
+						tclassCell.setCellValue(
+								tclassWeekView.getDayViewList().get(rowIdx - 3).getArrangedPeriodViewList()
+										.get(colIdx - 1).getArrangementList().get(0).getCourse().getName());
 						continue;
 					}
 				}
@@ -261,8 +216,11 @@ public class ScheduleServiceImpl implements ScheduleService {
 				teacherCell = teacherRow.createCell(j);
 				if (rowIdx == 0) {
 					if (colIdx == 0) {
-						teacherCell.setCellValue(teacherWeekView.getTitleView().getCourseGradeName());
+						teacherCell.setCellValue(teacherWeekView.getTitleView().getCourseName());
 						continue;
+					}
+					if (colIdx == 1) {
+						teacherCell.setCellValue(teacherWeekView.getTitleView().getGradeName());
 					}
 					if (colIdx == 3) {
 						teacherCell.setCellValue(teacherWeekView.getTitleView().getTeacherName());
@@ -297,8 +255,9 @@ public class ScheduleServiceImpl implements ScheduleService {
 						teacherCell.setCellValue(String.valueOf(rowIdx - 2));
 						continue;
 					} else if (colIdx >= 1 && colIdx <= 8) {
-						teacherCell.setCellValue(teacherWeekView.getDayViewList().get(rowIdx - 3)
-								.getArrangedPeriodViewList().get(colIdx - 1).getArrangement().tclass.name);
+						teacherCell.setCellValue(
+								teacherWeekView.getDayViewList().get(rowIdx - 3).getArrangedPeriodViewList()
+										.get(colIdx - 1).getArrangementList().get(0).getTclass().getName());
 						continue;
 					}
 				}
@@ -313,6 +272,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 		workbook.write(fileOutputStream);
 		fileOutputStream.close();
 		workbook.close();
+	}
+
+	@Override
+	public void initial(Integer scheduleId) {
+		arrangementService.initial(scheduleId);
+		return;
 	}
 
 }

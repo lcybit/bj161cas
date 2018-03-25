@@ -103,7 +103,14 @@
     }
 
     function choose(scheduleId) {
-      sessionStorage.setItem('currentScheduleId', scheduleId)
+      sessionStorage.setItem('currentScheduleId', scheduleId);
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/schedule/initial/' + scheduleId,
+        success : function() {
+        }
+      })
     }
     
     function list() {

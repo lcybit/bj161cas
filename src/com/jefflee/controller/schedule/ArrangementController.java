@@ -89,4 +89,30 @@ public class ArrangementController {
 		return arrangementService.gnrPriorityList(arrangementView);
 	}
 
+	@RequestMapping(value = "/doAdjust/{adjustmentId}", method = RequestMethod.POST)
+	public Map<String, String> doAdjust(@PathVariable Integer adjustmentId) {
+		Map<String, String> result = new HashMap<String, String>();
+		arrangementService.doAdjust(adjustmentId);
+		result.put("done", "true");
+		return result;
+	}
+
+	@RequestMapping(value = "/undoAdjust/{adjustmentId}", method = RequestMethod.POST)
+	public Map<String, String> undoAdjust(@PathVariable Integer adjustmentId) {
+		Map<String, String> result = new HashMap<String, String>();
+		arrangementService.undoAdjust(adjustmentId);
+		result.put("done", "true");
+		return result;
+	}
+
+	@RequestMapping(value = "/saveAdjustment/{scheduleId}", method = RequestMethod.POST)
+	public void saveAdjustment(@PathVariable Integer scheduleId) {
+		arrangementService.saveAdjustment(scheduleId);
+		return;
+	}
+
+	@RequestMapping(value = "/getBackground", method = RequestMethod.GET)
+	public Map<String, Map<String, Integer>> getBackgroundMap() {
+		return arrangementService.getBackgroundMap();
+	}
 }

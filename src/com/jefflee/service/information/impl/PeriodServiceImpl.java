@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.jefflee.entity.information.Period;
 import com.jefflee.mapper.information.PeriodMapper;
 import com.jefflee.po.information.PeriodPo;
 import com.jefflee.service.information.PeriodService;
@@ -59,10 +60,12 @@ public class PeriodServiceImpl implements PeriodService {
 	}
 
 	@Override
-	public PeriodPo selectByOrder(Integer dayOfWeek, Integer orderOfDay) {
-		PeriodPo queryPeriodPo = new PeriodPo();
-		queryPeriodPo.setDayOfWeek(dayOfWeek);
-		queryPeriodPo.setOrderOfDay(orderOfDay);
-		return periodMapper.selectOne(queryPeriodPo);
+	public Period selectPeriodByOrder(Integer dayOfWeek, Integer orderOfDay) {
+		return periodMapper.selectEntityByOrder(dayOfWeek, orderOfDay);
+	}
+
+	@Override
+	public List<Period> selectPeriodListByScope(Integer daysPerWeek, Integer periodsPerDay) {
+		return periodMapper.selectEntityListByScope(daysPerWeek, periodsPerDay);
 	}
 }

@@ -1,5 +1,7 @@
 package com.jefflee.mapper.information;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
@@ -18,5 +20,11 @@ public interface CourseMapper extends Mapper<CoursePo> {
 			@Result(column = "course_no", property = "courseNo"), @Result(column = "name", property = "name"),
 			@Result(column = "short_name", property = "shortName"), @Result(column = "type", property = "type") })
 	public Course selectEntityById(Integer courseId);
+
+	@Select("select * from info_course")
+	@Results({ @Result(id = true, column = "course_id", property = "courseId"),
+			@Result(column = "course_no", property = "courseNo"), @Result(column = "name", property = "name"),
+			@Result(column = "short_name", property = "shortName"), @Result(column = "type", property = "type") })
+	public List<Course> selectEntityList();
 
 }

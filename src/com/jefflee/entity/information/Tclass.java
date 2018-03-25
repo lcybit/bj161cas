@@ -3,12 +3,13 @@ package com.jefflee.entity.information;
 import com.jefflee.po.information.TclassPo;
 
 public class Tclass {
-	public Integer tclassId;
-	public String tclassNo;
-	public String name;
-	public Integer type;
-	public Integer year;
-	public Integer level;
+	private Integer tclassId;
+	private String tclassNo;
+	private String name;
+	private String shortName;
+	private Integer type;
+	private Integer year;
+	private Integer level;
 
 	public Tclass() {
 	}
@@ -20,7 +21,6 @@ public class Tclass {
 	public Tclass(TclassPo tclassPo) {
 		tclassId = tclassPo.getTclassId();
 		tclassNo = tclassPo.getTclassNo();
-		name = tclassPo.getName();
 		type = tclassPo.getType();
 		year = tclassPo.getYear();
 		level = tclassPo.getLevel();
@@ -30,10 +30,65 @@ public class Tclass {
 		TclassPo tclassPo = new TclassPo();
 		tclassPo.setTclassId(tclassId);
 		tclassPo.setTclassNo(tclassNo);
-		tclassPo.setName(name);
 		tclassPo.setType(type);
 		tclassPo.setYear(year);
 		tclassPo.setLevel(level);
 		return tclassPo;
+	}
+
+	public Integer getTclassId() {
+		return tclassId;
+	}
+
+	public void setTclassId(Integer tclassId) {
+		this.tclassId = tclassId;
+	}
+
+	public String getTclassNo() {
+		return tclassNo;
+	}
+
+	public void setTclassNo(String tclassNo) {
+		this.tclassNo = tclassNo;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getShortName() {
+		return shortName;
+	}
+
+	public void setShortName(String shortName) {
+		this.shortName = shortName;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
+	}
+
+	public Integer getYear() {
+		return year;
+	}
+
+	public void setYear(Integer year) {
+		this.year = year;
+	}
+
+	public Integer getLevel() {
+		return level;
+	}
+
+	public void setLevel(Integer level) {
+		this.level = level;
 	}
 }

@@ -1,11 +1,13 @@
 package com.jefflee.view;
 
+import java.util.List;
+
 import com.jefflee.entity.schedule.Arrangement;
 
 public class PeriodView {
 	private String periodViewId;
-	private Integer scheduleId;
-	private Arrangement arrangement;
+	private List<String> jumpViewIdList;
+	private List<Arrangement> arrangementList;
 
 	public String getPeriodViewId() {
 		return periodViewId;
@@ -15,20 +17,20 @@ public class PeriodView {
 		this.periodViewId = periodViewId;
 	}
 
-	public Integer getScheduleId() {
-		return scheduleId;
+	public List<String> getJumpViewIdList() {
+		return jumpViewIdList;
 	}
 
-	public void setScheduleId(Integer scheduleId) {
-		this.scheduleId = scheduleId;
+	public void setJumpViewIdList(List<String> jumpViewIdList) {
+		this.jumpViewIdList = jumpViewIdList;
 	}
 
-	public Arrangement getArrangement() {
-		return arrangement;
+	public List<Arrangement> getArrangementList() {
+		return arrangementList;
 	}
 
-	public void setArrangement(Arrangement arrangement) {
-		this.arrangement = arrangement;
+	public void setArrangementList(List<Arrangement> arrangementList) {
+		this.arrangementList = arrangementList;
 	}
 
 }

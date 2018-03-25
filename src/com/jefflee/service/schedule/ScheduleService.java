@@ -26,4 +26,6 @@ public interface ScheduleService {
 	public void gnrSchedule(Integer scheduleId);
 
 	public void gnrScheduleViewExcel(Integer scheduleId) throws FileNotFoundException, IOException;
+
+	public void initial(Integer scheduleId);
 }

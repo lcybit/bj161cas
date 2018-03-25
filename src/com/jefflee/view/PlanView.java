@@ -4,6 +4,7 @@ import com.jefflee.entity.schedule.Plan;
 
 public class PlanView {
 	private Plan plan;
+	private String jumpViewId;
 	private Integer arrangedNum;
 	private Integer highestNum;
 
@@ -29,6 +30,14 @@ public class PlanView {
 
 	public void setHighestNum(Integer highestNum) {
 		this.highestNum = highestNum;
+	}
+
+	public String getJumpViewId() {
+		return jumpViewId;
+	}
+
+	public void setJumpViewId(String jumpViewId) {
+		this.jumpViewId = jumpViewId;
 	}
 
 }

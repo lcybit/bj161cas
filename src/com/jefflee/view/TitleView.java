@@ -1,18 +1,11 @@
 package com.jefflee.view;
 
 public class TitleView {
-	private String courseGradeName;
+	private String courseName;
+	private String gradeName;
 	private String tclassName;
 	private String teacherName;
 	private String startDate;
-
-	public String getCourseGradeName() {
-		return courseGradeName;
-	}
-
-	public void setCourseGradeName(String courseGradeName) {
-		this.courseGradeName = courseGradeName;
-	}
 
 	public String getTclassName() {
 		return tclassName;
@@ -36,6 +29,22 @@ public class TitleView {
 
 	public void setStartDate(String startDate) {
 		this.startDate = startDate;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+
+	public String getGradeName() {
+		return gradeName;
+	}
+
+	public void setGradeName(String gradeName) {
+		this.gradeName = gradeName;
 	}
 
 }

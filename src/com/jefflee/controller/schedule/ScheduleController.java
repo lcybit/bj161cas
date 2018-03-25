@@ -85,4 +85,9 @@ public class ScheduleController {
 		scheduleService.gnrScheduleViewExcel(scheduleId);
 	}
 
+	@RequestMapping(value = "/initial/{id}", method = RequestMethod.GET)
+	public void initial(@PathVariable("id") Integer scheduleId) {
+		scheduleService.initial(scheduleId);
+	}
+
 }

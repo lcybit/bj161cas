@@ -15,7 +15,7 @@
     $(document).ready(function() {
       $.ajaxSetup({
         cache : false
-      })
+      });
       $('#navigation').load('/html/common/navigation.html');
       $('#main').load('/html/common/home.html');
     });
@@ -31,7 +31,7 @@
   <!-- 收起侧边栏 -->
   <script>
     $(document).ready(function() {
-      $('#navToggle').css('height',$(document).height());
+      $('#navToggle').css('height', $(document).height());
       $('#navToggle').click(function() {
         if ($('#navigation').css('display') == 'none') {
           $('#navigation').show();

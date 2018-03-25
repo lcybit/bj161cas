@@ -58,7 +58,7 @@ public class GroupServiceImpl implements GroupService {
 	@Override
 	public String gnrGradeName(Group group) {
 		StringBuilder name = new StringBuilder();
-		switch (group.level) {
+		switch (group.getLevel()) {
 		case 0:
 			name.append("初");
 			break;
@@ -74,7 +74,7 @@ public class GroupServiceImpl implements GroupService {
 		if (month < 9) {
 			year -= 1;
 		}
-		switch (year - group.year) {
+		switch (year - group.getYear()) {
 		case 0:
 			name.append("一");
 			break;
@@ -85,7 +85,7 @@ public class GroupServiceImpl implements GroupService {
 			name.append("三");
 			break;
 		default:
-			name.insert(0, group.year + "级");
+			name.insert(0, group.getYear() + "级");
 			name.append("中");
 			break;
 		}

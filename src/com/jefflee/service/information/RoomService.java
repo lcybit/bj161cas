@@ -2,18 +2,21 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
+import com.jefflee.entity.information.Room;
 import com.jefflee.po.information.RoomPo;
 
 public interface RoomService {
 
-	public Integer insert(RoomPo roomPo);
+	Integer insert(RoomPo roomPo);
 
-	public List<RoomPo> selectAll();
+	List<RoomPo> selectAll();
 
-	public RoomPo selectById(Integer roomId);
+	RoomPo selectById(Integer roomId);
 
-	public Integer updateById(RoomPo roomPo);
+	Integer updateById(RoomPo roomPo);
 
-	public Integer deleteById(Integer roomId);
+	Integer deleteById(Integer roomId);
+
+	List<Room> selectRoomList();
 
 }

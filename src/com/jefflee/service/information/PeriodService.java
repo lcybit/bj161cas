@@ -2,22 +2,25 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
+import com.jefflee.entity.information.Period;
 import com.jefflee.po.information.PeriodPo;
 
 public interface PeriodService {
 
-	public Integer insert(PeriodPo periodPo);
+	Integer insert(PeriodPo periodPo);
 
-	public List<PeriodPo> selectAll();
+	List<PeriodPo> selectAll();
 
-	public PeriodPo selectById(Integer periodId);
+	PeriodPo selectById(Integer periodId);
 
-	public Integer updateById(PeriodPo periodPo);
+	Integer updateById(PeriodPo periodPo);
 
-	public Integer deleteById(Integer periodId);
+	Integer deleteById(Integer periodId);
 
-	public List<PeriodPo> select(PeriodPo queryPeriodPo);
+	List<PeriodPo> select(PeriodPo queryPeriodPo);
 
-	public PeriodPo selectByOrder(Integer dayOfWeek, Integer orderOfDay);
+	Period selectPeriodByOrder(Integer dayOfWeek, Integer orderOfDay);
+
+	List<Period> selectPeriodListByScope(Integer daysPerWeek, Integer periodsPerDay);
 
 }

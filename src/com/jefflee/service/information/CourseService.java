@@ -2,18 +2,21 @@ package com.jefflee.service.information;
 
 import java.util.List;
 
+import com.jefflee.entity.information.Course;
 import com.jefflee.po.information.CoursePo;
 
 public interface CourseService {
 
-	public Integer insert(CoursePo coursePo);
+	Integer insert(CoursePo coursePo);
 
-	public List<CoursePo> selectAll();
+	List<CoursePo> selectAll();
 
-	public CoursePo selectById(Integer courseId);
+	CoursePo selectById(Integer courseId);
 
-	public Integer updateById(CoursePo coursePo);
+	Integer updateById(CoursePo coursePo);
 
-	public Integer deleteById(Integer courseId);
+	Integer deleteById(Integer courseId);
+
+	List<Course> selectCourseList();
 
 }

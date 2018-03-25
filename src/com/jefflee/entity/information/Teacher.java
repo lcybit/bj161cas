@@ -3,10 +3,10 @@ package com.jefflee.entity.information;
 import com.jefflee.po.information.TeacherPo;
 
 public class Teacher {
-	public Integer teacherId;
-	public String teacherNo;
-	public String name;
-	public Integer type;
+	private Integer teacherId;
+	private String teacherNo;
+	private String name;
+	private Integer type;
 
 	public Teacher() {
 	}
@@ -29,5 +29,37 @@ public class Teacher {
 		teacherPo.setName(name);
 		teacherPo.setType(type);
 		return teacherPo;
+	}
+
+	public Integer getTeacherId() {
+		return teacherId;
+	}
+
+	public void setTeacherId(Integer teacherId) {
+		this.teacherId = teacherId;
+	}
+
+	public String getTeacherNo() {
+		return teacherNo;
+	}
+
+	public void setTeacherNo(String teacherNo) {
+		this.teacherNo = teacherNo;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public Integer getType() {
+		return type;
+	}
+
+	public void setType(Integer type) {
+		this.type = type;
 	}
 }

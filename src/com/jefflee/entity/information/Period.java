@@ -3,10 +3,10 @@ package com.jefflee.entity.information;
 import com.jefflee.po.information.PeriodPo;
 
 public class Period {
-	public Integer periodId;
-	public String periodNo;
-	public Integer dayOfWeek;
-	public Integer orderOfDay;
+	private Integer periodId;
+	private String periodNo;
+	private Integer dayOfWeek;
+	private Integer orderOfDay;
 
 	public Period() {
 	}
@@ -30,5 +30,37 @@ public class Period {
 		periodPo.setDayOfWeek(dayOfWeek);
 		periodPo.setOrderOfDay(orderOfDay);
 		return periodPo;
+	}
+
+	public Integer getPeriodId() {
+		return periodId;
+	}
+
+	public void setPeriodId(Integer periodId) {
+		this.periodId = periodId;
+	}
+
+	public String getPeriodNo() {
+		return periodNo;
+	}
+
+	public void setPeriodNo(String periodNo) {
+		this.periodNo = periodNo;
+	}
+
+	public Integer getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+	public void setDayOfWeek(Integer dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
+
+	public Integer getOrderOfDay() {
+		return orderOfDay;
+	}
+
+	public void setOrderOfDay(Integer orderOfDay) {
+		this.orderOfDay = orderOfDay;
 	}
 }

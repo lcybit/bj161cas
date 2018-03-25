@@ -14,7 +14,6 @@ public class TclassPo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer tclassId;
 	private String tclassNo;
-	private String name;
 	private Integer type;
 	private Integer year;
 	private Integer level;
@@ -33,14 +32,6 @@ public class TclassPo {
 
 	public void setTclassNo(String tclassNo) {
 		this.tclassNo = tclassNo;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public Integer getType() {

@@ -24,7 +24,7 @@ public interface PlanMapper extends Mapper<PlanPo> {
 			@Result(column = "period_num", property = "periodNum") })
 	public Plan selectEntityById(Integer planId);
 
-	@Select("select * from schd_plan where schedule_id = #{scheduleId}")
+	@Select("select * from schd_plan where schedule_id = #{scheduleId} order by teacher_id, course_id")
 	@Results({ @Result(id = true, column = "plan_id", property = "planId"),
 			@Result(column = "schedule_id", property = "scheduleId"),
 			@Result(column = "course_id", property = "course", one = @One(select = "com.jefflee.mapper.information.CourseMapper.selectEntityById") ),
