@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.schedule.ArrangementService;
-import com.jefflee.view.ArrangementView;
 
 @RestController
 @RequestMapping(value = "/arrangement")
@@ -61,32 +60,6 @@ public class ArrangementController {
 			result.put("arrangementId", arrangementId.toString());
 		}
 		return result;
-	}
-
-	@RequestMapping(value = "/setArranged", method = RequestMethod.POST)
-	public Map<String, String> setArranged(@RequestBody ArrangementView arrangementView) {
-		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.setArranged(arrangementView);
-		result.put("done", "true");
-		return result;
-	}
-
-	@RequestMapping(value = "/setPriority", method = RequestMethod.POST)
-	public Map<String, String> setPriority(@RequestBody ArrangementView arrangementView) {
-		Map<String, String> result = new HashMap<String, String>();
-		arrangementService.setPriority(arrangementView);
-		result.put("done", "true");
-		return result;
-	}
-
-	@RequestMapping(value = "/getConflictList", method = RequestMethod.POST)
-	public Map<String, String> getConflictList(@RequestBody ArrangementView arrangementView) {
-		return arrangementService.gnrConflictList(arrangementView);
-	}
-
-	@RequestMapping(value = "/getPriorityList", method = RequestMethod.POST)
-	public Map<String, String> getPriorityList(@RequestBody ArrangementView arrangementView) {
-		return arrangementService.gnrPriorityList(arrangementView);
 	}
 
 	@RequestMapping(value = "/doAdjust/{adjustmentId}", method = RequestMethod.POST)
