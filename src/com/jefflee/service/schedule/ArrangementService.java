@@ -34,7 +34,7 @@ public interface ArrangementService {
 
 	void undoAdjust(Integer adjustmentId);
 
-	Map<String, Map<String, Integer>> getBackgroundMap();
+	Map<String, Map<String, Integer>> getBackgroundMap(Integer scheduleId);
 
 	void saveAdjustment(Integer scheduleId);
 

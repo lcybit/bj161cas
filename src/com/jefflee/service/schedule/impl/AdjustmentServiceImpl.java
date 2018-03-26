@@ -62,6 +62,7 @@ public class AdjustmentServiceImpl implements AdjustmentService {
 
 	@Override
 	public Integer selectLatestId(Integer scheduleId) {
+		// 待改进，可只查询最后一个
 		List<Adjustment> adjustmentList = adjustmentMapper.selectTempEntityListByScheduleId(scheduleId);
 		Adjustment adjustment = adjustmentList.get(adjustmentList.size() - 1);
 		return adjustment.getAdjustmentId();

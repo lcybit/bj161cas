@@ -471,7 +471,6 @@ public class ArrangementServiceImpl implements ArrangementService {
 	}
 
 	private void mergeAdjustmentList(List<Arrangement> arrangementList, List<Adjustment> adjustmentList) {
-		cache.getBackgroundMap().get("adjusted").clear();
 		for (Adjustment adjustment : adjustmentList) {
 			adjust(arrangementList, adjustment);
 		}
@@ -484,7 +483,6 @@ public class ArrangementServiceImpl implements ArrangementService {
 			saveAdjust(adjustment);
 			adjustmentService.deletePoById(adjustment.getAdjustmentId());
 		}
-		cache.getBackgroundMap().get("adjusted").clear();
 	}
 
 	private void saveAdjust(Adjustment adjustment) {
@@ -581,18 +579,20 @@ public class ArrangementServiceImpl implements ArrangementService {
 		String secondId = adjustment.getSecondId();
 		Map<String, Integer> firstIdPairs = parseViewId(firstId);
 		Map<String, Integer> secondIdPairs = parseViewId(secondId);
-		Map<String, Integer> adjustedMap = cache.getBackgroundMap().get("adjusted");
+		Integer type = adjustment.getType();
 
-		if (adjustment.getType() == 0) {
+		switch (type) {
+		case 0:
 			swap(arrangementList, firstIdPairs, secondIdPairs);
-			adjustedMap.put(firstId, 0);
-			adjustedMap.put(secondId, 0);
-		} else if (adjustment.getType() == 1) {
+			break;
+		case 1:
 			add(arrangementList, firstIdPairs, secondIdPairs);
-			adjustedMap.put(secondId, 0);
-		} else if (adjustment.getType() == 2) {
+			break;
+		case 2:
 			remove(arrangementList, firstIdPairs, secondIdPairs);
-			adjustedMap.put(secondId, 0);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -601,18 +601,20 @@ public class ArrangementServiceImpl implements ArrangementService {
 		String secondId = adjustment.getSecondId();
 		Map<String, Integer> firstIdPairs = parseViewId(firstId);
 		Map<String, Integer> secondIdPairs = parseViewId(secondId);
-		Map<String, Integer> adjustedMap = cache.getBackgroundMap().get("adjusted");
+		Integer type = adjustment.getType();
 
-		if (adjustment.getType() == 0) {
+		switch (type) {
+		case 0:
 			swap(arrangementList, firstIdPairs, secondIdPairs);
-			adjustedMap.remove(firstId);
-			adjustedMap.remove(secondId);
-		} else if (adjustment.getType() == 1) {
+			break;
+		case 1:
 			remove(arrangementList, firstIdPairs, secondIdPairs);
-			adjustedMap.remove(secondId);
-		} else if (adjustment.getType() == 2) {
+			break;
+		case 2:
 			add(arrangementList, firstIdPairs, secondIdPairs);
-			adjustedMap.remove(secondId);
+			break;
+		default:
+			break;
 		}
 	}
 
@@ -741,7 +743,28 @@ public class ArrangementServiceImpl implements ArrangementService {
 	}
 
 	@Override
-	public Map<String, Map<String, Integer>> getBackgroundMap() {
+	public Map<String, Map<String, Integer>> getBackgroundMap(Integer scheduleId) {
+		Map<String, Integer> adjustedMap = cache.getBackgroundMap().get("adjusted");
+		adjustedMap.clear();
+		List<Adjustment> adjustmentList = adjustmentService.selectTempListByScheduleId(scheduleId);
+		Integer type = null;
+		String firstId = null;
+		String secondId = null;
+		for (Adjustment adjustment : adjustmentList) {
+			type = adjustment.getType();
+			firstId = adjustment.getFirstId();
+			secondId = adjustment.getSecondId();
+			switch (type) {
+			case 0:
+				adjustedMap.put(firstId, 0);
+			case 1:
+			case 2:
+				adjustedMap.put(secondId, 0);
+				break;
+			default:
+				break;
+			}
+		}
 		return cache.getBackgroundMap();
 	}
 
