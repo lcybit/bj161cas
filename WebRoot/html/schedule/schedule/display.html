@@ -66,17 +66,17 @@
   <script id="tmpl-scheduleView" type="text/x-jsrender">
 	<div class="layui-col-md6">
       <blockquote class="layui-elem-quote" id="tclassScheduleTitle">班级课表</blockquote>
-      <div class="layui-col-md12" id="tclassSchedule" style="overflow-x:hidden; overflow-y:auto">
+      <div class="layui-col-md12" id="tclassSchedule" style="overflow-x:hidden; overflow-y:auto;">
         <div class="layui-col-md12">
-          {{props tclassWeekViewMap tmpl="#tmpl-tclassWeekView" /}}
+          {{props tclassWeekViewMap tmpl="#tmpl-tclassWeekView" ~forenoon=schedule.forenoon ~afternoon=schedule.afternoon ~evening=schedule.evening /}}
         </div>
       </div>
     </div>
 	<div class="layui-col-md6">
       <blockquote class="layui-elem-quote">教师课表</blockquote>
-      <div class="layui-col-md12" id="teacherSchedule" style="overflow-x:hidden; overflow-y:auto">
+      <div class="layui-col-md12" id="teacherSchedule" style="overflow-x:hidden; overflow-y:auto;">
         <div class="layui-col-md12">
-          {{props teacherWeekViewMap tmpl="#tmpl-teacherWeekView" /}}
+          {{props teacherWeekViewMap tmpl="#tmpl-teacherWeekView" ~forenoon=schedule.forenoon ~afternoon=schedule.afternoon ~evening=schedule.evening /}}
         </div>
       </div>
     </div>
@@ -89,8 +89,15 @@
           {{include titleView tmpl="#tmpl-tclassTitleView" /}}
           <tr>
             <th rowspan="2"></th>
-            <th colspan="5">上午</th>
-            <th colspan="3">下午</th>
+            {{if ~forenoon > 0}}
+              <th colspan="{{:~forenoon}}">上午</th>
+            {{/if}}
+            {{if ~afternoon > 0}}
+              <th colspan="{{:~afternoon}}">下午</th>
+            {{/if}}
+            {{if ~evening > 0}}
+              <th colspan="{{:~evening}}">晚上</th>
+            {{/if}}
           </tr>
           <tr>
             <th>早</th>
@@ -110,12 +117,12 @@
       <table class="layui-table" lay-size="sm">
         <tr>
           {{props planViewMap tmpl="#tmpl-tclassPlanView" /}}
-          <td class="layui-col-md2" id="{{:#parent.data.key + 'c0'}}" style="cursor:pointer" onclick="clickRemoveBtn(this)">删除</td>
+          <td class="layui-col-md2" name="{{:#parent.data.key + 'c0'}}" style="cursor:pointer" onclick="clickRemoveBtn(this)">删除</td>
         </tr>
       </table>
       {{/for}}
     </div>
-    {{if (#getIndex() + 1) % 2 == 0}}</div><div class="layui-col-md12">{{/if}}
+    {{if (#index + 1) % 2 == 0}}</div><div class="layui-col-md12">{{/if}}
   </script>
   <script id="tmpl-teacherWeekView" type="text/x-jsrender">
     <div class="layui-col-md6">
@@ -125,8 +132,15 @@
           {{include titleView tmpl="#tmpl-teacherTitleView" /}}
           <tr>
             <th rowspan="2"></th>
-            <th colspan="5">上午</th>
-            <th colspan="3">下午</th>
+            {{if ~forenoon > 0}}
+              <th colspan="{{:~forenoon}}">上午</th>
+            {{/if}}
+            {{if ~afternoon > 0}}
+              <th colspan="{{:~afternoon}}">下午</th>
+            {{/if}}
+            {{if ~evening > 0}}
+              <th colspan="{{:~evening}}">晚上</th>
+            {{/if}}
           </tr>
           <tr>
             <th>早</th>
@@ -140,17 +154,18 @@
           </tr>
         </thead>
         <tbody>
-			{{for dayViewList tmpl="#tmpl-teacherDayView" /}}
+          {{for dayViewList tmpl="#tmpl-teacherDayView" /}}
         </tbody>
       </table>
       <table class="layui-table" lay-size="sm">
         <tr>
           {{props planViewMap tmpl="#tmpl-teacherPlanView" /}}
+          <td class="layui-col-md2" name="{{:#parent.data.key + 'c0'}}" style="cursor:pointer" onclick="clickRemoveBtn(this)">删除</td>
         </tr>
       </table>
       {{/for}}
     </div>
-    {{if (#getIndex() + 1) % 2 == 0}}</div><div class="layui-col-md12">{{/if}}
+    {{if (#index + 1) % 2 == 0}}</div><div class="layui-col-md12">{{/if}}
   </script>
   <script id="tmpl-tclassTitleView" type="text/x-jsrender">
     <tr>
@@ -180,7 +195,7 @@
     </tr>
   </script>
   <script id="tmpl-tclassPeriodView" type="text/x-jsrender">
-	<td id="{{:periodViewId}}"
+	<td name="{{:periodViewId}}"
       style="cursor:pointer"
       onclick="clickPeriodView(this, event, [
         {{for arrangementList ~length = arrangementList.length}}
@@ -194,7 +209,7 @@
     </td>
   </script>
   <script id="tmpl-teacherPeriodView" type="text/x-jsrender">
-	<td id="{{:periodViewId}}"
+	<td name="{{:periodViewId}}"
       style="cursor:pointer"
       onclick="clickPeriodView(this, event, [
         {{for arrangementList ~length = arrangementList.length}}
@@ -202,38 +217,38 @@
           {{if #index < ~length - 1}},{{/if}}
         {{/for}}
       ])">
-        {{for arrangementList ~jumpList = jumpViewIdList}}
-          <span onclick="jumpToView(event, '{{:~jumpList[#index]}}')">{{:tclass.shortName}}</span>
+      {{for arrangementList ~jumpList = jumpViewIdList}}
+        <span onclick="jumpToView(event, '{{:~jumpList[#index]}}')">
+        {{for #data ~courseId = course.courseId}}
+          {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
+            {{:course.shortName}}
+          {{else}}
+            {{:tclass.shortName}}
+          {{/if}}
         {{/for}}
+        </span>
+      {{/for}}
     </td>
   </script>
   <script id="tmpl-tclassPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2" id="{{:key}}" style="cursor:pointer" onclick="clickPlanView(this, event)">
+    <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView(this, event)">
     {{for prop}}
-      {{for plan.course.shortName}}
-        {{if #data.length > 1}}
-          <span style="font-size:9px">{{:#data}}</span>
-        {{else}}
-          {{:#data}}
-        {{/if}}
-      {{/for}}
+      {{:plan.course.shortName}}
       {{:plan.periodNum - arrangedNum}}</td>
     {{/for}}
-    {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
+    {{if (#index + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script id="tmpl-teacherPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2" id="{{:key}}" style="cursor:pointer" onclick="clickPlanView(this, event)">
-    {{for prop}}
-      {{for plan.tclass.shortName}}
-        {{if #data.length > 2}}
-          <span style="font-size:9px">{{:#data}}</span>
-        {{else}}
-          {{:#data}}
-        {{/if}}
-      {{/for}}
+    <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView(this, event)">
+    {{for prop ~courseId = prop.plan.course.courseId}}
+      {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
+        {{:plan.course.shortName}}
+      {{else}}
+        {{:plan.tclass.shortName}}
+      {{/if}}
       {{:plan.periodNum - arrangedNum}}</td>
     {{/for}}
-    {{if (#getIndex() + 1) % 6 == 0}}</tr><tr>{{/if}}
+    {{if (#index + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script>
     var form = layui.form;
@@ -290,18 +305,19 @@
         return;
       }
       var periodView = $(cell);
-      var periodViewId = periodView.attr('id');
+      var periodViewId = periodView.attr('name');
       var firstId = $('#firstId').attr('value');
+      var isBlank = isNull(arrangementList);
       switch (status) {
       case 'add':
-        if (!isNull(arrangementList)) {
+        if (!isBlank) {
           layer.msg('请选择空白位置添加！');
           return;
         }
         endAdd(periodViewId);
         break;
       case 'normal':
-        if (isNull(arrangementList)) {
+        if (isBlank) {
           layer.msg('请选择非空位置交换！');
           return;
         }
@@ -309,20 +325,20 @@
         startSwap(periodViewId);
         break;
       case 'remove':
-        if (isNull(arrangementList)) {
+        if (isBlank) {
           layer.msg('请选择非空位置删除！');
           return;
         }
         endRemove(periodViewId, arrangementList[0].courseId);
         break;
       case 'swap':
-        if (isNull(arrangementList)) {
+        if (isBlank) {
           layer.msg('请选择非空位置交换！');
           return;
         }
         if (periodViewId == firstId) {
           status = 'normal';
-          clearColor($('#' + firstId));
+          clearColor($('td[name="' + firstId + '"]'));
         } else {
           endSwap(periodViewId);
         }
@@ -334,15 +350,15 @@
   
     function clickPlanView(cell, event) {
       var planView = $(cell);
-      var planViewId = planView.attr('id');
+      var planViewId = planView.attr('name');
       var firstId = $('#firstId').attr('value');
       switch (status) {
       case 'add':
         if (planViewId == firstId) {
           status = 'normal';
-          clearColor($('#' + firstId));
+          clearColor($('td[name="' + firstId + '"]'));
         } else {
-          clearColor($('#' + firstId));
+          clearColor($('td[name="' + firstId + '"]'));
           setColor(planView, 'LimeGreen', 'White');
           startAdd(planViewId);
         }
@@ -352,12 +368,12 @@
         startAdd(planViewId);
         break;
       case 'remove':
-        clearColor($('#' + firstId.substr(0, 3) + '0'))
+        clearColor($('td[name="' + firstId.substr(0, 3) + '0"]'));
         setColor(planView, 'LimeGreen', 'White');
         startAdd(planViewId);
         break;
       case 'swap':
-        clearColor($('#' + firstId));
+        clearColor($('td[name="' + firstId + '"]'));
         setColor(planView, 'LimeGreen', 'White');
         startAdd(planViewId);
         break;
@@ -368,23 +384,26 @@
   
     function clickRemoveBtn(cell) {
       var removeBtn = $(cell);
-      var removeBtnId = removeBtn.attr('id');
+      var removeBtnId = removeBtn.attr('name');
       var firstId = $('#firstId').attr('value');
       switch (status) {
       case 'remove':
         if (removeBtnId.substr(0, 3) == firstId.substr(0, 3)) {
           status = 'normal';
-          clearColor($('#' + firstId.substr(0, 3) + '0'));
+          clearColor($('td[name="' + firstId.substr(0, 3) + '0"]'));
         } else {
-          clearColor($('#' + firstId.substr(0, 3) + '0'));
+          clearColor($('td[name="' + firstId.substr(0, 3) + '0"]'));
           setColor(removeBtn, 'OrangeRed', 'White');
           startRemove(removeBtnId);
         }
         break;
-      case 'add':
       case 'normal':
+        setColor(removeBtn, 'OrangeRed', 'White');
+        startRemove(removeBtnId);
+        break;
+      case 'add':
       case 'swap':
-        clearColor($('#' + firstId));
+        clearColor($('td[name="' + firstId + '"]'));
         setColor(removeBtn, 'OrangeRed', 'White');
         startRemove(removeBtnId);
         break;
@@ -541,13 +560,13 @@
         success : function(backgroundMap) {
           var periodView;
           $.each(backgroundMap.conflicting, function(key, value) {
-            periodView = $('#' + key);
+            periodView = $('td[name="' + key + '"]');
             if (value == 0) {
               setColor(periodView, 'Red', 'White');
             }
           });
           $.each(backgroundMap.adjusted, function(key, value) {
-            periodView = $('#' + key);
+            periodView = $('td[name="' + key + '"]');
             if (value == 0) {
               setColor(periodView, 'Orange', 'White');
             }
@@ -557,12 +576,12 @@
       var firstId = $('#firstId').attr('value');
       switch (status) {
       case 'add':
-        setColor($('#' + firstId), 'LimeGreen', 'White');
+        setColor($('td[name="' + firstId + '"]'), 'LimeGreen', 'White');
         break;
       case 'normal':
         break;
       case 'remove':
-        setColor($('#' + firstId.substr(0, 3) + '0'), 'OrangeRed', 'White');
+        setColor($('td[name="' + firstId.substr(0, 3) + '0"]'), 'OrangeRed', 'White');
         break;
       case 'swap':
         break;
@@ -570,7 +589,7 @@
         break;
       }
     }
-  
+    
     function setColor(cell, backgroundColor, color) {
       cell.css('background-color', backgroundColor);
       cell.css('color', color);
@@ -582,7 +601,7 @@
     }
   
     function clearAllColor() {
-      var allCell = $('td[id]');
+      var allCell = $('td[name]');
       clearColor(allCell);
     }
   </script>

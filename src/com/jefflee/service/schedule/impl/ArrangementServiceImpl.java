@@ -7,6 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
@@ -161,6 +162,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 		TitleView titleView = null;
 
+		// 新建WeekView
 		for (Plan plan : schedulePlanList) {
 			Course course = plan.getCourse();
 			Tclass tclass = plan.getTclass();
@@ -168,7 +170,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 			if (tclass.getTclassId() != null) {
 				tclassWeekViewId = "s" + tclass.getTclassId();
-				// 若不存在该班课表，新建之
+				// 若不存在该班级课表，新建之
 				if (!tclassWeekViewMap.containsKey(tclassWeekViewId)) {
 					tclassWeekView = gnrEmptyWeekView(schedule.getGroup(), periodList);
 					tclassWeekViewMap.put(tclassWeekViewId, tclassWeekView);
@@ -180,12 +182,48 @@ public class ArrangementServiceImpl implements ArrangementService {
 							periodView.setPeriodViewId(periodView.getPeriodViewId() + tclassWeekViewId);
 						}
 					}
-
 				}
+
+				if (teacher.getTeacherId() != null) {
+					Integer courseId = course.getCourseId();
+					teacherWeekViewId = "t" + teacher.getTeacherId() + "c" + courseId;
+					// 若不存在该教师课程课表，新建之
+					// TODO type
+					if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
+						if (!teacherWeekViewMap.containsKey(teacherWeekViewId)) {
+							teacherWeekView = gnrEmptyWeekView(schedule.getGroup(), periodList);
+							teacherWeekViewMap.put(teacherWeekViewId, teacherWeekView);
+							titleView = teacherWeekView.getTitleView();
+							titleView.setCourseName(course.getShortName());
+							titleView.setGradeName(groupService.gnrGradeName(schedule.getGroup()));
+							titleView.setTeacherName(teacher.getName());
+							// 必要时添加
+							for (DayView dayView : teacherWeekView.getDayViewList()) {
+								for (PeriodView periodView : dayView.getArrangedPeriodViewList()) {
+									periodView.setPeriodViewId(periodView.getPeriodViewId() + teacherWeekViewId);
+								}
+							}
+						}
+					}
+				}
+			}
+
+		}
+
+		for (Plan plan : schedulePlanList) {
+			Course course = plan.getCourse();
+			Tclass tclass = plan.getTclass();
+			Teacher teacher = plan.getTeacher();
+
+			if (tclass.getTclassId() != null) {
+				tclassWeekViewId = "s" + tclass.getTclassId();
 				tclassPlanViewId = tclassWeekViewId + "c" + course.getCourseId();
-				if (course.getType() == 0) {
+				Integer courseId = course.getCourseId();
+				// TODO type
+				// if (course.getType() == 0) {
+				if (courseId != 23 && courseId != 24 && courseId != 25) {
 					tclassWeekView = tclassWeekViewMap.get(tclassWeekViewId);
-					if (course.getCourseId() == 11) {
+					if (courseId == 11) {
 						tclassWeekView.getTitleView().setTeacherName(plan.getTeacher().getName());
 					}
 					tclassWeekView.getPlanViewMap().put(tclassPlanViewId, gnrEmptyPlanView(plan));
@@ -193,27 +231,25 @@ public class ArrangementServiceImpl implements ArrangementService {
 			}
 
 			if (teacher.getTeacherId() != null) {
-				teacherWeekViewId = "t" + teacher.getTeacherId() + "c" + course.getCourseId();
-				// 若不存在该教师课程课表，新建之
-				if (course.getType() != 1 && !teacherWeekViewMap.containsKey(teacherWeekViewId)) {
-					teacherWeekView = gnrEmptyWeekView(schedule.getGroup(), periodList);
-					teacherWeekViewMap.put(teacherWeekViewId, teacherWeekView);
-					titleView = teacherWeekView.getTitleView();
-					titleView.setCourseName(course.getShortName());
-					titleView.setGradeName(groupService.gnrGradeName(schedule.getGroup()));
-					titleView.setTeacherName(teacher.getName());
-					// 必要时添加
-					for (DayView dayView : teacherWeekView.getDayViewList()) {
-						for (PeriodView periodView : dayView.getArrangedPeriodViewList()) {
-							periodView.setPeriodViewId(periodView.getPeriodViewId() + teacherWeekViewId);
+				teacherWeekViewId = "t" + teacher.getTeacherId();
+				Integer courseId = course.getCourseId();
+				// TODO type
+				// if (course.getType() == 0) {
+				if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
+					teacherWeekViewId = teacherWeekViewId + "c" + courseId;
+					teacherPlanViewId = teacherWeekViewId + "s" + tclass.getTclassId();
+					teacherWeekView = teacherWeekViewMap.get(teacherWeekViewId);
+					teacherWeekView.getPlanViewMap().put(teacherPlanViewId, gnrEmptyPlanView(plan));
+				} else {
+					teacherPlanViewId = teacherWeekViewId + "c" + courseId;
+					Set<String> existTeacherWeekViewIdList = teacherWeekViewMap.keySet();
+					for (String existTeacherWeekViewId : existTeacherWeekViewIdList) {
+						if (existTeacherWeekViewId.startsWith(teacherWeekViewId)) {
+							teacherWeekView = teacherWeekViewMap.get(existTeacherWeekViewId);
+							teacherWeekView.getPlanViewMap().put(teacherPlanViewId, gnrEmptyPlanView(plan));
 						}
 					}
 
-				}
-				teacherPlanViewId = teacherWeekViewId + "s" + tclass.getTclassId();
-				if (course.getType() != 1) {
-					teacherWeekView = teacherWeekViewMap.get(teacherWeekViewId);
-					teacherWeekView.getPlanViewMap().put(teacherPlanViewId, gnrEmptyPlanView(plan));
 				}
 			}
 		}
@@ -228,7 +264,10 @@ public class ArrangementServiceImpl implements ArrangementService {
 				if (tclass.getTclassId() != null) {
 					tclassWeekViewId = "s" + tclass.getTclassId();
 					tclassPlanViewId = tclassWeekViewId + "c" + course.getCourseId();
-					if (course.getType() == 0) {
+					Integer courseId = course.getCourseId();
+					// TODO type
+					// if (course.getType() == 0) {
+					if (courseId != 23 && courseId != 24 && courseId != 25) {
 						tclassWeekView = tclassWeekViewMap.get(tclassWeekViewId);
 						tclassPeriodView = tclassWeekView.getDayViewList().get(period.getDayOfWeek() - 1)
 								.getArrangedPeriodViewList().get(period.getOrderOfDay() - 1);
@@ -246,9 +285,12 @@ public class ArrangementServiceImpl implements ArrangementService {
 				}
 
 				if (teacher.getTeacherId() != null) {
-					teacherWeekViewId = "t" + teacher.getTeacherId() + "c" + course.getCourseId();
-					teacherPlanViewId = teacherWeekViewId + "s" + tclass.getTclassId();
-					if (course.getType() == 0) {
+					teacherWeekViewId = "t" + teacher.getTeacherId();
+					Integer courseId = course.getCourseId();
+					// TODO type
+					// if (course.getType() == 0) {
+					if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
+						teacherWeekViewId = teacherWeekViewId + "c" + courseId;
 						teacherWeekView = teacherWeekViewMap.get(teacherWeekViewId);
 						teacherPeriodView = teacherWeekView.getDayViewList().get(period.getDayOfWeek() - 1)
 								.getArrangedPeriodViewList().get(period.getOrderOfDay() - 1);
@@ -259,8 +301,27 @@ public class ArrangementServiceImpl implements ArrangementService {
 						teacherPeriodView.getArrangementList().add(arrangement);
 						teacherPeriodView.getJumpViewIdList().add("s" + tclass.getTclassId());
 
+						teacherPlanViewId = teacherWeekViewId + "s" + tclass.getTclassId();
 						teacherPlanView = teacherWeekView.getPlanViewMap().get(teacherPlanViewId);
 						teacherPlanView.setArrangedNum(teacherPlanView.getArrangedNum() + 1);
+					} else {
+						teacherPlanViewId = teacherWeekViewId + "c" + courseId;
+						Set<String> existTeacherWeekViewIdList = teacherWeekViewMap.keySet();
+						for (String existTeacherWeekViewId : existTeacherWeekViewIdList) {
+							if (existTeacherWeekViewId.startsWith(teacherWeekViewId)) {
+								teacherWeekView = teacherWeekViewMap.get(existTeacherWeekViewId);
+								teacherPeriodView = teacherWeekView.getDayViewList().get(period.getDayOfWeek() - 1)
+										.getArrangedPeriodViewList().get(period.getOrderOfDay() - 1);
+								if (!teacherPeriodView.getArrangementList().isEmpty()) {
+									conflictMap.put(teacherPeriodView.getPeriodViewId(), 0);
+								}
+								teacherPeriodView.getArrangementList().add(arrangement);
+								teacherPeriodView.getJumpViewIdList().add("s" + tclass.getTclassId());
+
+								teacherPlanView = teacherWeekView.getPlanViewMap().get(teacherPlanViewId);
+								teacherPlanView.setArrangedNum(teacherPlanView.getArrangedNum() + 1);
+							}
+						}
 					}
 				}
 			}
