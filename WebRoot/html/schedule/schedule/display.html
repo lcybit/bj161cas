@@ -51,13 +51,13 @@
       <div class="layui-form-item">
         <label class="layui-form-label">甲ID</label>
         <div class="layui-input-block">
-          <input class="layui-input" type="text" name="firstId" id="firstId">
+          <input class="layui-input" type="text" name="position" id="position">
         </div>
       </div>
       <div class="layui-form-item">
         <label class="layui-form-label">乙ID</label>
         <div class="layui-input-block">
-          <input class="layui-input" type="text" name="secondId" id="secondId">
+          <input class="layui-input" type="text" name="additionalInfo" id="additionalInfo">
         </div>
       </div>
     </form>
@@ -117,7 +117,7 @@
       <table class="layui-table" lay-size="sm">
         <tr>
           {{props planViewMap tmpl="#tmpl-tclassPlanView" /}}
-          <td class="layui-col-md2" name="{{:#parent.data.key + 'c0'}}" style="cursor:pointer" onclick="clickRemoveBtn(this)">删除</td>
+          <td class="layui-col-md2" name="d" style="cursor:pointer" onclick="clickRemoveBtn('d')">删除</td>
         </tr>
       </table>
       {{/for}}
@@ -160,7 +160,7 @@
       <table class="layui-table" lay-size="sm">
         <tr>
           {{props planViewMap tmpl="#tmpl-teacherPlanView" /}}
-          <td class="layui-col-md2" name="{{:#parent.data.key + 'c0'}}" style="cursor:pointer" onclick="clickRemoveBtn(this)">删除</td>
+          <td class="layui-col-md2" name="d" style="cursor:pointer" onclick="clickRemoveBtn('d')">删除</td>
         </tr>
       </table>
       {{/for}}
@@ -197,10 +197,9 @@
   <script id="tmpl-tclassPeriodView" type="text/x-jsrender">
 	<td name="{{:periodViewId}}"
       style="cursor:pointer"
-      onclick="clickPeriodView(this, event, [
+      onclick="clickPeriodView('{{:periodViewId}}', event, [
         {{for arrangementList ~length = arrangementList.length}}
-          {'courseId':{{:course.courseId}}}
-          {{if #index < ~length - 1}},{{/if}}
+          'c-{{:course.courseId}}'{{if #index < ~length - 1}},{{/if}}
         {{/for}}
       ])">
         {{for arrangementList ~jumpList = jumpViewIdList}}
@@ -211,9 +210,15 @@
   <script id="tmpl-teacherPeriodView" type="text/x-jsrender">
 	<td name="{{:periodViewId}}"
       style="cursor:pointer"
-      onclick="clickPeriodView(this, event, [
+      onclick="clickPeriodView('{{:periodViewId}}', event, [
         {{for arrangementList ~length = arrangementList.length}}
-          {'tclassId':{{:tclass.tclassId}}}
+          {{for #data ~courseId = course.courseId}}
+            {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
+              'c-{{:course.courseId}}'
+            {{else}}
+              's-{{:tclass.tclassId}}'
+            {{/if}}
+          {{/for}}
           {{if #index < ~length - 1}},{{/if}}
         {{/for}}
       ])">
@@ -231,7 +236,7 @@
     </td>
   </script>
   <script id="tmpl-tclassPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView(this, event)">
+    <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView('{{:key}}', event)">
     {{for prop}}
       {{:plan.course.shortName}}
       {{:plan.periodNum - arrangedNum}}</td>
@@ -239,7 +244,7 @@
     {{if (#index + 1) % 6 == 0}}</tr><tr>{{/if}}
   </script>
   <script id="tmpl-teacherPlanView" type="text/x-jsrender">
-    <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView(this, event)">
+    <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView('{{:key}}', event)">
     {{for prop ~courseId = prop.plan.course.courseId}}
       {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
         {{:plan.course.shortName}}
@@ -278,8 +283,8 @@
           $('th,td').css('font-size', '14px').css('padding', '2px 2px').css('text-align', 'center');
           $('th').css('width', '11%');
           loadBackground();
-          form.render();
-          //var scheduleHeight = $(window).height() - $('#tclassScheduleTitle').height() - $('#exportExcel').height();
+          // 设置课表滚动栏高度，保存当前滚动位置
+          // var scheduleHeight = $(window).height() - $('#tclassScheduleTitle').height() - $('#exportExcel').height();
           $('#tclassSchedule').css('max-height', '460px');
           $('#teacherSchedule').css('max-height', '460px');
           $('#tclassSchedule').scrollTop(sessionStorage.getItem('tclassScrollTop'));
@@ -288,26 +293,12 @@
       });
     }
   
-    function getConflictList() {
-      $.ajax({
-        async : false,
-        url : '/arrangement/getConflictList',
-        type : 'POST',
-        dataType : 'json',
-        contentType : 'application/json',
-        data : JSON.stringify($('#arrangementView').serializeJSON()),
-        success : function(conflictMap) {}
-      });
-    }
-  
-    function clickPeriodView(cell, event, arrangementList) {
+    function clickPeriodView(periodViewId, event, nameArray) {
       if (event.ctrlKey == false) {
         return;
       }
-      var periodView = $(cell);
-      var periodViewId = periodView.attr('name');
-      var firstId = $('#firstId').attr('value');
-      var isBlank = isNull(arrangementList);
+      var position = $('#position').attr('value');
+      var isBlank = isNull(nameArray);
       switch (status) {
       case 'add':
         if (!isBlank) {
@@ -321,26 +312,26 @@
           layer.msg('请选择非空位置交换！');
           return;
         }
-        setColor(periodView, 'Orange', 'White');
-        startSwap(periodViewId);
+        setColor(periodViewId, 'Orange', 'White');
+        startSwap(periodViewId, nameArray);
         break;
       case 'remove':
         if (isBlank) {
           layer.msg('请选择非空位置删除！');
           return;
         }
-        endRemove(periodViewId, arrangementList[0].courseId);
+        endRemove(periodViewId, nameArray);
         break;
       case 'swap':
         if (isBlank) {
           layer.msg('请选择非空位置交换！');
           return;
         }
-        if (periodViewId == firstId) {
+        if (periodViewId == position) {
           status = 'normal';
-          clearColor($('td[name="' + firstId + '"]'));
+          clearColor(position);
         } else {
-          endSwap(periodViewId);
+          endSwap(periodViewId, nameArray);
         }
         break;
       default:
@@ -348,33 +339,32 @@
       }
     }
   
-    function clickPlanView(cell, event) {
-      var planView = $(cell);
-      var planViewId = planView.attr('name');
-      var firstId = $('#firstId').attr('value');
+    function clickPlanView(planViewId, event) {
+      var position = $('#position').attr('value');
+      var additionalInfo = $('#additionalInfo').attr('value');
       switch (status) {
       case 'add':
-        if (planViewId == firstId) {
+        if (planViewId == additionalInfo) {
           status = 'normal';
-          clearColor($('td[name="' + firstId + '"]'));
+          clearColor(additionalInfo);
         } else {
-          clearColor($('td[name="' + firstId + '"]'));
-          setColor(planView, 'LimeGreen', 'White');
+          clearColor(additionalInfo);
+          setColor(planViewId, 'LimeGreen', 'White');
           startAdd(planViewId);
         }
         break;
       case 'normal':
-        setColor(planView, 'LimeGreen', 'White');
+        setColor(planViewId, 'LimeGreen', 'White');
         startAdd(planViewId);
         break;
       case 'remove':
-        clearColor($('td[name="' + firstId.substr(0, 3) + '0"]'));
-        setColor(planView, 'LimeGreen', 'White');
+        clearColor('d');
+        setColor(planViewId, 'LimeGreen', 'White');
         startAdd(planViewId);
         break;
       case 'swap':
-        clearColor($('td[name="' + firstId + '"]'));
-        setColor(planView, 'LimeGreen', 'White');
+        clearColor(position);
+        setColor(planViewId, 'LimeGreen', 'White');
         startAdd(planViewId);
         break;
       default:
@@ -382,70 +372,72 @@
       }
     }
   
-    function clickRemoveBtn(cell) {
-      var removeBtn = $(cell);
-      var removeBtnId = removeBtn.attr('name');
-      var firstId = $('#firstId').attr('value');
+    function clickRemoveBtn(removeBtnId) {
+      var position = $('#position').attr('value');
+      var additionalInfo = $('#additionalInfo').attr('value');
       switch (status) {
       case 'remove':
-        if (removeBtnId.substr(0, 3) == firstId.substr(0, 3)) {
-          status = 'normal';
-          clearColor($('td[name="' + firstId.substr(0, 3) + '0"]'));
-        } else {
-          clearColor($('td[name="' + firstId.substr(0, 3) + '0"]'));
-          setColor(removeBtn, 'OrangeRed', 'White');
-          startRemove(removeBtnId);
-        }
+        status = 'normal';
+        clearColor(removeBtnId);
         break;
       case 'normal':
-        setColor(removeBtn, 'OrangeRed', 'White');
-        startRemove(removeBtnId);
+        setColor(removeBtnId, 'OrangeRed', 'White');
+        startRemove();
         break;
       case 'add':
+        clearColor(additionalInfo);
+        setColor(removeBtnId, 'OrangeRed', 'White');
+        startRemove();
+        break;
       case 'swap':
-        clearColor($('td[name="' + firstId + '"]'));
-        setColor(removeBtn, 'OrangeRed', 'White');
-        startRemove(removeBtnId);
+        clearColor(position);
+        setColor(removeBtnId, 'OrangeRed', 'White');
+        startRemove();
         break;
       default:
         break;
       }
     }
   
-    function startSwap(periodViewId) {
+    function startSwap(periodViewId, nameArray) {
       status = 'swap';
       $('#type').attr('value', 0);
-      $('#firstId').attr('value', periodViewId);
+      $('#position').attr('value', periodViewId);
+      $('#additionalInfo').attr('value', nameArray.join(','));
     }
   
     function startAdd(planViewId) {
       status = 'add';
       $('#type').attr('value', 1);
-      $('#firstId').attr('value', planViewId);
+      $('#additionalInfo').attr('value', planViewId);
     }
   
-    function startRemove(planViewId) {
+    function startRemove() {
       status = 'remove';
       $('#type').attr('value', 2);
-      $('#firstId').attr('value', planViewId);
     }
   
-    function endSwap(periodViewId) {
+    function endSwap(periodViewId, nameArray) {
       status = 'normal';
-      $('#secondId').attr('value', periodViewId);
+      var currentPostion = $('#position').attr('value');
+      var additionalInfo = $('#additionalInfo').attr('value');
+      $('#position').attr('value', currentPostion + '|' + periodViewId);
+      $('#additionalInfo').attr('value', additionalInfo + '|' + nameArray.join(','));
+      //recordAdjustment();
       doAdjust(recordAdjustment());
   
     }
   
     function endAdd(periodViewId) {
-      $('#secondId').attr('value', periodViewId);
+      $('#position').attr('value', periodViewId);
+      //recordAdjustment();
       doAdjust(recordAdjustment());
     }
   
-    function endRemove(periodViewId, courseId) {
-      var firstId = $('#firstId').attr('value');
-      $('#firstId').attr('value', firstId.substr(0, 3) + courseId);
-      $('#secondId').attr('value', periodViewId);
+    function endRemove(periodViewId, nameArray) {
+      $('#position').attr('value', periodViewId);
+      $('#additionalInfo').attr('value', nameArray.join(','));
+      //recordAdjustment();
       doAdjust(recordAdjustment());
     }
   
@@ -558,30 +550,27 @@
         url : '/arrangement/getBackground/' + scheduleId,
         type : 'GET',
         success : function(backgroundMap) {
-          var periodView;
           $.each(backgroundMap.conflicting, function(key, value) {
-            periodView = $('td[name="' + key + '"]');
             if (value == 0) {
-              setColor(periodView, 'Red', 'White');
+              setColor(key, 'Red', 'White');
             }
           });
           $.each(backgroundMap.adjusted, function(key, value) {
-            periodView = $('td[name="' + key + '"]');
             if (value == 0) {
-              setColor(periodView, 'Orange', 'White');
+              setColor(key, 'Orange', 'White');
             }
           });
         }
       });
-      var firstId = $('#firstId').attr('value');
+      var additionalInfo = $('#additionalInfo').attr('value');
       switch (status) {
       case 'add':
-        setColor($('td[name="' + firstId + '"]'), 'LimeGreen', 'White');
+        setColor(additionalInfo, 'LimeGreen', 'White');
         break;
       case 'normal':
         break;
       case 'remove':
-        setColor($('td[name="' + firstId.substr(0, 3) + '0"]'), 'OrangeRed', 'White');
+        setColor('d', 'OrangeRed', 'White');
         break;
       case 'swap':
         break;
@@ -590,14 +579,16 @@
       }
     }
     
-    function setColor(cell, backgroundColor, color) {
-      cell.css('background-color', backgroundColor);
-      cell.css('color', color);
+    function setColor(viewName, backgroundColor, color) {
+      var td =$('td[name="' + viewName + '"]');
+      td.css('background-color', backgroundColor);
+      td.css('color', color);
     }
   
-    function clearColor(cell) {
-      cell.css('background-color', '');
-      cell.css('color', '');
+    function clearColor(viewName) {
+      var td =$('td[name="' + viewName + '"]');
+      td.css('background-color', '');
+      td.css('color', '');
     }
   
     function clearAllColor() {

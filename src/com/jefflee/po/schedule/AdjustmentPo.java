@@ -1,5 +1,6 @@
 package com.jefflee.po.schedule;
 
+import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,8 +17,11 @@ public class AdjustmentPo {
 	private Integer startWeek;
 	private Integer duration;
 	private Integer type;
-	private String firstId;
-	private String secondId;
+	// TODO 合并后修改数据库
+	@Column(name = "first_id")
+	private String position;
+	@Column(name = "second_id")
+	private String additionalInfo;
 
 	public Integer getAdjustmentId() {
 		return adjustmentId;
@@ -59,20 +63,20 @@ public class AdjustmentPo {
 		this.type = type;
 	}
 
-	public String getFirstId() {
-		return firstId;
+	public String getPosition() {
+		return position;
 	}
 
-	public void setFirstId(String firstId) {
-		this.firstId = firstId;
+	public void setPosition(String postion) {
+		this.position = postion;
 	}
 
-	public String getSecondId() {
-		return secondId;
+	public String getAdditionalInfo() {
+		return additionalInfo;
 	}
 
-	public void setSecondId(String secondId) {
-		this.secondId = secondId;
+	public void setAdditionalInfo(String additionalInfo) {
+		this.additionalInfo = additionalInfo;
 	}
 
 }

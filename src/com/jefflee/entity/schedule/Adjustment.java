@@ -6,8 +6,8 @@ public class Adjustment {
 	private Integer startWeek;
 	private Integer duration;
 	private Integer type;
-	private String firstId;
-	private String secondId;
+	private String position;
+	private String additionalInfo;
 
 	public Integer getAdjustmentId() {
 		return adjustmentId;
@@ -49,20 +49,20 @@ public class Adjustment {
 		this.type = type;
 	}
 
-	public String getFirstId() {
-		return firstId;
+	public String getPosition() {
+		return position;
 	}
 
-	public void setFirstId(String firstId) {
-		this.firstId = firstId;
+	public void setPosition(String position) {
+		this.position = position;
 	}
 
-	public String getSecondId() {
-		return secondId;
+	public String getAdditionalInfo() {
+		return additionalInfo;
 	}
 
-	public void setSecondId(String secondId) {
-		this.secondId = secondId;
+	public void setAdditionalInfo(String additionalInfo) {
+		this.additionalInfo = additionalInfo;
 	}
 
 }

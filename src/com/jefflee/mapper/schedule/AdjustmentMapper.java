@@ -17,16 +17,16 @@ public interface AdjustmentMapper extends Mapper<AdjustmentPo> {
 	@Results({ @Result(id = true, column = "adjustment_id", property = "adjustmentId"),
 			@Result(column = "schedule_id", property = "scheduleId"),
 			@Result(column = "start_week", property = "startWeek"), @Result(column = "duration", property = "duration"),
-			@Result(column = "type", property = "type"), @Result(column = "first_id", property = "firstId"),
-			@Result(column = "second_id", property = "secondId") })
+			@Result(column = "type", property = "type"), @Result(column = "first_id", property = "position"),
+			@Result(column = "second_id", property = "additionalInfo") })
 	public Adjustment selectEntityById(Integer adjustmentId);
 
 	@Select("select * from schd_adjustment where schedule_id = #{scheduleId} and duration = 0")
 	@Results({ @Result(id = true, column = "adjustment_id", property = "adjustmentId"),
 			@Result(column = "schedule_id", property = "scheduleId"),
 			@Result(column = "start_week", property = "startWeek"), @Result(column = "duration", property = "duration"),
-			@Result(column = "type", property = "type"), @Result(column = "first_id", property = "firstId"),
-			@Result(column = "second_id", property = "secondId") })
+			@Result(column = "type", property = "type"), @Result(column = "first_id", property = "position"),
+			@Result(column = "second_id", property = "additionalInfo") })
 	public List<Adjustment> selectTempEntityListByScheduleId(Integer scheduleId);
 
 }

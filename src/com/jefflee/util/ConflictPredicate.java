@@ -32,7 +32,7 @@ public class ConflictPredicate implements Predicate<Arrangement> {
 		Integer tclassId2 = arrangement.getTclass().getTclassId();
 		Integer teacherId2 = arrangement.getTeacher().getTeacherId();
 
-		// TODO 适当设置课程类型以求精简判断
+		// TODO type
 		if (periodId1 != periodId2) {
 			return false;
 		}
