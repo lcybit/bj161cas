@@ -5,6 +5,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
 import com.jefflee.po.schedule.SchedulePo;
+import com.jefflee.view.SchdPlanView;
 import com.jefflee.view.ScheduleView;
 
 public interface ScheduleService {
@@ -20,6 +21,8 @@ public interface ScheduleService {
 	public Integer deleteById(Integer scheduleId);
 
 	public ScheduleView gnrScheduleView(Integer scheduleId);
+	
+	public SchdPlanView gnrSchdPlanView(Integer groupId,Integer scheduleId);
 
 	public void gnrEmptyArrangementList(Integer scheduleId);
 

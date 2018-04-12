@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.po.schedule.SchedulePo;
+import com.jefflee.service.information.TclassService;
 import com.jefflee.service.schedule.ScheduleService;
+import com.jefflee.view.SchdPlanView;
 import com.jefflee.view.ScheduleView;
 
 @RestController
@@ -23,6 +25,9 @@ public class ScheduleController {
 
 	@Resource(name = "scheduleService")
 	ScheduleService scheduleService;
+
+	@Resource(name = "tclassService")
+	TclassService tclassService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
 	public Map<String, String> create(@RequestBody SchedulePo schedulePo) {
@@ -67,6 +72,11 @@ public class ScheduleController {
 	@RequestMapping(value = "/display/{scheduleId}", method = RequestMethod.GET)
 	public ScheduleView display(@PathVariable("scheduleId") Integer scheduleId) {
 		return scheduleService.gnrScheduleView(scheduleId);
+	}
+
+	@RequestMapping(value = "/show/{groupId}/{scheduleId}", method = RequestMethod.GET)
+	public SchdPlanView show(@PathVariable("groupId") Integer groupId, @PathVariable("scheduleId") Integer scheduleId) {
+		return scheduleService.gnrSchdPlanView(groupId, scheduleId);
 	}
 
 	@RequestMapping(value = "/generate/{scheduleId}", method = RequestMethod.GET)

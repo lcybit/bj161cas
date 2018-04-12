@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>选择班级任课教师</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="width:100%;">
+    <div class="layui-row" id="schdPlanView"></div>
+    <div class="layui-form-item">
+       <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+       </div>
+    </div>
+  </div>
+  <script id="tmpl-schdPlanView" type="text/x-jsrender">
+    <div class="layui-col-md12" id="tclassSchedule" style="overflow-x:hidden; overflow-y:auto;">
+      <table class="layui-table" id="{{:key}}" lay-size="sm">      
+        <thead>        
+          <tr>
+            <th></th>
+            <th>课时</th>
+            {{for tclassList tmpl="#tmpl-tclassListView" /}}      
+          </tr>
+        </thead>
+        <tbody>
+	      {{props coursePlanViewMap tmpl="#tmpl-coursePlanView" /}}
+        </tbody>
+      </table>     
+    </div>
+  </script>
+  <script id="tmpl-tclassListView" type="text/x-jsrender">
+    <th id="{{:tclassId}}">{{:name}}</th>  
+  </script> 
+  <script id="tmpl-coursePlanView" type="text/x-jsrender">   
+   {{for prop}}
+    <tr>    
+      <td >{{:course.name}}</td> 
+      <td class="layui-td" onclick="clickSelectPidNum('{{:course.courseId}}')">{{:periodNum}}</td> 
+      {{props paneMap tmpl="#tmpl-paneMapView" /}}
+    </tr>   
+   {{/for }} 
+  </script>
+  <script id="tmpl-paneMapView" type="text/x-jsrender">
+     {{for prop}}
+       <td class="layui-td" onclick="clickSelectTeacher('{{:planId}}')">{{:teacher.name}}</td>         
+     {{/for }} 
+  </script>
+ 
+  <script>
+   
+    var groupId = sessionStorage.getItem('currentGroupId'); 
+    var scheduleId = sessionStorage.getItem('currentScheduleId');
+    
+    $(document).ready(function() {
+      show();
+    });
+  
+    function show() {   
+      $.ajax({
+        async : false,
+        url : '/schedule/show/' + groupId + '/' + scheduleId,
+        type : 'GET',
+        success : function(schdPlanView) {
+          alert('获取schdPlanView成功');
+          console.log(schdPlanView);//在网页 （按F12）中显示信息
+          $('#schdPlanView').html($.templates('#tmpl-schdPlanView').render(schdPlanView));                
+        }
+      });
+    }
+
+    
+     function  clickSelectPidNum(courseId) {  
+      
+      sessionStorage.setItem('currentCourseId', courseId);
+      sessionStorage.setItem('currentScheduleId', scheduleId);    
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'clickSelectPidNum',
+          title : '显示课时信息',
+          content : '/html/schedule/schedule/showPidNum.html',
+          area : [ '500px', '300px' ],
+          shade : 0.5,
+          closeBtn : false,
+        });
+      });
+     }
+     
+     function clickSelectTeacher(planId) {   
+      sessionStorage.setItem('currentGroupId', groupId);
+      sessionStorage.setItem('currentPlanId', planId);   
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'clickSelectTeacher',
+          title : '显示教师信息',
+          content : '/html/schedule/schedule/showTeacherList.html',
+          area : [ '500px', '300px' ],
+          shade : 0.5,
+          closeBtn : false,
+        });
+      });
+    }
+    
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  
+ </script> 
+</body>
+
+</html>

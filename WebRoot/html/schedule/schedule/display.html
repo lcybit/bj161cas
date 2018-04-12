@@ -288,6 +288,7 @@
         type : 'GET',
         success : function(scheduleView) {
           $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
+          
           $('th,td').css('font-size', '14px').css('padding', '2px 2px').css('text-align', 'center');
           $('th').css('width', '11%');
           loadBackground();

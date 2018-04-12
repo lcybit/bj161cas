@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>选择年级课程信息</title>
+<title>选择年级组课程信息</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jquery/jquery.js"></script>
@@ -16,8 +16,7 @@
       <!-- 隐藏年级组ID -->        
           <input class="layui-input" name="groupId" id="groupId" type="hidden" />       
       
-      <div class="layui-form-item" pane="" id="courseList">        
-      </div>      
+      <div class="layui-form-item" pane="" id="courseList"></div>      
       <div class="layui-form-item">
         <div class="layui-input-block">
           <button class="layui-btn" type="button" onclick="choose()">添加</button>
@@ -37,10 +36,11 @@
     $(document).ready(function() {
       var groupId = sessionStorage.getItem('currentGroupId');
       $('#groupId').attr('value', groupId);  
-     list();//放到下个函数后面就显示不出来，函数的执行是按照顺序执行的
+      list();//放到下个函数后面就显示不出来，函数的执行是按照顺序执行的
+      
      // $("input[name='course'][value='groupCourseList[i].courseId']").attr("checked","true");//支持多条件操作
      
-      
+      //显示已选课程 （ralt_group_course表里有的数据）
       $.ajax({
         async : false,
         url : '/relation/find/' + groupId,
@@ -48,7 +48,7 @@
         dataType:'json',   
         success : function(groupCourseList) {
             alert('获取groupCourseList成功');
-            //console.log(groupCourseList);//在网页 （按F12）中显示信息
+            console.log(groupCourseList);//在网页 （按F12）中显示信息
             for(var i=0;i<groupCourseList.length;i++){
                 //console.log(groupCourseList[i]);
                 console.log(groupCourseList[i].courseId);
@@ -61,7 +61,7 @@
         }
       });    
       
-       layui.use('form', function() {
+      layui.use('form', function() {
         layui.form.render();
       });    
      
@@ -98,7 +98,7 @@
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/course/list',
+        url : '/c/list',
         success : function(courseList) {
           $('#courseList').html($.templates('#tmpl-courseList').render(courseList));
           alert('获取courseList成功');

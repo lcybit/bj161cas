@@ -27,4 +27,10 @@ public interface TclassMapper extends Mapper<TclassPo> {
 			@Result(column = "year", property = "year"), @Result(column = "level", property = "level") })
 	public List<Tclass> selectEntityList();
 
+	@Select("select * from info_tclass where year = #{year}")
+	@Results({ @Result(id = true, column = "tclass_id", property = "tclassId"),
+			@Result(column = "tclass_no", property = "tclassNo"), @Result(column = "type", property = "type"),
+			@Result(column = "year", property = "year"), @Result(column = "level", property = "level") })
+	public List<Tclass> selectEntityListByYear(Integer year);
+
 }

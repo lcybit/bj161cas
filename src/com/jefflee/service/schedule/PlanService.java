@@ -12,6 +12,10 @@ public interface PlanService {
 	public List<PlanPo> selectAll();
 
 	public PlanPo selectById(Integer planId);
+	
+	public Plan findById(Integer planId);
+	
+	public List<PlanPo> getPlanById(Integer courseId,Integer scheduleId); 
 
 	public Integer updateById(PlanPo planPo);
 

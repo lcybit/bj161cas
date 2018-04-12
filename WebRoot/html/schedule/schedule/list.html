@@ -47,6 +47,8 @@
         <button class="layui-btn layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
         <button class="layui-btn layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
         <button class="layui-btn layui-btn-sm" onclick="choose('{{:scheduleId}}')">选择</button>
+        <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:groupId}}','{{:scheduleId}}')">计划</button>
+
       </td>
     </tr>
   </script>
@@ -112,6 +114,27 @@
         }
       })
     }
+    
+    function selectTeacher(groupId,scheduleId) {
+      sessionStorage.setItem('currentScheduleId', scheduleId);
+      sessionStorage.setItem('currentGroupId', groupId);
+      
+      layui.use('layer', function() {
+        var layer = layui.layer;
+        layer.open({
+          type : 2,
+          id : 'modify',
+          title : '为固定班级选择上课老师',
+          content : '/html/schedule/schedule/selectTeacher.html',
+          area : [ '700px', '500px' ],
+          shade : 0.5,
+          closeBtn : false,
+        });
+      });
+    }
+    
+    
+    
     
     function list() {
       $.ajax({
