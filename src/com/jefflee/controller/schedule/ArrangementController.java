@@ -84,6 +84,12 @@ public class ArrangementController {
 		return;
 	}
 
+	@RequestMapping(value = "/resetArrangement/{scheduleId}", method = RequestMethod.POST)
+	public void resetArrangement(@PathVariable Integer scheduleId) {
+		arrangementService.resetArrangementList(scheduleId);
+		return;
+	}
+
 	@RequestMapping(value = "/getBackground/{scheduleId}", method = RequestMethod.GET)
 	public Map<String, Map<String, Integer>> getBackgroundMap(@PathVariable Integer scheduleId) {
 		return arrangementService.getBackgroundMap(scheduleId);

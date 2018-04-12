@@ -12,6 +12,7 @@ import java.util.Set;
 import javax.annotation.Resource;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.ListUtils;
 import org.apache.commons.collections4.Predicate;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,6 @@ import com.jefflee.entity.schedule.Plan;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ArrangementMapper;
 import com.jefflee.po.schedule.ArrangementPo;
-import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.service.information.PeriodService;
 import com.jefflee.service.information.TclassService;
@@ -37,6 +37,8 @@ import com.jefflee.service.schedule.GroupService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.util.ArrangementPredicate;
 import com.jefflee.util.Cache;
+import com.jefflee.util.ConflictPredicate;
+import com.jefflee.util.PlanPredicate;
 import com.jefflee.view.DayView;
 import com.jefflee.view.PeriodView;
 import com.jefflee.view.PlanView;
@@ -445,17 +447,20 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public void gnrArrangementList(Integer scheduleId) {
-		clearArrangedArrangement(scheduleId);
-
-		Arrangement queryArrangedArrangement = new Arrangement();
-		Arrangement queryPriorityArrangement = new Arrangement();
-		Arrangement queryIdArrangement = new Arrangement();
+		Arrangement queryArranged = new Arrangement();
+		Arrangement queryUnarranged = new Arrangement();
+		Arrangement queryPriority = new Arrangement();
+		Arrangement queryArrangement = new Arrangement();
+		Arrangement querySameCourseArrangement = new Arrangement();
+		Plan queryPlan = new Plan();
 
 		List<Arrangement> scheduleArrangementList = cache.getScheduleArrangementList();
-		queryArrangedArrangement.setArranged(0);
-		List<Arrangement> unarrangedArrangementList = (List<Arrangement>) CollectionUtils
-				.select(scheduleArrangementList, new ArrangementPredicate(queryArrangedArrangement));
-		List<PlanPo> schedulePlanPoList = planService.selectByScheduleId(scheduleId);
+		queryUnarranged.setArranged(0);
+		Predicate<Arrangement> unarrangedPredicate = new ArrangementPredicate(queryUnarranged);
+		queryArranged.setArranged(1);
+		Predicate<Arrangement> arrangedPredicate = new ArrangementPredicate(queryArranged);
+		List<Arrangement> unarrangedArrangementList = ListUtils.select(scheduleArrangementList, unarrangedPredicate);
+		List<Plan> schedulePlanList = cache.getSchedulePlanList();
 
 		Integer courseId;
 		Integer tclassId;
@@ -466,55 +471,83 @@ public class ArrangementServiceImpl implements ArrangementService {
 		// TODO 重新调整排课逻辑
 		while (!unarrangedArrangementList.isEmpty()) {
 			for (int priority = 4; priority > 0; priority--) {
-				queryPriorityArrangement.setPriority(priority);
-				List<Arrangement> priorityArrangementList = (List<Arrangement>) CollectionUtils
-						.select(unarrangedArrangementList, new ArrangementPredicate(queryPriorityArrangement));
+				queryPriority.setPriority(priority);
+				Predicate<Arrangement> queryPredicate = new ArrangementPredicate(queryPriority);
+				List<Arrangement> priorityArrangementList = ListUtils.select(unarrangedArrangementList, queryPredicate);
 				if (!priorityArrangementList.isEmpty()) {
 					Arrangement chosenArrangement = chooseRandomly(priorityArrangementList);
 					courseId = chosenArrangement.getCourse().getCourseId();
-					tclassId = chosenArrangement.getTclass().getTclassId();
-
-					queryArrangedArrangement.setArranged(1);
-					arrangedArrangementList = (List<Arrangement>) CollectionUtils.select(scheduleArrangementList,
-							new ArrangementPredicate(queryArrangedArrangement));
-
-					queryIdArrangement.getCourse().setCourseId(courseId);
-					queryIdArrangement.getTclass().setTclassId(tclassId);
-					arrangedNum = ((List<Arrangement>) CollectionUtils.select(arrangedArrangementList,
-							new ArrangementPredicate(queryIdArrangement))).size();
-					periodNum = planService
-							.selectByCourseId(planService.selectByTclassId(schedulePlanPoList, tclassId), courseId)
-							.get(0).getPeriodNum();
-					if (periodNum - arrangedNum <= 0) {
+					// TODO type
+					if (courseId == 23 || courseId == 24 || courseId == 25) {
 						chosenArrangement.setArranged(-1);
+						updateArrangement(chosenArrangement);
 						break;
 					}
-					for (Arrangement arrangement : unarrangedArrangementList) {
-						if (isConflictive(chosenArrangement, arrangement)) {
-							arrangement.setArranged(-1);
-						}
+					tclassId = chosenArrangement.getTclass().getTclassId();
+
+					arrangedArrangementList = ListUtils.select(scheduleArrangementList, arrangedPredicate);
+					ConflictPredicate conflictPredicate = new ConflictPredicate(chosenArrangement);
+					List<Arrangement> arrangedConflictList = ListUtils.select(arrangedArrangementList,
+							conflictPredicate);
+					if (!arrangedConflictList.isEmpty()) {
+						chosenArrangement.setArranged(-1);
+						updateArrangement(chosenArrangement);
+						break;
 					}
-					chosenArrangement.setArranged(1);
+
+					queryArrangement.getCourse().setCourseId(courseId);
+					queryArrangement.getTclass().setTclassId(tclassId);
+					arrangedNum = ListUtils.select(arrangedArrangementList, new ArrangementPredicate(queryArrangement))
+							.size();
+					queryPlan.getCourse().setCourseId(courseId);
+					queryPlan.getTclass().setTclassId(tclassId);
+					periodNum = ListUtils.select(schedulePlanList, new PlanPredicate(queryPlan)).iterator().next()
+							.getPeriodNum();
+					if (periodNum - arrangedNum <= 0) {
+						chosenArrangement.setArranged(-1);
+						updateArrangement(chosenArrangement);
+						break;
+					}
+
+					List<Arrangement> unarrangedConflictList = ListUtils.select(unarrangedArrangementList,
+							conflictPredicate);
+					for (Arrangement arrangement : unarrangedConflictList) {
+						arrangement.setArranged(-1);
+						updateArrangement(arrangement);
+					}
+
+					// 因为改动queryArrangment导致循环后arrangedNum不正确
+					querySameCourseArrangement.getPeriod().setPeriodId(chosenArrangement.getPeriod().getPeriodId());
+					querySameCourseArrangement.getCourse().setCourseId(courseId);
+					querySameCourseArrangement.getTclass().setTclassId(tclassId);
+					List<Arrangement> sameCourseArrangementList = ListUtils.select(unarrangedArrangementList,
+							new ArrangementPredicate(querySameCourseArrangement));
+					for (Arrangement arrangement : sameCourseArrangementList) {
+						arrangement.setArranged(1);
+						updateArrangement(arrangement);
+					}
 					break;
 				}
 			}
-			queryArrangedArrangement.setArranged(0);
-			unarrangedArrangementList = (List<Arrangement>) CollectionUtils.select(unarrangedArrangementList,
-					new ArrangementPredicate(queryArrangedArrangement));
-		}
-		for (Arrangement arrangement : scheduleArrangementList) {
-			updateArrangement(arrangement);
+			unarrangedArrangementList = ListUtils.select(unarrangedArrangementList, unarrangedPredicate);
 		}
 		return;
 	}
 
-	private void clearArrangedArrangement(Integer scheduleId) {
+	private void clearArrangementList(Integer scheduleId) {
 		ArrangementPo arrangementPo = new ArrangementPo();
 		arrangementPo.setArranged(0);
+		arrangementPo.setPriority(2);
 		Example example = new Example(ArrangementPo.class);
 		Criteria criteria = example.createCriteria();
 		criteria.andEqualTo("scheduleId", scheduleId);
 		arrangementMapper.updateByExampleSelective(arrangementPo, example);
+	}
+
+	@Override
+	public void resetArrangementList(Integer scheduleId) {
+		clearArrangementList(scheduleId);
+		cache.initial(scheduleId);
 	}
 	/* Arrange Block End */
 
@@ -709,8 +742,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 	}
 
 	private void remove(List<Arrangement> arrangementList, String position, String additionalInfo) {
-		List<Map<String, Integer>> idPairList;
-		idPairList = parseIdPairList(position, additionalInfo);
+		List<Map<String, Integer>> idPairList = parseIdPairList(position, additionalInfo);
 		for (Map<String, Integer> idPair : idPairList) {
 			setArrangedByIdPair(arrangementList, idPair, 1);
 		}

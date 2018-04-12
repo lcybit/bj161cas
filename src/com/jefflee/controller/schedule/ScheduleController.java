@@ -1,12 +1,11 @@
 package com.jefflee.controller.schedule;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -81,8 +80,8 @@ public class ScheduleController {
 	}
 
 	@RequestMapping(value = "/export/{scheduleId}", method = RequestMethod.GET)
-	public void export(@PathVariable("scheduleId") Integer scheduleId) throws FileNotFoundException, IOException {
-		scheduleService.gnrScheduleViewExcel(scheduleId);
+	public void export(HttpServletResponse response, @PathVariable("scheduleId") Integer scheduleId) throws Exception {
+		scheduleService.gnrScheduleViewExcel(response, scheduleId);
 	}
 
 	@RequestMapping(value = "/initial/{id}", method = RequestMethod.GET)

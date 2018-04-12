@@ -11,9 +11,7 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-    <button class="layui-btn layui-btn-normal" id="exportExcel" onclick="exportExcel()">
-      <i class="layui-icon">&#xe601;</i>导出
-    </button>
+    <div class="layui-btn-group">
     <button class="layui-btn layui-btn-normal" id="listAdjustment" style="display:none" onclick="listAdjustment()">
       <i class="layui-icon">&#xe60a;</i>调整列表
     </button>
@@ -23,6 +21,16 @@
     <button class="layui-btn" id="saveAdjustment" onclick="saveAdjustment()">
       <i class="layui-icon">&#xe638;</i>保存
     </button>
+    <button class="layui-btn layui-btn-normal" id="gnrArrangement" onclick="gnrArrangement()">
+      <i class="layui-icon">&#xe62d;</i>排课
+    </button>
+    <button class="layui-btn layui-btn-warm" id="resetArrangement" onclick="resetArrangement()">
+      <i class="layui-icon">&#xe621;</i>重置
+    </button>
+    <button class="layui-btn layui-bg-cyan" id="exportExcel" onclick="exportExcel()">
+      <i class="layui-icon">&#xe601;</i>导出
+    </button>
+    </div>
     <form class="layui-form layui-form-pane" id="adjustment" style="display:none">
       <div class="layui-form-item">
         <label class="layui-form-label">课表ID</label>
@@ -292,6 +300,38 @@
         }
       });
     }
+        
+    function gnrArrangement() {
+      var loading = layer.load(1);
+      $.ajax({
+        async : true,
+        type : 'GET',
+        url : '/schedule/arrange/' + scheduleId,
+        success : function() {
+          layer.close(loading);
+          layer.msg('排课完毕！');
+          display();
+        }
+      });
+    }
+    
+    function resetArrangement() {
+      layer.confirm('重置将清空所有已排课数据！', function(index) {
+        saveAdjustment();
+        var loading = layer.load(1);
+        $.ajax({
+          async : true,
+          url : '/arrangement/resetArrangement/' + scheduleId,
+          type : 'POST',
+          success : function(response) {
+            layer.close(loading);
+            layer.msg('课表已重置！');
+            display();
+          }
+        });
+        layer.close(index);
+      });
+    }
   
     function clickPeriodView(periodViewId, event, nameArray) {
       if (event.ctrlKey == false) {
@@ -508,14 +548,15 @@
     }
   
     function exportExcel() {
-      $.ajax({
+      document.location.href = '/schedule/export/' + scheduleId;
+      /* $.ajax({
         async : false,
         url : '/schedule/export/' + scheduleId,
         type : 'GET',
         success : function(response) {
           layer.msg('导出成功！');
         }
-      })
+      }); */
     }
   
     function listAdjustment() {

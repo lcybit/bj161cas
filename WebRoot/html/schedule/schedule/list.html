@@ -135,18 +135,6 @@
         }
       });
     }
-    
-    function arrange() {
-      var scheduleId = sessionStorage.getItem('currentScheduleId');
-      $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/schedule/arrange/' + scheduleId,
-        success : function() {
-          alert('排课成功！');
-        }
-      });
-    }
 
     function goBack() {
       jump('html/schedule/schedule/list.html');

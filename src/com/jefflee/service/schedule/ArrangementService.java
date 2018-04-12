@@ -38,4 +38,6 @@ public interface ArrangementService {
 
 	void saveAdjustment(Integer scheduleId);
 
+	void resetArrangementList(Integer scheduleId);
+
 }
