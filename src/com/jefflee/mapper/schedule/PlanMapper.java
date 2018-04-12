@@ -33,5 +33,15 @@ public interface PlanMapper extends Mapper<PlanPo> {
 			@Result(column = "teacher_id", property = "teacher", one = @One(select = "com.jefflee.mapper.information.TeacherMapper.selectEntityById") ),
 			@Result(column = "period_num", property = "periodNum") })
 	public List<Plan> selectEntityListByScheduleId(Integer scheduleId);
+	
+	@Select("select * from schd_plan where course_id = #{0} and schedule_id = #{1}")
+	@Results({ @Result(id = true, column = "plan_id", property = "planId"),
+			@Result(column = "schedule_id", property = "scheduleId"),
+			@Result(column = "course_id", property = "courseId" ),
+			@Result(column = "room_id", property = "roomId" ),
+			@Result(column = "tclass_id", property = "tclassId" ),
+			@Result(column = "teacher_id", property = "teacherId"),
+			@Result(column = "period_num", property = "periodNum") })
+	public List<PlanPo> selectPlanPoListById(Integer courseId ,Integer scheduleId);
 
 }

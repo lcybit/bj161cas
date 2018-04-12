@@ -1,6 +1,6 @@
 package com.jefflee.util;
 
-import java.util.Objects;
+import java.util.Objects;//出错是因为jdk版本低
 
 import org.apache.commons.collections4.Predicate;
 

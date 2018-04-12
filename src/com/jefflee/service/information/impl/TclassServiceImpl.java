@@ -7,9 +7,12 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import tk.mybatis.mapper.entity.Example;
+
 import com.jefflee.entity.information.Tclass;
 import com.jefflee.mapper.information.TclassMapper;
 import com.jefflee.po.information.TclassPo;
+import com.jefflee.po.relation.GroupCoursePo;
 import com.jefflee.service.information.TclassService;
 
 @Service("tclassService")
@@ -30,6 +33,19 @@ public class TclassServiceImpl implements TclassService {
 	@Override
 	public List<TclassPo> selectAll() {
 		return tclassMapper.selectAll();
+	}
+	
+	//TODO 
+	@Override
+	public List<Tclass> checkByYear(Integer year){
+
+		List<Tclass> tclassList = tclassMapper.selectEntityListByYear(year);
+		for (Tclass tclass : tclassList) {
+			tclass.setName(gnrName(tclass));
+			tclass.setShortName(gnrShortName(tclass));
+		}
+		return tclassList;
+  
 	}
 
 	@Override

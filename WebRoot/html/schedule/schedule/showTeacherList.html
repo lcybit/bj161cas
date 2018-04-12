@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>显示教师信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="" method="post">
+      <!-- 隐藏年级组ID -->        
+          <input class="layui-input" name="planId" id="planId" type="hidden" />       
+      
+      <div class="layui-form-item" pane="" id="teacherList"></div>      
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="choose()">修改</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>  
+  <script id="tmpl-teacherList" type="text/x-jsrender">
+     <label class="layui-form-label">教师信息</label>
+     <div class="layui-input-block">
+          <input type="radio" name="teacher"  value="{{:teacherId}}" title="{{:name}}" >
+     </div>
+  </script>
+  
+  <script>
+  
+      var groupId = sessionStorage.getItem('currentGroupId'); 
+      var planId = sessionStorage.getItem('currentPlanId');
+      
+    $(document).ready(function() {
+      
+      $('#planId').attr('value', planId);  
+      list();  //放到下个函数后面就显示不出来，函数的执行是按照顺序执行的
+     
+      //显示已选的老师（schd_plan表里存在的信息）
+      $.ajax({
+        async : false,
+        url : '/plan/check/' + planId,
+        type : 'GET',
+        dataType:'json',   
+        success : function(plan) {
+            alert('获取plan成功');         
+                console.log(plan);             
+                $("input[name='teacher'][value='"+plan.teacher.teacherId+"']").prop('checked',true);                 
+        }
+      });    
+      
+      layui.use('form', function() {
+        layui.form.render();
+      });    
+     
+    });
+  
+  
+    function choose(){
+    
+       var planid=$("#planId").attr("value");//right   
+       //var id_array =[];
+       var teacherid ;
+       $('input[name="teacher"]:checked').each(function(){  
+          teacherid = $(this).val();
+          //id_array.push($(this).val());//向数组中添加元素  
+       });       
+       $.ajax({
+         async:false,
+         url:'/plan/change',
+         type:'POST',
+         dataType:'json',
+         data:{"planId":planid,"teacherId":teacherid},
+         contentType : 'application/x-www-form-urlencoded',//传json数据（用requstbody接受）时用'application/json',//传普通数据（用requstparam接受）时用'application/x-www-form-urlencoded',
+         traditional:true,
+         success: function(result){
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);  
+            alert('修改老师成功');
+            parent.show();      
+         }
+       });
+            
+    }
+    
+    function list() {
+      $.ajax({
+        async : false,
+        type : 'GET',
+        url : '/relat/check/' + groupId,
+        success : function(teacherList) {
+          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+          alert('获取teacherList成功');
+        }
+      });
+    }
+   
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>

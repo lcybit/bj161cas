@@ -10,6 +10,8 @@ public interface TclassService {
 	Integer insert(TclassPo tclassPo);
 
 	List<TclassPo> selectAll();
+	
+	List<Tclass> checkByYear(Integer year);
 
 	TclassPo selectById(Integer tclassId);
 

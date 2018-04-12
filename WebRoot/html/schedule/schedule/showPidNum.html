@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>显示课时信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="" method="post">       
+      
+      <div class="layui-form-item" pane="" id="teacherList">
+          <input type="radio" name="periodNum"  value="0" title="0" >
+          <input type="radio" name="periodNum"  value="1" title="1" >
+          <input type="radio" name="periodNum"  value="2" title="2" >
+          <input type="radio" name="periodNum"  value="3" title="3" >
+          <input type="radio" name="periodNum"  value="4" title="4" >
+          <input type="radio" name="periodNum"  value="5" title="5" >
+          <input type="radio" name="periodNum"  value="6" title="6" >
+          <input type="radio" name="periodNum"  value="7" title="7" >
+          <input type="radio" name="periodNum"  value="8" title="8" >
+      </div>      
+      <div class="layui-form-item">
+        <div class="layui-input-block">
+          <button class="layui-btn" type="button" onclick="choose()">修改</button>
+          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>  
+  
+  
+  <script>
+   
+      var courseId = sessionStorage.getItem('currentCourseId'); 
+      var scheduleId = sessionStorage.getItem('currentScheduleId');
+      
+     $(document).ready(function() {
+      
+      //显示已选的课时信息（schd_plan表里存在的信息）
+      $.ajax({
+        async : false,
+        url : '/plan/look/' + courseId + '/' + scheduleId,
+        type : 'GET',
+        dataType:'json',   
+        success : function(planPoList) {
+            alert('获取planPoList成功');         
+                console.log(planPoList);             
+                $("input[name='periodNum'][value='"+planPoList[0].periodNum+"']").prop('checked',true);                 
+        }
+      });    
+      
+      layui.use('form', function() {
+        layui.form.render();
+      });    
+     
+    });
+  
+  
+    function choose(){
+     
+       var pidNum ;
+       $('input[name="periodNum"]:checked').each(function(){  
+          pidNum  = $(this).val();
+       });       
+       $.ajax({
+         async:false,
+         url:'/plan/rewrite',
+         type:'POST',
+         dataType:'json',
+         data:{"pidNum":pidNum,"courseId":courseId,"scheduleId":scheduleId},
+         contentType : 'application/x-www-form-urlencoded',//传json数据（用requstbody接受）时用'application/json',//传普通数据（用requstparam接受）时用'application/x-www-form-urlencoded',
+         traditional:true,
+         success: function(result){
+            var index = parent.layer.getFrameIndex(window.name);
+            parent.layer.close(index);  
+            alert('修改课时成功');
+            parent.show();      
+         }
+       });
+            
+    }
+    
+    
+   
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>

@@ -37,6 +37,11 @@ public class PlanServiceImpl implements PlanService {
 		return planMapper.selectByPrimaryKey(planId);
 	}
 
+	
+	public Plan findById(Integer planId){
+		return planMapper.selectEntityById(planId);
+	}
+	
 	@Override
 	public Integer updateById(PlanPo planPo) {
 		if (planMapper.updateByPrimaryKey(planPo) == 1) {
@@ -73,7 +78,11 @@ public class PlanServiceImpl implements PlanService {
 		}
 		return selectedPlanPoList;
 	}
-
+    
+	public List<PlanPo> getPlanById(Integer courseId,Integer scheduleId){
+		return planMapper.selectPlanPoListById(courseId,scheduleId);
+	}
+	
 	@Override
 	public List<PlanPo> selectByCourseId(List<PlanPo> planPoList, Integer courseId) {
 		List<PlanPo> selectedPlanPoList = new ArrayList<PlanPo>();
