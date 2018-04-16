@@ -36,9 +36,9 @@ public class ConflictPredicate implements Predicate<Arrangement> {
 		if (periodId1 != periodId2) {
 			return false;
 		}
-		// TODO type
-		if (courseType1 == 1 && courseType2 == 1) {
-			if (courseId1 != 11 && Objects.equals(courseId1, courseId2)) {
+		if (Objects.equals(courseId1, courseId2)) {
+			// TODO type
+			if (courseId1 == 23 || courseId1 == 24 || courseId1 == 25) {
 				return false;
 			}
 		}

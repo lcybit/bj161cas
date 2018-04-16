@@ -98,7 +98,7 @@
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/c/list',
+        url : '/course/list',
         success : function(courseList) {
           $('#courseList').html($.templates('#tmpl-courseList').render(courseList));
           alert('获取courseList成功');

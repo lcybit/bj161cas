@@ -447,90 +447,84 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public void gnrArrangementList(Integer scheduleId) {
-		Arrangement queryArranged = new Arrangement();
-		Arrangement queryUnarranged = new Arrangement();
-		Arrangement queryPriority = new Arrangement();
-		Arrangement queryArrangement = new Arrangement();
-		Arrangement querySameCourseArrangement = new Arrangement();
-		Plan queryPlan = new Plan();
-
 		List<Arrangement> scheduleArrangementList = cache.getScheduleArrangementList();
-		queryUnarranged.setArranged(0);
-		Predicate<Arrangement> unarrangedPredicate = new ArrangementPredicate(queryUnarranged);
+		List<Plan> schedulePlanList = cache.getSchedulePlanList();
+
+		Arrangement queryUnselected = new Arrangement();
+		queryUnselected.setArranged(0);
+		Predicate<Arrangement> unselectedPredicate = new ArrangementPredicate(queryUnselected);
+		List<Arrangement> unselectedArrangementList = ListUtils.select(scheduleArrangementList, unselectedPredicate);
+
+		Arrangement queryArranged = new Arrangement();
 		queryArranged.setArranged(1);
 		Predicate<Arrangement> arrangedPredicate = new ArrangementPredicate(queryArranged);
-		List<Arrangement> unarrangedArrangementList = ListUtils.select(scheduleArrangementList, unarrangedPredicate);
-		List<Plan> schedulePlanList = cache.getSchedulePlanList();
+		List<Arrangement> arrangedArrangementList = ListUtils.select(scheduleArrangementList, arrangedPredicate);
 
 		Integer courseId;
 		Integer tclassId;
 		Integer arrangedNum;
 		Integer periodNum;
-		List<Arrangement> arrangedArrangementList = new ArrayList<Arrangement>();
+
+		Arrangement queryArrangement = new Arrangement();
+		Arrangement querySameCourseArrangement = new Arrangement();
+		Plan queryPlan = new Plan();
 
 		// TODO 重新调整排课逻辑
-		while (!unarrangedArrangementList.isEmpty()) {
-			for (int priority = 4; priority > 0; priority--) {
-				queryPriority.setPriority(priority);
-				Predicate<Arrangement> queryPredicate = new ArrangementPredicate(queryPriority);
-				List<Arrangement> priorityArrangementList = ListUtils.select(unarrangedArrangementList, queryPredicate);
-				if (!priorityArrangementList.isEmpty()) {
-					Arrangement chosenArrangement = chooseRandomly(priorityArrangementList);
-					courseId = chosenArrangement.getCourse().getCourseId();
-					// TODO type
-					if (courseId == 23 || courseId == 24 || courseId == 25) {
-						chosenArrangement.setArranged(-1);
-						updateArrangement(chosenArrangement);
-						break;
-					}
-					tclassId = chosenArrangement.getTclass().getTclassId();
-
-					arrangedArrangementList = ListUtils.select(scheduleArrangementList, arrangedPredicate);
-					ConflictPredicate conflictPredicate = new ConflictPredicate(chosenArrangement);
-					List<Arrangement> arrangedConflictList = ListUtils.select(arrangedArrangementList,
-							conflictPredicate);
-					if (!arrangedConflictList.isEmpty()) {
-						chosenArrangement.setArranged(-1);
-						updateArrangement(chosenArrangement);
-						break;
-					}
-
-					queryArrangement.getCourse().setCourseId(courseId);
-					queryArrangement.getTclass().setTclassId(tclassId);
-					arrangedNum = ListUtils.select(arrangedArrangementList, new ArrangementPredicate(queryArrangement))
-							.size();
-					queryPlan.getCourse().setCourseId(courseId);
-					queryPlan.getTclass().setTclassId(tclassId);
-					periodNum = ListUtils.select(schedulePlanList, new PlanPredicate(queryPlan)).iterator().next()
-							.getPeriodNum();
-					if (periodNum - arrangedNum <= 0) {
-						chosenArrangement.setArranged(-1);
-						updateArrangement(chosenArrangement);
-						break;
-					}
-
-					List<Arrangement> unarrangedConflictList = ListUtils.select(unarrangedArrangementList,
-							conflictPredicate);
-					for (Arrangement arrangement : unarrangedConflictList) {
-						arrangement.setArranged(-1);
-						updateArrangement(arrangement);
-					}
-
-					// 因为改动queryArrangment导致循环后arrangedNum不正确
-					querySameCourseArrangement.getPeriod().setPeriodId(chosenArrangement.getPeriod().getPeriodId());
-					querySameCourseArrangement.getCourse().setCourseId(courseId);
-					querySameCourseArrangement.getTclass().setTclassId(tclassId);
-					List<Arrangement> sameCourseArrangementList = ListUtils.select(unarrangedArrangementList,
-							new ArrangementPredicate(querySameCourseArrangement));
-					for (Arrangement arrangement : sameCourseArrangementList) {
-						arrangement.setArranged(1);
-						updateArrangement(arrangement);
-					}
-					break;
-				}
+		while (!unselectedArrangementList.isEmpty()) {
+			Arrangement selectedArrangement = chooseRandomly(unselectedArrangementList);
+			courseId = selectedArrangement.getCourse().getCourseId();
+			// TODO type
+			if (courseId == 23 || courseId == 24 || courseId == 25) {
+				selectedArrangement.setArranged(-1);
+				unselectedArrangementList.remove(selectedArrangement);
+				continue;
 			}
-			unarrangedArrangementList = ListUtils.select(unarrangedArrangementList, unarrangedPredicate);
+			tclassId = selectedArrangement.getTclass().getTclassId();
+
+			// 若需要添加的课程冲突，不添加
+			ConflictPredicate conflictPredicate = new ConflictPredicate(selectedArrangement);
+			List<Arrangement> arrangedConflictList = ListUtils.select(arrangedArrangementList, conflictPredicate);
+			if (!arrangedConflictList.isEmpty()) {
+				selectedArrangement.setArranged(-1);
+				unselectedArrangementList.remove(selectedArrangement);
+				continue;
+			}
+
+			// 若已安排数量超过上限，不添加
+			queryArrangement.getCourse().setCourseId(courseId);
+			queryArrangement.getTclass().setTclassId(tclassId);
+			arrangedNum = ListUtils.select(arrangedArrangementList, new ArrangementPredicate(queryArrangement)).size();
+			queryPlan.getCourse().setCourseId(courseId);
+			queryPlan.getTclass().setTclassId(tclassId);
+			periodNum = ListUtils.select(schedulePlanList, new PlanPredicate(queryPlan)).iterator().next()
+					.getPeriodNum();
+			if (periodNum - arrangedNum <= 0) {
+				selectedArrangement.setArranged(-1);
+				unselectedArrangementList.remove(selectedArrangement);
+				continue;
+			}
+
+			// 同课时同课程同班级安排一起添加
+			querySameCourseArrangement.getPeriod().setPeriodId(selectedArrangement.getPeriod().getPeriodId());
+			querySameCourseArrangement.getCourse().setCourseId(courseId);
+			querySameCourseArrangement.getTclass().setTclassId(tclassId);
+			List<Arrangement> sameCourseArrangementList = ListUtils.select(unselectedArrangementList,
+					new ArrangementPredicate(querySameCourseArrangement));
+			for (Arrangement arrangement : sameCourseArrangementList) {
+				arrangement.setArranged(1);
+				arrangedArrangementList.add(arrangement);
+				unselectedArrangementList.remove(arrangement);
+				updateArrangement(arrangement);
+			}
+
+			// 移除冲突的课程（注意和前一部分的顺序）
+			List<Arrangement> unselectedConflictList = ListUtils.select(unselectedArrangementList, conflictPredicate);
+			for (Arrangement arrangement : unselectedConflictList) {
+				arrangement.setArranged(-1);
+				unselectedArrangementList.remove(arrangement);
+			}
 		}
+		fastUpdateArrangement(scheduleArrangementList);
 		return;
 	}
 
@@ -819,6 +813,15 @@ public class ArrangementServiceImpl implements ArrangementService {
 	private void updateArrangement(Arrangement arrangement) {
 		ArrangementPo arrangementPo = arrangement.toPo();
 		arrangementMapper.updateByPrimaryKeySelective(arrangementPo);
+		return;
+	}
+
+	private void fastUpdateArrangement(List<Arrangement> arrangementList) {
+		List<ArrangementPo> arrangementPoList = new ArrayList<ArrangementPo>();
+		for (Arrangement arrangement : arrangementList) {
+			arrangementPoList.add(arrangement.toPo());
+		}
+		arrangementMapper.insertListOnDuplicateKeyUpdate(arrangementPoList);
 		return;
 	}
 

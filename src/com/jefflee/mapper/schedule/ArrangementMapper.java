@@ -9,10 +9,9 @@ import org.apache.ibatis.annotations.Select;
 
 import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.po.schedule.ArrangementPo;
+import com.jefflee.util.MyMapper;
 
-import tk.mybatis.mapper.common.Mapper;
-
-public interface ArrangementMapper extends Mapper<ArrangementPo> {
+public interface ArrangementMapper extends MyMapper<ArrangementPo> {
 
 	@Select("select * from schd_arrangement where arrangement_id = #{arrangementId}")
 	@Results({ @Result(id = true, column = "arrangement_id", property = "arrangementId"),

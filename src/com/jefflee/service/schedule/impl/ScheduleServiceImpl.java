@@ -501,7 +501,13 @@ public class ScheduleServiceImpl implements ScheduleService {
 						periodArrangementList = teacherWeekView.getDayViewList().get(rowIdx - 3)
 								.getArrangedPeriodViewList().get(colIdx - 1).getArrangementList();
 						if (!periodArrangementList.isEmpty()) {
-							teacherCell.setCellValue(periodArrangementList.get(0).getTclass().getShortName());
+							// TODO type
+							Integer courseId = periodArrangementList.get(0).getCourse().getCourseId();
+							if (courseId == 11 || courseId == 23 || courseId == 24 || courseId == 25) {
+								teacherCell.setCellValue(periodArrangementList.get(0).getCourse().getShortName());
+							} else {
+								teacherCell.setCellValue(periodArrangementList.get(0).getTclass().getShortName());
+							}
 						}
 						continue;
 					}
