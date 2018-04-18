@@ -26,6 +26,7 @@ import com.jefflee.entity.schedule.Group;
 import com.jefflee.entity.schedule.Plan;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.ArrangementMapper;
+import com.jefflee.po.relation.GroupCoursePo;
 import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.service.information.PeriodService;
@@ -95,7 +96,13 @@ public class ArrangementServiceImpl implements ArrangementService {
 			return null;
 		}
 	}
-
+    //测试 插入arrangement表的数据 
+	public List<Arrangement> findById(Integer scheduleId){
+		List<Arrangement> arrangementList = new  ArrayList<Arrangement>();
+		arrangementList = arrangementMapper.selectEntityListByScheduleId(scheduleId);
+		return arrangementList;
+	}
+	
 	@Override
 	public List<ArrangementPo> selectAll() {
 		return arrangementMapper.selectAll();
@@ -115,6 +122,13 @@ public class ArrangementServiceImpl implements ArrangementService {
 		}
 	}
 
+	public void deleteByScheduleId (Integer scheduleId ){
+		
+		Example example =new Example(ArrangementPo.class);
+        example.createCriteria().andEqualTo("scheduleId",scheduleId.toString());
+         
+        arrangementMapper.deleteByExample(example);
+	}
 	@Override
 	public Integer deleteById(Integer arrangementId) {
 		if (arrangementMapper.deleteByPrimaryKey(arrangementId) == 1) {

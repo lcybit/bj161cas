@@ -7,6 +7,8 @@
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
+
+
 </head>
 
 <body>
@@ -46,18 +48,20 @@
       <td>
         <button class="layui-btn layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
         <button class="layui-btn layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
-        <button class="layui-btn layui-btn-sm" onclick="choose('{{:scheduleId}}')">选择</button>
         <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:groupId}}','{{:scheduleId}}')">计划</button>
-
+        <button class="layui-btn layui-btn-sm" onclick="choose('{{:scheduleId}}')">查看课表</button>
       </td>
     </tr>
   </script>
   <script>
+  
+    var groupId = sessionStorage.getItem('currentGroupId');
     $(document).ready(function() {
       list();
     })
   
     function goCreate() {
+    sessionStorage.setItem('currentGroupId', groupId); 
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
@@ -111,6 +115,8 @@
         type : 'GET',
         url : '/schedule/initial/' + scheduleId,
         success : function() {
+               
+                jump('/html/schedule/schedule/display.html');
         }
       })
     }
@@ -160,7 +166,8 @@
     }
 
     function goBack() {
-      jump('html/schedule/schedule/list.html');
+      jump('html/schedule/group/list.html');
+      
     }
   </script>
 </body>

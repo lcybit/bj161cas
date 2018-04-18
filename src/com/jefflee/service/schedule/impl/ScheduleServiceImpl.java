@@ -143,6 +143,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		// 根据scheduleId获得planList
 		List<Plan> planList = new ArrayList<Plan>();
+		
 		planList = planService.selectPlanListByScheduleId(scheduleId);
 		// 测试
 		System.out.println("planlist的数量：");
@@ -150,6 +151,7 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		// 根据coursePolist 、tclasslist 生成具有部分属性的coursePlanViewMap
 		Map<String, CoursePlanView> coursePlanViewMap = new LinkedHashMap<String, CoursePlanView>();
+		
 		for (CoursePo coursePo : coursePoList) {
 			CoursePlanView coursePlanView = new CoursePlanView();
 			Map<String, Plan> paneMap = new LinkedHashMap<String, Plan>();
@@ -160,25 +162,37 @@ public class ScheduleServiceImpl implements ScheduleService {
 				Plan plan = new Plan();
 				plan.setTclass(tclass);
 				paneMap.put(tclass.getTclassId().toString(), plan);
-				/*
-				 * //schd_plan表里没有一条scheduleId的数据时，插入x*y条数据到该表,这样 planlist
-				 * 只有两种情况 1. null 2. planlist.size()=x*y if(planList==null) {
-				 * Integer num; PlanPo planPo = new PlanPo();
-				 * planPo.setScheduleId(scheduleId);
-				 * planPo.setCourseId(coursePo.getCourseId());
-				 * planPo.setTclassId(tclass.getTclassId());
-				 * planPo.setPeriodNum(0);//默认值0 num =
-				 * planService.insert(planPo); }
-				 */
-			}
+				
+				//schd_plan表里没有一条scheduleId的数据时，插入x*y条数据到该表,这样 planlist 只有两种情况 1. null 2. planlist.size()=x*y 
+				if(planList.size()==0) {
+				  Integer num=0; 
+				  PlanPo planPo = new PlanPo();
+				  planPo.setScheduleId(scheduleId);
+				  planPo.setCourseId(coursePo.getCourseId());
+				  //默认教室，体育课（courseid=10）roomid=9，其他的课程roomid=tclassid;
+				  if(coursePo.getCourseId()==10){
+					  planPo.setRoomId(9);
+				  }else{
+					  planPo.setRoomId(tclass.getTclassId());
+				  }
+				  planPo.setTclassId(tclass.getTclassId());
+				  planPo.setPeriodNum(0);//默认值0                  
+				  num = planService.insert(planPo); 				  
+				 }				 
+			}			
 			coursePlanView.setPaneMap(paneMap);
-			coursePlanViewMap.put(coursePo.getCourseId().toString(), coursePlanView);
+			coursePlanViewMap.put(coursePo.getCourseId().toString(), coursePlanView);		
 		}
-		/*
-		 * //重新获得planlist if(planList==null) { planList =
-		 * planService.selectPlanListByScheduleId(scheduleId); }
-		 */
+		
+		//重新获得planlist 
+		if(planList.size()==0) 
+		{ 
+			planList = planService.selectPlanListByScheduleId(scheduleId); 
+		}
 		// 测试
+		// 测试
+		System.out.println("插入plan表的数量：");
+		System.out.println(planList.size());
 		System.out.println("coursePlanViewMap的数量：");
 		System.out.println(coursePlanViewMap.size());
 
@@ -208,7 +222,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 		}
 
 		schdPlanView.setCoursePlanViewMap(coursePlanViewMap);
-
 		return schdPlanView;
 	}
 
@@ -216,7 +229,25 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public void gnrEmptyArrangementList(Integer scheduleId) {
 		// TODO 根据课表上午、下午、晚上课时数生成课时列表，非selectAll
 		List<PeriodPo> periodPoList = periodService.selectAll();
-		List<PlanPo> planPoList = planService.selectAll();
+		//List<PlanPo> planPoList = planService.selectAll();
+		List<PlanPo> planPoList = planService.selectByScheduleId(scheduleId);	
+		List<Arrangement> arrangementList = new  ArrayList<Arrangement>();
+		//根据 scheduleId获取arrangementList
+		arrangementList = arrangementService.findById(scheduleId);
+		// 测试
+				System.out.println("1.存在的arrangement数量：");
+				System.out.println(arrangementList.size());
+		if(arrangementList.size()!=0)
+		{
+			arrangementService.deleteByScheduleId(scheduleId);
+		}
+		
+		//根据 scheduleId获取arrangementList
+		arrangementList = arrangementService.findById(scheduleId);
+		// 测试
+		System.out.println("2.删除之后arrangement的数量：");
+		System.out.println(arrangementList.size());
+		
 		for (PlanPo planPo : planPoList) {
 			for (PeriodPo periodPo : periodPoList) {
 				ArrangementPo arrangementPo = new ArrangementPo();
@@ -231,6 +262,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 				arrangementService.insert(arrangementPo);
 			}
 		}
+		//根据 scheduleId获取arrangementList
+		arrangementList = arrangementService.findById(scheduleId);
+		// 测试
+		System.out.println("3.插入arrangement表的数量：");
+		System.out.println(arrangementList.size());
+		
 	}
 
 	@Override

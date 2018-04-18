@@ -11,6 +11,8 @@ import com.jefflee.view.ScheduleView;
 public interface ArrangementService {
 
 	Integer insert(ArrangementPo arrangementPo);
+	
+	List<Arrangement> findById(Integer scheduleId);
 
 	List<ArrangementPo> selectAll();
 
@@ -19,6 +21,8 @@ public interface ArrangementService {
 	Integer updateById(ArrangementPo arrangementPo);
 
 	Integer deleteById(Integer arrangementId);
+	
+	void deleteByScheduleId (Integer scheduleId);
 
 	Arrangement selectArrangementById(Integer arrangementId);
 
