@@ -12,7 +12,7 @@ public interface ArrangementService {
 
 	Integer insert(ArrangementPo arrangementPo);
 	
-	List<Arrangement> findById(Integer scheduleId);
+	List<Arrangement> selectListByScheduleId(Integer scheduleId);
 
 	List<ArrangementPo> selectAll();
 

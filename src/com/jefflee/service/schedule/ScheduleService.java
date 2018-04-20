@@ -10,25 +10,27 @@ import com.jefflee.view.ScheduleView;
 
 public interface ScheduleService {
 
-	public Integer insert(SchedulePo schedulePo);
+	Integer insert(SchedulePo schedulePo);
 
-	public List<SchedulePo> selectAll();
+	List<SchedulePo> selectAll();
 
-	public SchedulePo selectById(Integer scheduleId);
+	SchedulePo selectById(Integer scheduleId);
 
-	public Integer updateById(SchedulePo schedulePo);
+	Integer updateById(SchedulePo schedulePo);
 
-	public Integer deleteById(Integer scheduleId);
+	Integer deleteById(Integer scheduleId);
 
-	public ScheduleView gnrScheduleView(Integer scheduleId);
-	
-	public SchdPlanView gnrSchdPlanView(Integer groupId,Integer scheduleId);
+	ScheduleView gnrScheduleView(Integer scheduleId);
 
-	public void gnrEmptyArrangementList(Integer scheduleId);
+	SchdPlanView gnrSchdPlanView(Integer groupId, Integer scheduleId);
 
-	public void gnrSchedule(Integer scheduleId);
+	void gnrEmptyArrangementList(Integer scheduleId);
 
-	public void gnrScheduleViewExcel(HttpServletResponse response, Integer scheduleId) throws Exception;
+	void gnrSchedule(Integer scheduleId);
 
-	public void initial(Integer scheduleId);
+	void gnrScheduleViewExcel(HttpServletResponse response, Integer scheduleId) throws Exception;
+
+	void initial(Integer scheduleId);
+
+	List<SchedulePo> selectListByGroupId(Integer groupId);
 }

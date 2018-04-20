@@ -39,9 +39,9 @@ public class ScheduleController {
 		return result;
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<SchedulePo> listAll() {
-		return scheduleService.selectAll();
+	@RequestMapping(value = "/list/{groupId}", method = RequestMethod.GET)
+	public List<SchedulePo> listAll(@PathVariable("groupId") Integer groupId) {
+		return scheduleService.selectListByGroupId(groupId);
 	}
 
 	@RequestMapping(value = "/find/{scheduleId}", method = RequestMethod.GET)

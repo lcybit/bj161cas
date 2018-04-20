@@ -16,8 +16,7 @@
     <table class="layui-table">
       <thead>
         <tr>
-          <th>课表ID</th>
-          <th>年级组ID</th>
+          <th>编号</th>
           <th>上午课时数</th>
           <th>下午课时数</th>
           <th>傍晚课时数</th>
@@ -29,145 +28,146 @@
       <tbody id="scheduleList">
       </tbody>
     </table>
-    <div class="layui-input-inline">
-      <button class="layui-btn" onclick="goBack()">返回</button>
-      <button class="layui-btn" onclick="goCreate()">新增</button>
-      <button class="layui-btn" onclick="generate()">生成</button>
-      <button class="layui-btn" onclick="arrange()">排课</button>
+    <div class="layui-input-inline layui-btn-group">
+      <button class="layui-btn layui-btn-sm" onclick="goBack()">返回</button>
+      <button class="layui-btn layui-btn-sm" onclick="goCreate()">新增</button>
     </div>
   </div>
   <script id="tmpl-scheduleList" type="text/x-jsrender">
     <tr>
-      <td>{{:scheduleId}}</td>
-      <td>{{:groupId}}</td>
+      <td>{{:#index + 1}}</td>
       <td>{{:forenoon}}</td>
       <td>{{:afternoon}}</td>
       <td>{{:evening}}</td>
       <td>{{:days}}</td>
       <td>{{:startWeek}}</td>
       <td>
-        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
-        <button class="layui-btn layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
-        <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:groupId}}','{{:scheduleId}}')">计划</button>
-        <button class="layui-btn layui-btn-sm" onclick="choose('{{:scheduleId}}')">查看课表</button>
+        <div class="layui-btn-group">
+          <button class="layui-btn layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
+          <button class="layui-btn layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
+          <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:groupId}}','{{:scheduleId}}')">教学计划</button>
+          <button class="layui-btn layui-btn-sm" onclick="generate('{{:scheduleId}}')">生成课表</button>
+          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="choose('{{:scheduleId}}')">查看课表</button>
+        </div>
       </td>
     </tr>
   </script>
   <script>
-  
+    var layer = layui.layer;
+    var laypage = layui.laypage;
+    var table = layui.table;
+    var upload = layui.upload;
+    var form = layui.form;
     var groupId = sessionStorage.getItem('currentGroupId');
+  
     $(document).ready(function() {
       list();
     })
   
     function goCreate() {
-    sessionStorage.setItem('currentGroupId', groupId); 
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type : 2,
-          id : 'create',
-          title : '新增课表信息',
-          content : '/html/schedule/schedule/create.html',
-          area : [ '700px', '500px' ],
-          shade : 0.5,
-          closeBtn : false
-        });
+      sessionStorage.setItem('currentGroupId', groupId);
+      layer.open({
+        type: 2,
+        id: 'create',
+        title: '新增课表信息',
+        content: '/html/schedule/schedule/create.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false
       });
     }
   
     function goModify(scheduleId) {
       sessionStorage.setItem('currentScheduleId', scheduleId);
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type : 2,
-          id : 'modify',
-          title : '修改课表信息',
-          content : '/html/schedule/schedule/modify.html',
-          area : [ '700px', '500px' ],
-          shade : 0.5,
-          closeBtn : false,
-        });
+      layer.open({
+        type: 2,
+        id: 'modify',
+        title: '修改课表信息',
+        content: '/html/schedule/schedule/modify.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false,
       });
     }
-
+  
     function remove(scheduleId) {
       layer.confirm('确认要删除吗？',
-        {title : '删除课表信息'},
+        {
+          title: '删除课表信息'
+        },
         function(index) {
           $.ajax({
-            async : false,
-            type : 'DELETE',
-            url : '/schedule/delete/' + scheduleId,
-            success : function() {
+            async: false,
+            type: 'DELETE',
+            url: '/schedule/delete/' + scheduleId,
+            success: function() {
               layer.close(index);
               list();
             }
           });
         });
     }
-
+  
     function choose(scheduleId) {
       sessionStorage.setItem('currentScheduleId', scheduleId);
       $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/schedule/initial/' + scheduleId,
-        success : function() {
-               
-                jump('/html/schedule/schedule/display.html');
+        async: false,
+        type: 'GET',
+        url: '/schedule/initial/' + scheduleId,
+        success: function() {
+          jump('/html/schedule/schedule/display.html');
         }
       })
     }
-    
-    function selectTeacher(groupId,scheduleId) {
+  
+    function selectTeacher(groupId, scheduleId) {
       sessionStorage.setItem('currentScheduleId', scheduleId);
       sessionStorage.setItem('currentGroupId', groupId);
-      
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type : 2,
-          id : 'modify',
-          title : '为固定班级选择上课老师',
-          content : '/html/schedule/schedule/selectTeacher.html',
-          area : [ '700px', '500px' ],
-          shade : 0.5,
-          closeBtn : false,
-        });
+      layer.open({
+        type: 2,
+        id: 'modify',
+        title: '设置教学计划',
+        content: '/html/schedule/schedule/selectTeacher.html',
+        area: [ '1000px', '600px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false,
       });
     }
-    
-    
-    
-    
+  
     function list() {
       $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/schedule/list',
-        success : function(scheduleList) {
+        async: false,
+        type: 'GET',
+        url: '/schedule/list/' + groupId,
+        success: function(scheduleList) {
           $('#scheduleList').html($.templates('#tmpl-scheduleList').render(scheduleList));
         }
       });
     }
-
-    function generate() {
-      var scheduleId = sessionStorage.getItem('currentScheduleId');
-      $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/schedule/generate/' + scheduleId,
-        success : function() {
-          alert('生成成功！');
-        }
-      });
+  
+    function generate(scheduleId) {
+      layer.confirm('该操作会删除已排课表！',
+        {
+          title: '生成空课表'
+        },
+        function(index) {
+          $.ajax({
+            async: false,
+            type: 'GET',
+            url: '/schedule/generate/' + scheduleId,
+            success: function() {
+              layer.close(index);
+              layer.msg('生成成功！');
+            }
+          });
+        });
     }
-
+  
     function goBack() {
       jump('html/schedule/group/list.html');
-      
     }
   </script>
 </body>

@@ -32,13 +32,9 @@ public class GroupTeacherController {
 			@RequestParam("IdArray") List<Integer> array) {
 		Map<String, String> result = new HashMap<String, String>();
 		Integer j = null, flag = 0;
-		System.out.println(groupid);
-
 		groupTeacherService.deleteById(groupid);// 删除数据库rlat_group_teacher表原有选课数据
 
 		for (int i = 0; i < array.size(); i++) {
-
-			System.out.println(array.get(i));
 			GroupTeacherPo groupTeacherPo = new GroupTeacherPo();
 			groupTeacherPo.setTeacherId(array.get(i));
 			groupTeacherPo.setGroupId(groupid);
@@ -60,19 +56,19 @@ public class GroupTeacherController {
 	public List<GroupTeacherPo> findById(@PathVariable("groupId") Integer groupId) {
 		return groupTeacherService.selectById(groupId);
 	}
-	
+
 	@RequestMapping(value = "/check/{groupId}", method = RequestMethod.GET)
 	public List<Teacher> checkById(@PathVariable("groupId") Integer groupId) {
 		List<GroupTeacherPo> groupTeacherPoList = new ArrayList<GroupTeacherPo>();
 		List<Teacher> teacherList = new ArrayList<Teacher>();
 		groupTeacherPoList = groupTeacherService.selectById(groupId);
-		//利用groupTeacherPoList 里的每一个groupTeacherPo.getTeacherId()得到 每一个teacherPo，再转化成teacher，放入teacherList中
-		for(GroupTeacherPo groupTeacherPo:groupTeacherPoList)
-		{
-			TeacherPo teacherPo =new TeacherPo();
+		// 利用groupTeacherPoList 里的每一个groupTeacherPo.getTeacherId()得到
+		// 每一个teacherPo，再转化成teacher，放入teacherList中
+		for (GroupTeacherPo groupTeacherPo : groupTeacherPoList) {
+			TeacherPo teacherPo = new TeacherPo();
 			teacherPo = teacherService.selectById(groupTeacherPo.getTeacherId());
-			//将 teacherPo转化 成 teacher
-			Teacher teacher =new Teacher(teacherPo);
+			// 将 teacherPo转化 成 teacher
+			Teacher teacher = new Teacher(teacherPo);
 			teacherList.add(teacher);
 		}
 		return teacherList;

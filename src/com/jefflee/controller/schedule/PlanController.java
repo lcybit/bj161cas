@@ -59,14 +59,13 @@ public class PlanController {
 	@RequestMapping(value = "/rewrite", method = RequestMethod.POST)
 	public Map<String, String> rewrite(@RequestParam("pidNum") Integer pidNum,
 			@RequestParam("courseId") Integer courseId, @RequestParam("scheduleId") Integer scheduleId) {
-		Integer num;
 		Map<String, String> result = new HashMap<String, String>();
 		List<PlanPo> planPoList = new ArrayList<PlanPo>();
 		planPoList = planService.getPlanById(courseId, scheduleId);
 
 		for (PlanPo planPo : planPoList) {
 			planPo.setPeriodNum(pidNum);
-			num = planService.updateById(planPo);
+			planService.updateById(planPo);
 		}
 
 		return result;
@@ -75,12 +74,11 @@ public class PlanController {
 	@RequestMapping(value = "/change", method = RequestMethod.POST)
 	public Map<String, String> change(@RequestParam("planId") Integer planid,
 			@RequestParam("teacherId") Integer teacherid) {
-		Integer num;
 		Map<String, String> result = new HashMap<String, String>();
 		PlanPo planPo = new PlanPo();
 		planPo = planService.selectById(planid);
 		planPo.setTeacherId(teacherid);
-		num = planService.updateById(planPo);
+		planService.updateById(planPo);
 		return result;
 	}
 

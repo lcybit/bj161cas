@@ -13,9 +13,14 @@
 <body>
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="schedule" method="post">
-       <!-- 隐藏课表ID -->        
-          <input class="layui-input" name="scheduleId" id="scheduleId" type="hidden" />
-      <div class="layui-form-item">
+      <!-- 隐藏课表ID -->
+      <div class="layui-form-item layui-hide">
+        <label class="layui-form-label">课表ID:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="scheduleId" id="scheduleId" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item layui-hide">
         <label class="layui-form-label">年级组ID:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="groupId" id="groupId" type="text" />
@@ -32,7 +37,7 @@
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">下午课时数:</label>
-        <div class="layui-input-block">         
+        <div class="layui-input-block">
           <input type="radio" name="afternoon" id="afternoon" value="2" title="2节">
           <input type="radio" name="afternoon" id="afternoon" value="3" title="3节" checked="">
           <input type="radio" name="afternoon" id="afternoon" value="4" title="4节">
@@ -41,7 +46,7 @@
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">傍晚课时数:</label>
-        <div class="layui-input-block">          
+        <div class="layui-input-block">
           <input type="radio" name="evening" id="evening" value="1" title="1节">
           <input type="radio" name="evening" id="evening" value="2" title="2节">
           <input type="radio" name="evening" id="evening" value="3" title="3节">
@@ -50,17 +55,18 @@
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">每周天数:</label>
-        <div class="layui-input-block">         
+        <div class="layui-input-block">
           <input type="radio" name="days" id="days" value="3" title="3天">
           <input type="radio" name="days" id="days" value="4" title="4天">
           <input type="radio" name="days" id="days" value="5" title="5天" checked="">
-          <input type="radio" name="days" id="days" value="6" title="6天">          
+          <input type="radio" name="days" id="days" value="6" title="6天">
         </div>
       </div>
-      <div class="layui-form-item">
+      <div class="layui-form-item" pane="">
         <label class="layui-form-label">起始教学周:</label>
-        <div class="layui-input-block">          
-          <input class="layui-input" type="text" name="startWeek" id="startWeek" lay-verify="required|number" autocomplete="off">
+        <div class="layui-input-block">
+          <input class="layui-input" type="text" name="startWeek" id="startWeek" placeholder="请输入数字"
+            lay-verify="required|number" autocomplete="off">
         </div>
       </div>
       <div class="layui-form-item">
@@ -72,36 +78,40 @@
     </form>
   </div>
   <script>
+    var layer = layui.layer;
+    var laypage = layui.laypage;
+    var table = layui.table;
+    var upload = layui.upload;
+    var form = layui.form;
+  
     $(document).ready(function() {
       var scheduleId = sessionStorage.getItem('currentScheduleId');
       $('#scheduleId').attr('value', scheduleId);
       $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/schedule/find/' + scheduleId,
-        success : function(schedule) {
+        async: false,
+        type: 'GET',
+        url: '/schedule/find/' + scheduleId,
+        success: function(schedule) {
           $('#groupId').attr('value', schedule.groupId);
-          $(":radio[name='forenoon'][value='"+schedule.forenoon+"']").prop("checked","checked","checked","checked");
-          $(":radio[name='afternoon'][value='"+schedule.afternoon+"']").prop("checked","checked","checked","checked");
-          $(":radio[name='evening'][value='"+schedule.evening+"']").prop("checked","checked","checked","checked");
-          $(":radio[name='days'][value='"+schedule.days+"']").prop("checked","checked","checked","checked");
+          $(":radio[name='forenoon'][value='" + schedule.forenoon + "']").prop("checked", "checked", "checked", "checked");
+          $(":radio[name='afternoon'][value='" + schedule.afternoon + "']").prop("checked", "checked", "checked", "checked");
+          $(":radio[name='evening'][value='" + schedule.evening + "']").prop("checked", "checked", "checked", "checked");
+          $(":radio[name='days'][value='" + schedule.days + "']").prop("checked", "checked", "checked", "checked");
           $('#startWeek').attr('value', schedule.startWeek);
         }
       });
-      layui.use('form', function() {
-        layui.form.render();
-      });
+      form.render();
     });
   
     function modify() {
       $.ajax({
-        async : false,
-        url : '/schedule/modify',
-        type : 'POST',
-        dataType : 'json',
-        contentType : 'application/json',
-        data : JSON.stringify($('#schedule').serializeJSON()),
-        success : function(result) {
+        async: false,
+        url: '/schedule/modify',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify($('#schedule').serializeJSON()),
+        success: function(result) {
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
           parent.list();

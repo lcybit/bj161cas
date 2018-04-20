@@ -27,13 +27,9 @@ public class GroupCourseController {
 			@RequestParam("IdArray") List<Integer> array) {
 		Map<String, String> result = new HashMap<String, String>();
 		Integer j = null, flag = 0;
-		System.out.println(groupid);
-
 		groupCourseService.deleteById(groupid);// 删除数据库rlat_group_course表原有选课数据
 
 		for (int i = 0; i < array.size(); i++) {
-
-			System.out.println(array.get(i));
 			GroupCoursePo groupCoursePo = new GroupCoursePo();
 			groupCoursePo.setCourseId(array.get(i));
 			groupCoursePo.setGroupId(groupid);

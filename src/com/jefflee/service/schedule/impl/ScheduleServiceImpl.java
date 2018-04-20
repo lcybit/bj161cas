@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.collections4.ListUtils;
 import org.apache.poi.ss.usermodel.BorderStyle;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -44,10 +45,14 @@ import com.jefflee.service.schedule.ArrangementService;
 import com.jefflee.service.schedule.GroupService;
 import com.jefflee.service.schedule.PlanService;
 import com.jefflee.service.schedule.ScheduleService;
+import com.jefflee.util.PlanPredicate;
 import com.jefflee.view.CoursePlanView;
 import com.jefflee.view.SchdPlanView;
 import com.jefflee.view.ScheduleView;
 import com.jefflee.view.WeekView;
+
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.entity.Example.Criteria;
 
 @Service("scheduleService")
 public class ScheduleServiceImpl implements ScheduleService {
@@ -85,6 +90,14 @@ public class ScheduleServiceImpl implements ScheduleService {
 	@Override
 	public List<SchedulePo> selectAll() {
 		return scheduleMapper.selectAll();
+	}
+
+	@Override
+	public List<SchedulePo> selectListByGroupId(Integer groupId) {
+		Example example = new Example(SchedulePo.class);
+		Criteria criteria = example.createCriteria();
+		criteria.andEqualTo("groupId", groupId);
+		return scheduleMapper.selectByExample(example);
 	}
 
 	@Override
@@ -143,15 +156,12 @@ public class ScheduleServiceImpl implements ScheduleService {
 
 		// 根据scheduleId获得planList
 		List<Plan> planList = new ArrayList<Plan>();
-		
+
 		planList = planService.selectPlanListByScheduleId(scheduleId);
-		// 测试
-		System.out.println("planlist的数量：");
-		System.out.println(planList.size());
 
 		// 根据coursePolist 、tclasslist 生成具有部分属性的coursePlanViewMap
 		Map<String, CoursePlanView> coursePlanViewMap = new LinkedHashMap<String, CoursePlanView>();
-		
+
 		for (CoursePo coursePo : coursePoList) {
 			CoursePlanView coursePlanView = new CoursePlanView();
 			Map<String, Plan> paneMap = new LinkedHashMap<String, Plan>();
@@ -162,46 +172,41 @@ public class ScheduleServiceImpl implements ScheduleService {
 				Plan plan = new Plan();
 				plan.setTclass(tclass);
 				paneMap.put(tclass.getTclassId().toString(), plan);
-				
-				//schd_plan表里没有一条scheduleId的数据时，插入x*y条数据到该表,这样 planlist 只有两种情况 1. null 2. planlist.size()=x*y 
-				if(planList.size()==0) {
-				  Integer num=0; 
-				  PlanPo planPo = new PlanPo();
-				  planPo.setScheduleId(scheduleId);
-				  planPo.setCourseId(coursePo.getCourseId());
-				  //默认教室，体育课（courseid=10）roomid=9，其他的课程roomid=tclassid;
-				  if(coursePo.getCourseId()==10){
-					  planPo.setRoomId(9);
-				  }else{
-					  planPo.setRoomId(tclass.getTclassId());
-				  }
-				  planPo.setTclassId(tclass.getTclassId());
-				  planPo.setPeriodNum(0);//默认值0                  
-				  num = planService.insert(planPo); 				  
-				 }				 
-			}			
-			coursePlanView.setPaneMap(paneMap);
-			coursePlanViewMap.put(coursePo.getCourseId().toString(), coursePlanView);		
-		}
-		
-		//重新获得planlist 
-		if(planList.size()==0) 
-		{ 
-			planList = planService.selectPlanListByScheduleId(scheduleId); 
-		}
-		// 测试
-		// 测试
-		System.out.println("插入plan表的数量：");
-		System.out.println(planList.size());
-		System.out.println("coursePlanViewMap的数量：");
-		System.out.println(coursePlanViewMap.size());
 
-		int count = 0;// 测试 计数用的 最终count==planlist.size()
+				// schd_plan表里没有一条scheduleId的数据时，插入x*y条数据到该表,这样 planlist 只有两种情况
+				// 1. null 2. planlist.size()=x*y
+				Plan queryPlan = new Plan();
+				queryPlan.getCourse().setCourseId(coursePo.getCourseId());
+				queryPlan.getTclass().setTclassId(tclass.getTclassId());
+				if (ListUtils.select(planList, new PlanPredicate(queryPlan)).isEmpty()) {
+					PlanPo planPo = new PlanPo();
+					planPo.setScheduleId(scheduleId);
+					planPo.setCourseId(coursePo.getCourseId());
+					// TODO type
+					// 默认教室，体育课（courseid=10）roomid=9，其他的课程roomid=tclassid;
+					if (coursePo.getCourseId() == 10) {
+						planPo.setRoomId(9);
+					} else {
+						planPo.setRoomId(tclass.getTclassId());
+					}
+					planPo.setTclassId(tclass.getTclassId());
+					planPo.setPeriodNum(0);// 默认值0
+					planService.insert(planPo);
+				}
+			}
+			coursePlanView.setPaneMap(paneMap);
+			coursePlanViewMap.put(coursePo.getCourseId().toString(), coursePlanView);
+		}
+
+		// 重新获得planlist
+		if (planList.size() == 0) {
+			planList = planService.selectPlanListByScheduleId(scheduleId);
+		}
+
 		// 定位 planList中的plan元素
 		// 即将用planList中的每一个plan的plan.getPeriodNum()、plan.getTeacher()填充coursePlanViewMap，使其完善
 		if (planList != null) {
 			for (Plan plan : planList) {
-				count++;
 				Integer courseId;
 				Integer tclassId;
 				CoursePlanView coursePlanView = new CoursePlanView();
@@ -229,25 +234,15 @@ public class ScheduleServiceImpl implements ScheduleService {
 	public void gnrEmptyArrangementList(Integer scheduleId) {
 		// TODO 根据课表上午、下午、晚上课时数生成课时列表，非selectAll
 		List<PeriodPo> periodPoList = periodService.selectAll();
-		//List<PlanPo> planPoList = planService.selectAll();
-		List<PlanPo> planPoList = planService.selectByScheduleId(scheduleId);	
-		List<Arrangement> arrangementList = new  ArrayList<Arrangement>();
-		//根据 scheduleId获取arrangementList
-		arrangementList = arrangementService.findById(scheduleId);
-		// 测试
-				System.out.println("1.存在的arrangement数量：");
-				System.out.println(arrangementList.size());
-		if(arrangementList.size()!=0)
-		{
+		// List<PlanPo> planPoList = planService.selectAll();
+		List<PlanPo> planPoList = planService.selectByScheduleId(scheduleId);
+		List<Arrangement> arrangementList = new ArrayList<Arrangement>();
+		// 根据 scheduleId获取arrangementList
+		arrangementList = arrangementService.selectListByScheduleId(scheduleId);
+		if (arrangementList.size() != 0) {
 			arrangementService.deleteByScheduleId(scheduleId);
 		}
-		
-		//根据 scheduleId获取arrangementList
-		arrangementList = arrangementService.findById(scheduleId);
-		// 测试
-		System.out.println("2.删除之后arrangement的数量：");
-		System.out.println(arrangementList.size());
-		
+
 		for (PlanPo planPo : planPoList) {
 			for (PeriodPo periodPo : periodPoList) {
 				ArrangementPo arrangementPo = new ArrangementPo();
@@ -262,12 +257,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 				arrangementService.insert(arrangementPo);
 			}
 		}
-		//根据 scheduleId获取arrangementList
-		arrangementList = arrangementService.findById(scheduleId);
-		// 测试
-		System.out.println("3.插入arrangement表的数量：");
-		System.out.println(arrangementList.size());
-		
 	}
 
 	@Override

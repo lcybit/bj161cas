@@ -13,8 +13,8 @@
 <body>
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="group" method="post">
-      <!-- 隐藏年级组ID -->        
-          <input class="layui-input" name="groupId" id="groupId" type="hidden" />       
+      <!-- 隐藏年级组ID -->
+      <input class="layui-input" name="groupId" id="groupId" type="hidden" />
       <div class="layui-form-item">
         <label class="layui-form-label">入学年份:</label>
         <div class="layui-input-block">
@@ -25,22 +25,22 @@
         <label class="layui-form-label">学期:</label>
         <div class="layui-input-block">
           <input type="radio" name="semester" id="semester" value="0" title="上学期" checked="">
-      	  <input type="radio" name="semester" id="semester" value="1" title="下学期"> 
+          <input type="radio" name="semester" id="semester" value="1" title="下学期">
         </div>
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">初/高中:</label>
         <div class="layui-input-block">
           <input type="radio" name="level" id="level" value="0" title="初中" checked="">
-      	  <input type="radio" name="level" id="level" value="1" title="高中">          
+          <input type="radio" name="level" id="level" value="1" title="高中">
         </div>
       </div>
       <div class="layui-form-item" pane="">
         <label class="layui-form-label">年级:</label>
         <div class="layui-input-block">
           <input type="radio" name="grade" id="grade" value="0" title="一" checked="">
-      	  <input type="radio" name="grade" id="grade" value="1" title="二">
-      	  <input type="radio" name="grade" id="grade" value="2" title="三">
+          <input type="radio" name="grade" id="grade" value="1" title="二">
+          <input type="radio" name="grade" id="grade" value="2" title="三">
         </div>
       </div>
       <div class="layui-form-item">
@@ -50,72 +50,75 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <div class="layui-input-block">
-          <button class="layui-btn" type="button" onclick="modify()">保存</button>
-          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        <div class="layui-input-inline layui-btn-group">
+          <button class="layui-btn layui-btn-sm" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn layui-btn-sm" type="button" onclick="cancel()">取消</button>
         </div>
       </div>
     </form>
-  </div>  
+  </div>
   <script>
+    var layer = layui.layer;
+    var laypage = layui.laypage;
+    var table = layui.table;
+    var upload = layui.upload;
+    var form = layui.form;
+    var laydate = layui.laydate;
+  
     $(document).ready(function() {
       var groupId = sessionStorage.getItem('currentGroupId');
       $('#groupId').attr('value', groupId);
       $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/group/find/' + groupId,
-        success : function(group) {
+        async: false,
+        type: 'GET',
+        url: '/group/find/' + groupId,
+        success: function(group) {
           $('#year').attr('value', group.year);
-          $(":radio[name='semester'][value='"+group.semester+"']").prop("checked","checked");
-          $(":radio[name='level'][value='"+group.level+"']").prop("checked","checked");
-          $(":radio[name='grade'][value='"+group.grade+"']").prop("checked","checked","checked");
+          $(":radio[name='semester'][value='" + group.semester + "']").prop("checked", "checked");
+          $(":radio[name='level'][value='" + group.level + "']").prop("checked", "checked");
+          $(":radio[name='grade'][value='" + group.grade + "']").prop("checked", "checked", "checked");
           $('#startDate').attr('value', group.startDate);
         }
       });
-      layui.use('form', function() {
-        layui.form.render();
+      form.render();
+      laydate.render({
+        elem: '#startDate',
+        ready: function(date) {
+          console.log(date);
+        }
       });
-      layui.use('laydate', function(){
-        layui.laydate.render({
-          elem : '#startDate'
-          ,ready: function(date){
-            console.log(date);
-          }
-        });
-        layui.laydate.render({
-          elem: '#year'
-          ,type: 'year'
-          ,change: function(value){            
-            $('.layui-laydate-content').click(function(){              
-              if($(this).attr('class') == 'layui-laydate-content'){
-                $('#year').attr('value',value);
-                $('.layui-laydate').remove(0);
-              }
-            })          
-          }
-        });
-      });      
+      laydate.render({
+        elem: '#year',
+        type: 'year',
+        change: function(value) {
+          $('.layui-laydate-content').click(function() {
+            if ($(this).attr('class') == 'layui-laydate-content') {
+              $('#year').attr('value', value);
+              $('.layui-laydate').remove(0);
+            }
+          });
+        }
+      });
     });
   
   
     function modify() {
       $.ajax({
-        async : false,//同步请求（锁住浏览器，请求完毕后才可执行其他操作），true为异步请求
-        url : '/group/modify',//请求url
-        type : 'POST',
-        dataType : 'json',//预期服务器返回的数据类型
-        contentType : 'application/json',//发送信息至服务器时内容编码类型
-        data : JSON.stringify($('#group').serializeJSON()),//发送到服务器的数据类型,序列化表格内容为字符串
-        success : function(result) {//请求成功后回调函数。这个方法有两个参数：服务器返回数据，返回状态
-          var index = parent.layer.getFrameIndex(window.name);//获取当前界面的url
-          parent.layer.close(index);//关闭当前界面
-          parent.list();// 调用该界面的父界面的函数  即 调用list.html中的list()函数
+        async: false, //同步请求（锁住浏览器，请求完毕后才可执行其他操作），true为异步请求
+        url: '/group/modify', //请求url
+        type: 'POST',
+        dataType: 'json', //预期服务器返回的数据类型
+        contentType: 'application/json', //发送信息至服务器时内容编码类型
+        data: JSON.stringify($('#group').serializeJSON()), //发送到服务器的数据类型,序列化表格内容为字符串
+        success: function(result) { //请求成功后回调函数。这个方法有两个参数：服务器返回数据，返回状态
+          var index = parent.layer.getFrameIndex(window.name); //获取当前界面的url
+          parent.layer.close(index); //关闭当前界面
+          parent.list(); // 调用该界面的父界面的函数  即 调用list.html中的list()函数
         }
       });
     }
   
-    
+  
     function cancel() {
       var index = parent.layer.getFrameIndex(window.name);
       parent.layer.close(index);
