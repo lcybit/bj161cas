@@ -1,46 +1,28 @@
 package com.jefflee.entity.schedule;
 
-import com.jefflee.po.schedule.SchedulePo;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 
+@Table(name = "schd_schedule")
 public class Schedule {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer scheduleId;
-	private Group group;
+	@OrderBy
+	private Integer gradeId;
 	private Integer forenoon;
 	private Integer afternoon;
 	private Integer evening;
 	private Integer days;
 	private Integer startWeek;
 
-	public Schedule() {
-		this.group = new Group();
-	}
-
-	public Schedule(Integer scheduleId) {
-		this.scheduleId = scheduleId;
-		this.group = new Group();
-	}
-
-	public Schedule(SchedulePo schedulePo) {
-		scheduleId = schedulePo.getScheduleId();
-		group = new Group(schedulePo.getGroupId());
-		forenoon = schedulePo.getForenoon();
-		afternoon = schedulePo.getAfternoon();
-		evening = schedulePo.getEvening();
-		days = schedulePo.getDays();
-		startWeek = schedulePo.getStartWeek();
-	}
-
-	public SchedulePo toPo() {
-		SchedulePo schedulePo = new SchedulePo();
-		schedulePo.setScheduleId(scheduleId);
-		schedulePo.setGroupId(group.getGroupId());
-		schedulePo.setForenoon(forenoon);
-		schedulePo.setAfternoon(afternoon);
-		schedulePo.setEvening(evening);
-		schedulePo.setDays(days);
-		schedulePo.setStartWeek(startWeek);
-		return schedulePo;
-	}
+	@Transient
+	private String name;
+	private Grade grade;
 
 	public Integer getScheduleId() {
 		return scheduleId;
@@ -50,12 +32,12 @@ public class Schedule {
 		this.scheduleId = scheduleId;
 	}
 
-	public Group getGroup() {
-		return group;
+	public Grade getGrade() {
+		return grade;
 	}
 
-	public void setGroup(Group group) {
-		this.group = group;
+	public void setGrade(Grade grade) {
+		this.grade = grade;
 	}
 
 	public Integer getForenoon() {
@@ -96,5 +78,17 @@ public class Schedule {
 
 	public void setStartWeek(Integer startWeek) {
 		this.startWeek = startWeek;
+	}
+
+	public Integer getGradeId() {
+		return gradeId;
+	}
+
+	public void setGradeId(Integer gradeId) {
+		this.gradeId = gradeId;
+	}
+
+	public String getName() {
+		return "第" + this.startWeek + "周";
 	}
 }

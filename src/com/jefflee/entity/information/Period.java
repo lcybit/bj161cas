@@ -1,36 +1,20 @@
 package com.jefflee.entity.information;
 
-import com.jefflee.po.information.PeriodPo;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
+@Table(name = "info_period")
 public class Period {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@OrderBy
 	private Integer periodId;
 	private String periodNo;
 	private Integer dayOfWeek;
 	private Integer orderOfDay;
-
-	public Period() {
-	}
-
-	public Period(Integer periodId) {
-		this.periodId = periodId;
-	}
-
-	public Period(PeriodPo periodPo) {
-		periodId = periodPo.getPeriodId();
-		periodNo = periodPo.getPeriodNo();
-		dayOfWeek = periodPo.getDayOfWeek();
-		orderOfDay = periodPo.getOrderOfDay();
-
-	}
-
-	public PeriodPo toPo() {
-		PeriodPo periodPo = new PeriodPo();
-		periodPo.setPeriodId(periodId);
-		periodPo.setPeriodNo(periodNo);
-		periodPo.setDayOfWeek(dayOfWeek);
-		periodPo.setOrderOfDay(orderOfDay);
-		return periodPo;
-	}
 
 	public Integer getPeriodId() {
 		return periodId;

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Teacher;
 import com.jefflee.mapper.information.TeacherMapper;
-import com.jefflee.po.information.TeacherPo;
 import com.jefflee.service.information.TeacherService;
 
 @Service("teacherService")
@@ -18,28 +17,28 @@ public class TeacherServiceImpl implements TeacherService {
 	private TeacherMapper teacherMapper;
 
 	@Override
-	public Integer insert(TeacherPo teacherPo) {
-		if (teacherMapper.insert(teacherPo) == 1) {
-			return teacherPo.getTeacherId();
+	public Integer insert(Teacher teacher) {
+		if (teacherMapper.insert(teacher) == 1) {
+			return teacher.getTeacherId();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public List<TeacherPo> selectAll() {
+	public List<Teacher> selectList() {
 		return teacherMapper.selectAll();
 	}
 
 	@Override
-	public TeacherPo selectById(Integer teacherId) {
+	public Teacher selectById(Integer teacherId) {
 		return teacherMapper.selectByPrimaryKey(teacherId);
 	}
 
 	@Override
-	public Integer updateById(TeacherPo teacherPo) {
-		if (teacherMapper.updateByPrimaryKey(teacherPo) == 1) {
-			return teacherPo.getTeacherId();
+	public Integer updateById(Teacher teacher) {
+		if (teacherMapper.updateByPrimaryKey(teacher) == 1) {
+			return teacher.getTeacherId();
 		} else {
 			return null;
 		}
@@ -55,7 +54,8 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<Teacher> selectTeacherList() {
-		return teacherMapper.selectEntityList();
+	public List<Teacher> selectListByScheduleId(Integer scheduleId) {
+		return teacherMapper.selectListByScheduleId(scheduleId);
 	}
+
 }

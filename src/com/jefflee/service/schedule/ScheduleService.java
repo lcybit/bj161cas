@@ -4,33 +4,30 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.jefflee.po.schedule.SchedulePo;
-import com.jefflee.view.SchdPlanView;
+import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.view.ScheduleView;
 
 public interface ScheduleService {
 
-	Integer insert(SchedulePo schedulePo);
+	Integer insert(Schedule schedule);
 
-	List<SchedulePo> selectAll();
+	List<Schedule> selectList();
 
-	SchedulePo selectById(Integer scheduleId);
+	Schedule selectById(Integer scheduleId);
 
-	Integer updateById(SchedulePo schedulePo);
+	Integer updateById(Schedule schedule);
 
 	Integer deleteById(Integer scheduleId);
 
 	ScheduleView gnrScheduleView(Integer scheduleId);
 
-	SchdPlanView gnrSchdPlanView(Integer groupId, Integer scheduleId);
-
 	void gnrEmptyArrangementList(Integer scheduleId);
 
 	void gnrSchedule(Integer scheduleId);
 
-	void gnrScheduleViewExcel(HttpServletResponse response, Integer scheduleId) throws Exception;
+	void exportExcelView(HttpServletResponse response, Integer scheduleId) throws Exception;
 
 	void initial(Integer scheduleId);
 
-	List<SchedulePo> selectListByGroupId(Integer groupId);
+	List<Schedule> selectListByGradeId(Integer gradeId);
 }

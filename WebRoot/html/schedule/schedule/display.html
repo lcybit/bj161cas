@@ -12,24 +12,27 @@
 <body>
   <div class="layui-container" style="width:100%;">
     <div class="layui-btn-group">
-    <button class="layui-btn layui-btn-normal" id="listAdjustment" style="display:none" onclick="listAdjustment()">
-      <i class="layui-icon">&#xe60a;</i>调整列表
-    </button>
-    <button class="layui-btn layui-btn-danger" id="undoAdjust" onclick="undoAdjust()">
-      <i class="layui-icon">&#xe603;</i>撤销
-    </button>
-    <button class="layui-btn" id="saveAdjustment" onclick="saveAdjustment()">
-      <i class="layui-icon">&#xe638;</i>保存
-    </button>
-    <button class="layui-btn layui-btn-normal" id="gnrArrangement" onclick="gnrArrangement()">
-      <i class="layui-icon">&#xe62d;</i>排课
-    </button>
-    <button class="layui-btn layui-btn-warm" id="resetArrangement" onclick="resetArrangement()">
-      <i class="layui-icon">&#xe621;</i>重置
-    </button>
-    <button class="layui-btn layui-bg-cyan" id="exportExcel" onclick="exportExcel()">
-      <i class="layui-icon">&#xe601;</i>导出
-    </button>
+      <button class="layui-btn layui-bg-black layui-btn-sm" id="goBack" onclick="goBack()">
+        <i class="layui-icon">&#xe65c;</i>返回
+      </button>
+      <button class="layui-btn layui-bg-red layui-btn-sm" id="undoAdjust" onclick="undoAdjust()">
+        <i class="layui-icon">&#xe603;</i>撤销
+      </button>
+      <button class="layui-btn layui-bg-green layui-btn-sm" id="saveAdjustment" onclick="saveAdjustment()">
+        <i class="layui-icon">&#xe638;</i>保存
+      </button>
+      <button class="layui-btn layui-bg-blue layui-btn-sm" id="gnrArrangement" onclick="gnrArrangement()">
+        <i class="layui-icon">&#xe62d;</i>排课
+      </button>
+      <button class="layui-btn layui-bg-orange layui-btn-sm" id="resetArrangement" onclick="resetArrangement()">
+        <i class="layui-icon">&#x1002;</i>重置
+      </button>
+      <button class="layui-btn layui-bg-cyan layui-btn-sm" id="exportExcel" onclick="exportExcel()">
+        <i class="layui-icon">&#xe601;</i>导出
+      </button>
+      <button class="layui-btn layui-bg-gray layui-btn-sm" id="copyArrangement" onclick="goCopy()">
+        <i class="layui-icon">&#xe621;</i>复制
+      </button>
     </div>
     <form class="layui-form layui-form-pane" id="adjustment" style="display:none">
       <div class="layui-form-item">
@@ -57,15 +60,15 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">甲ID</label>
+        <label class="layui-form-label">位置</label>
         <div class="layui-input-block">
           <input class="layui-input" type="text" name="position" id="position">
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">乙ID</label>
+        <label class="layui-form-label">附加信息</label>
         <div class="layui-input-block">
-          <input class="layui-input" type="text" name="additionalInfo" id="additionalInfo">
+          <input class="layui-input" type="text" name="info" id="info">
         </div>
       </div>
     </form>
@@ -96,7 +99,7 @@
         <thead>
           {{include titleView tmpl="#tmpl-tclassTitleView" /}}
           <tr>
-            <th rowspan="2"></th>
+            <th rowspan="2">周</th>
             {{if ~forenoon > 0}}
               <th colspan="{{:~forenoon}}">上午</th>
             {{/if}}
@@ -108,14 +111,7 @@
             {{/if}}
           </tr>
           <tr>
-            <th>早</th>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
-            <th>6</th>
-            <th>7</th>
+            {{for periodNameList tmpl="#tmpl-periodNameList" /}}
           </tr>
         </thead>
         <tbody>
@@ -139,7 +135,7 @@
         <thead>
           {{include titleView tmpl="#tmpl-teacherTitleView" /}}
           <tr>
-            <th rowspan="2"></th>
+            <th rowspan="2">周</th>
             {{if ~forenoon > 0}}
               <th colspan="{{:~forenoon}}">上午</th>
             {{/if}}
@@ -151,14 +147,7 @@
             {{/if}}
           </tr>
           <tr>
-            <th>早</th>
-            <th>1</th>
-            <th>2</th>
-            <th>3</th>
-            <th>4</th>
-            <th>5</th>
-            <th>6</th>
-            <th>7</th>
+            {{for periodNameList tmpl="#tmpl-periodNameList" /}}
           </tr>
         </thead>
         <tbody>
@@ -190,27 +179,30 @@
       <th colspan="3">{{:startDate}}</th>
     </tr>
   </script>
+  <script id="tmpl-periodNameList" type="text/x-jsrender">
+    <th>{{:#data}}</th>
+  </script>
   <script id="tmpl-tclassDayView" type="text/x-jsrender">
     <tr>
-      <td>{{:#index +1}}</td>
-      {{for arrangedPeriodViewList tmpl="#tmpl-tclassPeriodView" /}}
+      <td>{{:dayName}}</td>
+      {{for periodViewList tmpl="#tmpl-tclassPeriodView" /}}
     </tr>
   </script>
   <script id="tmpl-teacherDayView" type="text/x-jsrender">
     <tr>
-      <td>{{:#index +1}}</td>
-      {{for arrangedPeriodViewList tmpl="#tmpl-teacherPeriodView" /}}
+      <td>{{:dayName}}</td>
+      {{for periodViewList tmpl="#tmpl-teacherPeriodView" /}}
     </tr>
   </script>
   <script id="tmpl-tclassPeriodView" type="text/x-jsrender">
 	<td name="{{:periodViewId}}"
       style="cursor:pointer"
       onclick="clickPeriodView('{{:periodViewId}}', event, [
-        {{for arrangementList ~length = arrangementList.length}}
+        {{for arrangementList ~length=arrangementList.length}}
           'c-{{:course.courseId}}'{{if #index < ~length - 1}},{{/if}}
         {{/for}}
       ])">
-        {{for arrangementList ~jumpList = jumpViewIdList}}
+        {{for arrangementList ~jumpList=jumpViewIdList}}
           <span onclick="jumpToView(event, '{{:~jumpList[#index]}}')">{{:course.shortName}}</span>
         {{/for}}
     </td>
@@ -219,8 +211,8 @@
 	<td name="{{:periodViewId}}"
       style="cursor:pointer"
       onclick="clickPeriodView('{{:periodViewId}}', event, [
-        {{for arrangementList ~length = arrangementList.length}}
-          {{for #data ~courseId = course.courseId}}
+        {{for arrangementList ~length=arrangementList.length}}
+          {{for #data ~courseId=course.courseId}}
             {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
               'c-{{:course.courseId}}'
             {{else}}
@@ -230,9 +222,9 @@
           {{if #index < ~length - 1}},{{/if}}
         {{/for}}
       ])">
-      {{for arrangementList ~jumpList = jumpViewIdList}}
+      {{for arrangementList ~jumpList=jumpViewIdList}}
         <span onclick="jumpToView(event, '{{:~jumpList[#index]}}')">
-        {{for #data ~courseId = course.courseId}}
+        {{for #data ~courseId=course.courseId}}
           {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
             {{:course.shortName}}
           {{else}}
@@ -253,7 +245,7 @@
   </script>
   <script id="tmpl-teacherPlanView" type="text/x-jsrender">
     <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView('{{:key}}', event)">
-    {{for prop ~courseId = prop.plan.course.courseId}}
+    {{for prop ~courseId=prop.plan.course.courseId}}
       {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
         {{:plan.course.shortName}}
       {{else}}
@@ -283,12 +275,12 @@
       sessionStorage.setItem('tclassScrollTop', $('#tclassSchedule').scrollTop());
       sessionStorage.setItem('teacherScrollTop', $('#teacherSchedule').scrollTop());
       $.ajax({
-        async : false,
-        url : '/schedule/display/' + scheduleId,
-        type : 'GET',
-        success : function(scheduleView) {
+        async: false,
+        url: '/schedule/display/' + scheduleId,
+        type: 'GET',
+        success: function(scheduleView) {
           $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
-          
+  
           $('th,td').css('font-size', '14px').css('padding', '2px 2px').css('text-align', 'center');
           $('th').css('width', '11%');
           loadBackground();
@@ -301,30 +293,30 @@
         }
       });
     }
-        
+  
     function gnrArrangement() {
       var loading = layer.load(1);
       $.ajax({
-        async : true,
-        type : 'GET',
-        url : '/schedule/arrange/' + scheduleId,
-        success : function() {
+        async: true,
+        type: 'GET',
+        url: '/schedule/arrange/' + scheduleId,
+        success: function() {
           layer.close(loading);
           layer.msg('排课完毕！');
           display();
         }
       });
     }
-    
+  
     function resetArrangement() {
       layer.confirm('重置将清空所有已排课数据！', function(index) {
         saveAdjustment();
         var loading = layer.load(1);
         $.ajax({
-          async : true,
-          url : '/arrangement/resetArrangement/' + scheduleId,
-          type : 'POST',
-          success : function(response) {
+          async: true,
+          url: '/arrangement/resetArrangement/' + scheduleId,
+          type: 'POST',
+          success: function(response) {
             layer.close(loading);
             layer.msg('课表已重置！');
             display();
@@ -382,14 +374,14 @@
   
     function clickPlanView(planViewId, event) {
       var position = $('#position').attr('value');
-      var additionalInfo = $('#additionalInfo').attr('value');
+      var info = $('#info').attr('value');
       switch (status) {
       case 'add':
-        if (planViewId == additionalInfo) {
+        if (planViewId == info) {
           status = 'normal';
-          clearColor(additionalInfo);
+          clearColor(info);
         } else {
-          clearColor(additionalInfo);
+          clearColor(info);
           setColor(planViewId, 'LimeGreen', 'White');
           startAdd(planViewId);
         }
@@ -415,7 +407,7 @@
   
     function clickRemoveBtn(removeBtnId) {
       var position = $('#position').attr('value');
-      var additionalInfo = $('#additionalInfo').attr('value');
+      var info = $('#info').attr('value');
       switch (status) {
       case 'remove':
         status = 'normal';
@@ -426,7 +418,7 @@
         startRemove();
         break;
       case 'add':
-        clearColor(additionalInfo);
+        clearColor(info);
         setColor(removeBtnId, 'OrangeRed', 'White');
         startRemove();
         break;
@@ -444,13 +436,13 @@
       status = 'swap';
       $('#type').attr('value', 0);
       $('#position').attr('value', periodViewId);
-      $('#additionalInfo').attr('value', nameArray.join(','));
+      $('#info').attr('value', nameArray.join(','));
     }
   
     function startAdd(planViewId) {
       status = 'add';
       $('#type').attr('value', 1);
-      $('#additionalInfo').attr('value', planViewId);
+      $('#info').attr('value', planViewId);
     }
   
     function startRemove() {
@@ -461,24 +453,20 @@
     function endSwap(periodViewId, nameArray) {
       status = 'normal';
       var currentPostion = $('#position').attr('value');
-      var additionalInfo = $('#additionalInfo').attr('value');
+      var info = $('#info').attr('value');
       $('#position').attr('value', currentPostion + '|' + periodViewId);
-      $('#additionalInfo').attr('value', additionalInfo + '|' + nameArray.join(','));
-      //recordAdjustment();
+      $('#info').attr('value', info + '|' + nameArray.join(','));
       doAdjust(recordAdjustment());
-  
     }
   
     function endAdd(periodViewId) {
       $('#position').attr('value', periodViewId);
-      //recordAdjustment();
       doAdjust(recordAdjustment());
     }
   
     function endRemove(periodViewId, nameArray) {
       $('#position').attr('value', periodViewId);
-      $('#additionalInfo').attr('value', nameArray.join(','));
-      //recordAdjustment();
+      $('#info').attr('value', nameArray.join(','));
       doAdjust(recordAdjustment());
     }
   
@@ -492,13 +480,13 @@
     function recordAdjustment() {
       var adjustmentId = '';
       $.ajax({
-        async : false,
-        url : '/adjustments',
-        type : 'POST',
-        dataType : 'json',
-        contentType : 'application/json',
-        data : JSON.stringify($('#adjustment').serializeJSON()),
-        success : function(response) {
+        async: false,
+        url: '/adjustments',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify($('#adjustment').serializeJSON()),
+        success: function(response) {
           adjustmentId = response.data;
           layer.msg('课程调整已记录！');
         }
@@ -508,10 +496,10 @@
   
     function doAdjust(adjustmentId) {
       $.ajax({
-        async : false,
-        url : '/arrangement/doAdjust/' + adjustmentId,
-        type : 'POST',
-        success : function(response) {
+        async: false,
+        url: '/arrangement/doAdjust/' + adjustmentId,
+        type: 'POST',
+        success: function(response) {
           display();
         }
       });
@@ -519,21 +507,21 @@
   
     function undoAdjust() {
       $.ajax({
-        async : false,
-        url : '/adjustments/latest?scheduleId=' + scheduleId,
-        type : 'GET',
-        success : function(response) {
-          var adjustmentId = response.data;
+        async: false,
+        url: '/adjustments/latest?scheduleId=' + scheduleId,
+        type: 'GET',
+        success: function(response) {
+          var adjustmentId = response.data.adjustmentId;
           $.ajax({
-            async : false,
-            url : '/arrangement/undoAdjust/' + adjustmentId,
-            type : 'POST',
-            success : function(response) {
+            async: false,
+            url: '/arrangement/undoAdjust/' + adjustmentId,
+            type: 'POST',
+            success: function(response) {
               $.ajax({
-                async : false,
-                url : '/adjustments/' + adjustmentId,
-                type : 'DELETE',
-                success : function(response) {
+                async: false,
+                url: '/adjustments/' + adjustmentId,
+                type: 'DELETE',
+                success: function(response) {
                   display();
                   layer.msg('撤销成功！');
                 }
@@ -550,35 +538,27 @@
   
     function exportExcel() {
       document.location.href = '/schedule/export/' + scheduleId;
-      /* $.ajax({
-        async : false,
-        url : '/schedule/export/' + scheduleId,
-        type : 'GET',
-        success : function(response) {
-          layer.msg('导出成功！');
-        }
-      }); */
     }
   
     function listAdjustment() {
       layer.open({
-        type : 2,
-        id : 'list',
-        title : '调整信息',
-        content : '/html/schedule/adjustment/display.html',
-        area : [ '300px', '500px' ],
-        offset : 'r',
-        shade : 0,
-        shadeClose : true
+        type: 2,
+        id: 'list',
+        title: '调整信息',
+        content: '/html/schedule/adjustment/display.html',
+        area: [ '300px', '500px' ],
+        offset: 'r',
+        shade: 0,
+        shadeClose: true
       });
     }
   
     function saveAdjustment() {
       $.ajax({
-        async : false,
-        url : '/arrangement/saveAdjustment/' + scheduleId,
-        type : 'POST',
-        success : function(response) {
+        async: false,
+        url: '/arrangement/saveAdjustment/' + scheduleId,
+        type: 'POST',
+        success: function(response) {
           display();
           layer.msg('保存完毕！');
         }
@@ -588,10 +568,10 @@
     function loadBackground() {
       clearAllColor();
       $.ajax({
-        async : false,
-        url : '/arrangement/getBackground/' + scheduleId,
-        type : 'GET',
-        success : function(backgroundMap) {
+        async: false,
+        url: '/arrangement/getBackground/' + scheduleId,
+        type: 'GET',
+        success: function(backgroundMap) {
           $.each(backgroundMap.conflicting, function(key, value) {
             if (value == 0) {
               setColor(key, 'Red', 'White');
@@ -604,10 +584,10 @@
           });
         }
       });
-      var additionalInfo = $('#additionalInfo').attr('value');
+      var info = $('#info').attr('value');
       switch (status) {
       case 'add':
-        setColor(additionalInfo, 'LimeGreen', 'White');
+        setColor(info, 'LimeGreen', 'White');
         break;
       case 'normal':
         break;
@@ -620,15 +600,15 @@
         break;
       }
     }
-    
+  
     function setColor(viewName, backgroundColor, color) {
-      var td =$('td[name="' + viewName + '"]');
+      var td = $('td[name="' + viewName + '"]');
       td.css('background-color', backgroundColor);
       td.css('color', color);
     }
   
     function clearColor(viewName) {
-      var td =$('td[name="' + viewName + '"]');
+      var td = $('td[name="' + viewName + '"]');
       td.css('background-color', '');
       td.css('color', '');
     }
@@ -636,6 +616,24 @@
     function clearAllColor() {
       var allCell = $('td[name]');
       clearColor(allCell);
+    }
+  
+    function goCopy() {
+      sessionStorage.setItem('copyingObject', 'arrangement');
+      layer.open({
+        type: 2,
+        id: 'copy',
+        title: '选择课表',
+        content: '/html/schedule/schedule/copy.html',
+        area: [ '800px', '400px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false
+      });
+    }
+    
+    function goBack() {
+      jump('html/schedule/schedule/list.html');
     }
   </script>
 </body>

@@ -55,27 +55,15 @@ public class Cache {
 	}
 
 	public void initial(Integer scheduleId) {
-		scheduleArrangementList = arrangementMapper.selectEntityListByScheduleId(scheduleId);
+		scheduleArrangementList = arrangementMapper.selectDetailListByScheduleId(scheduleId);
 
 		semesterArrangementList = scheduleArrangementList;
 		List<Integer> semesterScheduleIdList = getSemesterScheduleIdList(scheduleId);
 		for (Integer semesterScheduleId : semesterScheduleIdList) {
-			semesterArrangementList.addAll(arrangementMapper.selectEntityListByScheduleId(semesterScheduleId));
-		}
-		for (Arrangement arrangement : semesterArrangementList) {
-			if (arrangement.getTclass().getTclassId() != null) {
-				arrangement.getTclass().setName(tclassService.gnrName(arrangement.getTclass()));
-				arrangement.getTclass().setShortName(tclassService.gnrShortName(arrangement.getTclass()));
-			}
+			semesterArrangementList.addAll(arrangementMapper.selectDetailListByScheduleId(semesterScheduleId));
 		}
 
-		schedulePlanList = planMapper.selectEntityListByScheduleId(scheduleId);
-		for (Plan plan : schedulePlanList) {
-			if (plan.getTclass().getTclassId() != null) {
-				plan.getTclass().setName(tclassService.gnrName(plan.getTclass()));
-				plan.getTclass().setShortName(tclassService.gnrShortName(plan.getTclass()));
-			}
-		}
+		schedulePlanList = planMapper.selectDetailListByScheduleId(scheduleId);
 
 		backgroundMap = new HashMap<String, Map<String, Integer>>();
 		backgroundMap.put("conflicting", new HashMap<String, Integer>());

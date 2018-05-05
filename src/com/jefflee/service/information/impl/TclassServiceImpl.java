@@ -1,18 +1,13 @@
 package com.jefflee.service.information.impl;
 
-import java.util.Calendar;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
-import tk.mybatis.mapper.entity.Example;
-
 import com.jefflee.entity.information.Tclass;
 import com.jefflee.mapper.information.TclassMapper;
-import com.jefflee.po.information.TclassPo;
-import com.jefflee.po.relation.GroupCoursePo;
 import com.jefflee.service.information.TclassService;
 
 @Service("tclassService")
@@ -22,41 +17,37 @@ public class TclassServiceImpl implements TclassService {
 	private TclassMapper tclassMapper;
 
 	@Override
-	public Integer insert(TclassPo tclassPo) {
-		if (tclassMapper.insert(tclassPo) == 1) {
-			return tclassPo.getTclassId();
+	public Integer insert(Tclass tclass) {
+		if (tclassMapper.insert(tclass) == 1) {
+			return tclass.getTclassId();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public List<TclassPo> selectAll() {
+	public List<Tclass> selectList() {
 		return tclassMapper.selectAll();
 	}
-	
-	//TODO 
-	@Override
-	public List<Tclass> checkByYear(Integer year){
 
-		List<Tclass> tclassList = tclassMapper.selectEntityListByYear(year);
-		for (Tclass tclass : tclassList) {
-			tclass.setName(gnrName(tclass));
-			tclass.setShortName(gnrShortName(tclass));
-		}
+	// TODO checkByYear
+	@Override
+	public List<Tclass> selectListByYear(Integer year) {
+		Tclass tclass = new Tclass();
+		tclass.setYear(year);
+		List<Tclass> tclassList = tclassMapper.select(tclass);
 		return tclassList;
-  
 	}
 
 	@Override
-	public TclassPo selectById(Integer tclassId) {
+	public Tclass selectById(Integer tclassId) {
 		return tclassMapper.selectByPrimaryKey(tclassId);
 	}
 
 	@Override
-	public Integer updateById(TclassPo tclassPo) {
-		if (tclassMapper.updateByPrimaryKey(tclassPo) == 1) {
-			return tclassPo.getTclassId();
+	public Integer updateById(Tclass tclass) {
+		if (tclassMapper.updateByPrimaryKey(tclass) == 1) {
+			return tclass.getTclassId();
 		} else {
 			return null;
 		}
@@ -71,80 +62,4 @@ public class TclassServiceImpl implements TclassService {
 		}
 	}
 
-	@Override
-	public String gnrName(Tclass tclass) {
-		StringBuilder name = new StringBuilder();
-		switch (tclass.getLevel()) {
-		case 0:
-			name.append("初");
-			break;
-		case 1:
-			name.append("高");
-			break;
-		default:
-			break;
-		}
-		Calendar calendar = Calendar.getInstance();
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH);
-		if (month < Calendar.SEPTEMBER) {
-			year -= 1;
-		}
-		switch (year - tclass.getYear()) {
-		case 0:
-			name.append("一");
-			break;
-		case 1:
-			name.append("二");
-			break;
-		case 2:
-			name.append("三");
-			break;
-		default:
-			name.insert(0, "级");
-			name.insert(0, tclass.getYear());
-			name.append("中");
-			break;
-		}
-		name.append(tclass.getTclassNo());
-		name.append("班");
-		return name.toString();
-	}
-
-	@Override
-	public String gnrShortName(Tclass tclass) {
-		StringBuilder name = new StringBuilder();
-		Calendar calendar = Calendar.getInstance();
-		int year = calendar.get(Calendar.YEAR);
-		int month = calendar.get(Calendar.MONTH) + 1;
-		if (month < 9) {
-			year -= 1;
-		}
-		switch (year - tclass.getYear()) {
-		case 0:
-			name.append("-");
-			break;
-		case 1:
-			name.append("=");
-			break;
-		case 2:
-			name.append("三");
-			break;
-		default:
-			name.append("?");
-			break;
-		}
-		name.append(tclass.getTclassNo());
-		return name.toString();
-	}
-
-	@Override
-	public List<Tclass> selectTclassList() {
-		List<Tclass> tclassList = tclassMapper.selectEntityList();
-		for (Tclass tclass : tclassList) {
-			tclass.setName(gnrName(tclass));
-			tclass.setShortName(gnrShortName(tclass));
-		}
-		return tclassList;
-	}
 }

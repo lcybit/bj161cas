@@ -5,6 +5,7 @@ import java.util.Map;
 
 public class WeekView {
 	private TitleView titleView;
+	private List<String> periodNameList;
 	private List<DayView> dayViewList;
 	private Map<String, PlanView> planViewMap;
 
@@ -30,6 +31,14 @@ public class WeekView {
 
 	public void setPlanViewMap(Map<String, PlanView> planViewMap) {
 		this.planViewMap = planViewMap;
+	}
+
+	public List<String> getPeriodNameList() {
+		return periodNameList;
+	}
+
+	public void setPeriodNameList(List<String> periodNameList) {
+		this.periodNameList = periodNameList;
 	}
 
 }

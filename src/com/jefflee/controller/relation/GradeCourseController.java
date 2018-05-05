@@ -12,43 +12,43 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.po.relation.GroupCoursePo;
-import com.jefflee.service.relation.GroupCourseService;
+import com.jefflee.entity.relation.GradeCourse;
+import com.jefflee.service.relation.GradeCourseService;
 
 @RestController
 @RequestMapping(value = "/relation")
-public class GroupCourseController {
+public class GradeCourseController {
 
-	@Resource(name = "groupCourseService")
-	GroupCourseService groupCourseService;
+	@Resource(name = "gradeCourseService")
+	GradeCourseService gradeCourseService;
 
 	@RequestMapping(value = "/choose", method = RequestMethod.POST)
-	public Map<String, String> choose(@RequestParam("groupId") Integer groupid,
+	public Map<String, String> choose(@RequestParam("gradeId") Integer gradeid,
 			@RequestParam("IdArray") List<Integer> array) {
 		Map<String, String> result = new HashMap<String, String>();
 		Integer j = null, flag = 0;
-		groupCourseService.deleteById(groupid);// 删除数据库rlat_group_course表原有选课数据
+		gradeCourseService.deleteByGradeId(gradeid);// 删除数据库rlat_grade_course表原有选课数据
 
 		for (int i = 0; i < array.size(); i++) {
-			GroupCoursePo groupCoursePo = new GroupCoursePo();
-			groupCoursePo.setCourseId(array.get(i));
-			groupCoursePo.setGroupId(groupid);
-			j = groupCourseService.insert(groupCoursePo);
+			GradeCourse gradeCourse = new GradeCourse();
+			gradeCourse.setCourseId(array.get(i));
+			gradeCourse.setGradeId(gradeid);
+			j = gradeCourseService.insert(gradeCourse);
 			if (j == null) {
 				flag = 1;
 				break;
 			}
 		}
 		if (flag == 0) {
-			result.put("groupId", j.toString());
+			result.put("gradeId", j.toString());
 		} else {
-			result.put("groupId", j.toString());
+			result.put("gradeId", j.toString());
 		}
 		return result;
 	}
 
-	@RequestMapping(value = "/find/{groupId}", method = RequestMethod.GET)
-	public List<GroupCoursePo> findById(@PathVariable("groupId") Integer groupId) {
-		return groupCourseService.selectById(groupId);
+	@RequestMapping(value = "/find/{gradeId}", method = RequestMethod.GET)
+	public List<GradeCourse> findById(@PathVariable("gradeId") Integer gradeId) {
+		return gradeCourseService.selectByGradeId(gradeId);
 	}
 }

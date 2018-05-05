@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.po.information.PeriodPo;
+import com.jefflee.entity.information.Period;
 import com.jefflee.service.information.PeriodService;
 
 @RestController
@@ -23,9 +23,9 @@ public class PeriodController {
 	PeriodService periodService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody PeriodPo periodPo) {
+	public Map<String, String> create(@RequestBody Period period) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer periodId = periodService.insert(periodPo);
+		Integer periodId = periodService.insert(period);
 		if (periodId != null) {
 			result.put("preriodId", periodId.toString());
 		}
@@ -33,19 +33,19 @@ public class PeriodController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<PeriodPo> listAll() {
-		return periodService.selectAll();
+	public List<Period> listAll() {
+		return periodService.selectList();
 	}
 
 	@RequestMapping(value = "/find/{periodId}", method = RequestMethod.GET)
-	public PeriodPo findById(@PathVariable("periodId") Integer periodId) {
+	public Period findById(@PathVariable("periodId") Integer periodId) {
 		return periodService.selectById(periodId);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody PeriodPo periodPo) {
+	public Map<String, String> modify(@RequestBody Period period) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer periodId = periodService.updateById(periodPo);
+		Integer periodId = periodService.updateById(period);
 		if (periodId != null) {
 			result.put("periodId", periodId.toString());
 		}

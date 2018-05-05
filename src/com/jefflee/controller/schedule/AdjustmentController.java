@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.po.schedule.AdjustmentPo;
+import com.jefflee.entity.schedule.Adjustment;
 import com.jefflee.service.schedule.AdjustmentService;
 import com.jefflee.util.Response;
 
@@ -21,23 +21,23 @@ public class AdjustmentController {
 	AdjustmentService adjustmentService;
 
 	@RequestMapping(value = "", method = RequestMethod.POST)
-	public Response insert(@RequestBody AdjustmentPo adjustmentPo) {
-		return new Response().success(adjustmentService.insertPo(adjustmentPo));
+	public Response insert(@RequestBody Adjustment adjustment) {
+		return new Response().success(adjustmentService.insert(adjustment));
 	}
 
 	@RequestMapping(value = "/{adjustmentId}", method = RequestMethod.GET)
 	public Response selectById(@PathVariable("adjustmentId") Integer adjustmentId) {
-		return new Response().success(adjustmentService.selectPoById(adjustmentId));
+		return new Response().success(adjustmentService.selectById(adjustmentId));
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public Response selectList() {
-		return new Response().success(adjustmentService.selectPoList());
+		return new Response().success(adjustmentService.selectList());
 	}
 
 	@RequestMapping(value = "", method = RequestMethod.PUT)
-	public Response update(@RequestBody AdjustmentPo adjustmentPo) {
-		if (adjustmentService.updatePoById(adjustmentPo) == 1) {
+	public Response update(@RequestBody Adjustment adjustment) {
+		if (adjustmentService.updateById(adjustment) == 1) {
 			return new Response().success();
 		}
 		return new Response().fail();
@@ -45,7 +45,7 @@ public class AdjustmentController {
 
 	@RequestMapping(value = "/{adjustmentId}", method = RequestMethod.DELETE)
 	public Response delete(@PathVariable("adjustmentId") Integer adjustmentId) {
-		if (adjustmentService.deletePoById(adjustmentId) == 1) {
+		if (adjustmentService.deleteById(adjustmentId) == 1) {
 			return new Response().success();
 		}
 		return new Response().fail();
@@ -53,12 +53,12 @@ public class AdjustmentController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET, params = "scheduleId")
 	public Response selectByScheduleId(@RequestParam("scheduleId") Integer scheduleId) {
-		return new Response().success(adjustmentService.selectPoListByScheduleId(scheduleId));
+		return new Response().success(adjustmentService.selectListByScheduleId(scheduleId));
 	}
 
 	@RequestMapping(value = "/latest", method = RequestMethod.GET)
 	public Response selectLatest(@RequestParam("scheduleId") Integer scheduleId) {
-		return new Response().success(adjustmentService.selectLatestId(scheduleId));
+		return new Response().success(adjustmentService.selectLatest(scheduleId));
 	}
 
 }

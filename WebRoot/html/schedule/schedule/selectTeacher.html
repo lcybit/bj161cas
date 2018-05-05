@@ -12,14 +12,15 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-    <div class="layui-row" id="schdPlanView"></div>
+    <div class="layui-row" id="schedulePlanView"></div>
     <div class="layui-form-item">
-      <div class="layui-input-inline layui-input-group">
+      <div class="layui-input-inline layui-button-group">
+        <button class="layui-btn layui-btn-sm" type="button" onclick="goCopy()">复制</button>
         <button class="layui-btn layui-btn-sm" type="button" onclick="cancel()">确定</button>
       </div>
     </div>
   </div>
-  <script id="tmpl-schdPlanView" type="text/x-jsrender">
+  <script id="tmpl-schedulePlanView" type="text/x-jsrender">
     <div class="layui-col-md12" id="tclassSchedule" style="overflow-x:hidden; overflow-y:auto;">
       <table class="layui-table" id="{{:key}}" lay-size="sm">      
         <thead>        
@@ -49,7 +50,7 @@
   </script>
   <script id="tmpl-paneMapView" type="text/x-jsrender">
    {{for prop}}
-     <td class="layui-td" onclick="clickSelectTeacher('{{:planId}}')">{{:teacher.name}}</td>         
+     <td class="layui-td" onclick="clickSelectTeacher('{{:planId}}')">{{if teacher!=null}}{{:teacher.name}}{{/if}}</td>         
    {{/for }} 
   </script>
 
@@ -59,20 +60,20 @@
     var table = layui.table;
     var upload = layui.upload;
     var form = layui.form;
-    var groupId = sessionStorage.getItem('currentGroupId');
+    var gradeId = sessionStorage.getItem('currentGradeId');
     var scheduleId = sessionStorage.getItem('currentScheduleId');
   
     $(document).ready(function() {
-      show();
+      display();
     });
   
-    function show() {
+    function display() {
       $.ajax({
         async: false,
-        url: '/schedule/show/' + groupId + '/' + scheduleId,
+        url: '/plan/display/' + gradeId + '/' + scheduleId,
         type: 'GET',
-        success: function(schdPlanView) {
-          $('#schdPlanView').html($.templates('#tmpl-schdPlanView').render(schdPlanView));
+        success: function(schedulePlanView) {
+          $('#schedulePlanView').html($.templates('#tmpl-schedulePlanView').render(schedulePlanView));
         }
       });
     }
@@ -102,6 +103,20 @@
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
+      });
+    }
+    
+    function goCopy() {
+      sessionStorage.setItem('copyingObject', 'plan');
+      layer.open({
+        type: 2,
+        id: 'copy',
+        title: '选择课表',
+        content: '/html/schedule/schedule/copy.html',
+        area: [ '800px', '400px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false
       });
     }
   

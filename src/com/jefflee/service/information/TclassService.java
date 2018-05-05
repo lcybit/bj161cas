@@ -3,25 +3,19 @@ package com.jefflee.service.information;
 import java.util.List;
 
 import com.jefflee.entity.information.Tclass;
-import com.jefflee.po.information.TclassPo;
 
 public interface TclassService {
 
-	Integer insert(TclassPo tclassPo);
+	Integer insert(Tclass tclass);
 
-	List<TclassPo> selectAll();
-	
-	List<Tclass> checkByYear(Integer year);
+	List<Tclass> selectList();
 
-	TclassPo selectById(Integer tclassId);
+	List<Tclass> selectListByYear(Integer year);
 
-	Integer updateById(TclassPo tclassPo);
+	Tclass selectById(Integer tclassId);
+
+	Integer updateById(Tclass tclass);
 
 	Integer deleteById(Integer tclassId);
 
-	String gnrName(Tclass tclass);
-
-	String gnrShortName(Tclass tclass);
-
-	List<Tclass> selectTclassList();
 }

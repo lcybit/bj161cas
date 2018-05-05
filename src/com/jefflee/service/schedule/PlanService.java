@@ -3,30 +3,28 @@ package com.jefflee.service.schedule;
 import java.util.List;
 
 import com.jefflee.entity.schedule.Plan;
-import com.jefflee.po.schedule.PlanPo;
+import com.jefflee.view.SchedulePlanView;
 
 public interface PlanService {
 
-	public Integer insert(PlanPo planPo);
+	Integer insert(Plan plan);
 
-	public List<PlanPo> selectAll();
+	List<Plan> selectList();
 
-	public PlanPo selectById(Integer planId);
-	
-	public Plan findById(Integer planId);
-	
-	public List<PlanPo> getPlanById(Integer courseId,Integer scheduleId); 
+	Plan selectById(Integer planId);
 
-	public Integer updateById(PlanPo planPo);
+	List<Plan> getPlanById(Integer courseId, Integer scheduleId);
 
-	public Integer deleteById(Integer planId);
+	Integer updateById(Plan plan);
 
-	public List<PlanPo> selectByScheduleId(Integer scheduleId);
+	Integer deleteById(Integer planId);
 
-	public List<PlanPo> selectByTclassId(List<PlanPo> planPoList, Integer tclassId);
+	List<Plan> selectListByScheduleId(Integer scheduleId);
 
-	public List<PlanPo> selectByCourseId(List<PlanPo> planPoList, Integer courseId);
+	List<Plan> selectDetailListByScheduleId(Integer scheduleId);
 
-	public List<Plan> selectPlanListByScheduleId(Integer scheduleId);
+	void copyListByScheduleId(Integer srcScheduleId, Integer destScheduleId);
+
+	SchedulePlanView gnrSchedulePlanView(Integer gradeId, Integer scheduleId);
 
 }

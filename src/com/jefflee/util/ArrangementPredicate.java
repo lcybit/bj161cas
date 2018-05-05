@@ -18,20 +18,20 @@ public class ArrangementPredicate implements Predicate<Arrangement> {
 	@Override
 	public boolean evaluate(Arrangement arrangement) {
 		Integer arrangementId1 = this.arrangement.getArrangementId();
-		Integer periodId1 = this.arrangement.getPeriod().getPeriodId();
-		Integer courseId1 = this.arrangement.getCourse().getCourseId();
-		Integer roomId1 = this.arrangement.getRoom().getRoomId();
-		Integer tclassId1 = this.arrangement.getTclass().getTclassId();
-		Integer teacherId1 = this.arrangement.getTeacher().getTeacherId();
+		Integer periodId1 = this.arrangement.getPeriodId();
+		Integer courseId1 = this.arrangement.getCourseId();
+		Integer roomId1 = this.arrangement.getRoomId();
+		Integer tclassId1 = this.arrangement.getTclassId();
+		Integer teacherId1 = this.arrangement.getTeacherId();
 		Integer arranged1 = this.arrangement.getArranged();
 		Integer priority1 = this.arrangement.getPriority();
 
 		Integer arrangementId2 = arrangement.getArrangementId();
-		Integer periodId2 = arrangement.getPeriod().getPeriodId();
-		Integer courseId2 = arrangement.getCourse().getCourseId();
-		Integer roomId2 = arrangement.getRoom().getRoomId();
-		Integer tclassId2 = arrangement.getTclass().getTclassId();
-		Integer teacherId2 = arrangement.getTeacher().getTeacherId();
+		Integer periodId2 = arrangement.getPeriodId();
+		Integer courseId2 = arrangement.getCourseId();
+		Integer roomId2 = arrangement.getRoomId();
+		Integer tclassId2 = arrangement.getTclassId();
+		Integer teacherId2 = arrangement.getTeacherId();
 		Integer arranged2 = arrangement.getArranged();
 		Integer priority2 = arrangement.getPriority();
 

@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Course;
 import com.jefflee.mapper.information.CourseMapper;
-import com.jefflee.po.information.CoursePo;
 import com.jefflee.service.information.CourseService;
 
 @Service("courseService")
@@ -18,28 +17,33 @@ public class CourseServiceImpl implements CourseService {
 	private CourseMapper courseMapper;
 
 	@Override
-	public Integer insert(CoursePo coursePo) {
-		if (courseMapper.insert(coursePo) == 1) {
-			return coursePo.getCourseId();
+	public Integer insert(Course course) {
+		if (courseMapper.insert(course) == 1) {
+			return course.getCourseId();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public List<CoursePo> selectAll() {
+	public List<Course> selectList() {
 		return courseMapper.selectAll();
 	}
 
 	@Override
-	public CoursePo selectById(Integer courseId) {
+	public Course selectById(Integer courseId) {
 		return courseMapper.selectByPrimaryKey(courseId);
 	}
 
 	@Override
-	public Integer updateById(CoursePo coursePo) {
-		if (courseMapper.updateByPrimaryKey(coursePo) == 1) {
-			return coursePo.getCourseId();
+	public List<Course> selectListByGradeId(Integer gradeId) {
+		return courseMapper.selectListByGradeId(gradeId);
+	}
+
+	@Override
+	public Integer updateById(Course course) {
+		if (courseMapper.updateByPrimaryKey(course) == 1) {
+			return course.getCourseId();
 		} else {
 			return null;
 		}
@@ -54,8 +58,4 @@ public class CourseServiceImpl implements CourseService {
 		}
 	}
 
-	@Override
-	public List<Course> selectCourseList() {
-		return courseMapper.selectEntityList();
-	}
 }

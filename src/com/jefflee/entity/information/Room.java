@@ -1,35 +1,21 @@
 package com.jefflee.entity.information;
 
-import com.jefflee.po.information.RoomPo;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
+@Table(name = "info_room")
 public class Room {
+	@Id
+	// TODO 定好顺序
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer roomId;
+	@OrderBy
 	private String roomNo;
 	private String name;
 	private Integer type;
-
-	public Room() {
-	}
-
-	public Room(Integer roomId) {
-		this.roomId = roomId;
-	}
-
-	public Room(RoomPo roomPo) {
-		roomId = roomPo.getRoomId();
-		roomNo = roomPo.getRoomNo();
-		name = roomPo.getName();
-		type = roomPo.getType();
-	}
-
-	public RoomPo toPo() {
-		RoomPo roomPo = new RoomPo();
-		roomPo.setRoomId(roomId);
-		roomPo.setRoomNo(roomNo);
-		roomPo.setName(name);
-		roomPo.setType(type);
-		return roomPo;
-	}
 
 	public Integer getRoomId() {
 		return roomId;

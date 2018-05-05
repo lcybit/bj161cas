@@ -16,7 +16,7 @@
       <div class="layui-form-item layui-hide">
         <label class="layui-form-label">年级组ID:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="groupId" id="groupId" type="text" />
+          <input class="layui-input" name="gradeId" id="gradeId" type="text" />
         </div>
       </div>
       <div class="layui-form-item" pane="">
@@ -78,8 +78,8 @@
     var form = layui.form;
   
     $(document).ready(function() {
-      var groupId = sessionStorage.getItem('currentGroupId');
-      $('#groupId').attr('value', groupId);
+      var gradeId = sessionStorage.getItem('currentGradeId');
+      $('#gradeId').attr('value', gradeId);
       form.on('submit(go)', function(data) {
         return false;
       });

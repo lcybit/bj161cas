@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.po.information.RoomPo;
+import com.jefflee.entity.information.Room;
 import com.jefflee.service.information.RoomService;
 
 @RestController
@@ -23,9 +23,9 @@ public class RoomController {
 	RoomService roomService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody RoomPo roomPo) {
+	public Map<String, String> create(@RequestBody Room room) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer roomId = roomService.insert(roomPo);
+		Integer roomId = roomService.insert(room);
 		if (roomId != null) {
 			result.put("roomId", roomId.toString());
 		}
@@ -33,19 +33,19 @@ public class RoomController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<RoomPo> listAll() {
-		return roomService.selectAll();
+	public List<Room> listAll() {
+		return roomService.selectList();
 	}
 
 	@RequestMapping(value = "/find/{roomId}", method = RequestMethod.GET)
-	public RoomPo findById(@PathVariable("roomId") Integer roomId) {
+	public Room findById(@PathVariable("roomId") Integer roomId) {
 		return roomService.selectById(roomId);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody RoomPo roomPo) {
+	public Map<String, String> modify(@RequestBody Room room) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer roomId = roomService.updateById(roomPo);
+		Integer roomId = roomService.updateById(room);
 		if (roomId != null) {
 			result.put("roomId", roomId.toString());
 		}

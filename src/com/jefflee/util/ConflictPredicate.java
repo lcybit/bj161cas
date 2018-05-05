@@ -18,19 +18,17 @@ public class ConflictPredicate implements Predicate<Arrangement> {
 	@Override
 	public boolean evaluate(Arrangement arrangement) {
 
-		Integer periodId1 = this.arrangement.getPeriod().getPeriodId();
-		Integer courseId1 = this.arrangement.getCourse().getCourseId();
-		Integer courseType1 = this.arrangement.getCourse().getType();
-		Integer roomId1 = this.arrangement.getRoom().getRoomId();
-		Integer tclassId1 = this.arrangement.getTclass().getTclassId();
-		Integer teacherId1 = this.arrangement.getTeacher().getTeacherId();
+		Integer periodId1 = this.arrangement.getPeriodId();
+		Integer courseId1 = this.arrangement.getCourseId();
+		Integer roomId1 = this.arrangement.getRoomId();
+		Integer tclassId1 = this.arrangement.getTclassId();
+		Integer teacherId1 = this.arrangement.getTeacherId();
 
-		Integer periodId2 = arrangement.getPeriod().getPeriodId();
-		Integer courseId2 = arrangement.getCourse().getCourseId();
-		Integer courseType2 = arrangement.getCourse().getType();
-		Integer roomId2 = arrangement.getRoom().getRoomId();
-		Integer tclassId2 = arrangement.getTclass().getTclassId();
-		Integer teacherId2 = arrangement.getTeacher().getTeacherId();
+		Integer periodId2 = arrangement.getPeriodId();
+		Integer courseId2 = arrangement.getCourseId();
+		Integer roomId2 = arrangement.getRoomId();
+		Integer tclassId2 = arrangement.getTclassId();
+		Integer teacherId2 = arrangement.getTeacherId();
 
 		// TODO type
 		if (periodId1 != periodId2) {

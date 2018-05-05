@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.po.information.TeacherPo;
+import com.jefflee.entity.information.Teacher;
 import com.jefflee.service.information.TeacherService;
 
 @RestController
@@ -23,9 +23,9 @@ public class TeacherController {
 	TeacherService teacherService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody TeacherPo teacherPo) {
+	public Map<String, String> create(@RequestBody Teacher teacher) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer teacherId = teacherService.insert(teacherPo);
+		Integer teacherId = teacherService.insert(teacher);
 		if (teacherId != null) {
 			result.put("teacherId", teacherId.toString());
 		}
@@ -33,19 +33,19 @@ public class TeacherController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<TeacherPo> listAll() {
-		return teacherService.selectAll();
+	public List<Teacher> listAll() {
+		return teacherService.selectList();
 	}
 
 	@RequestMapping(value = "/find/{teacherId}", method = RequestMethod.GET)
-	public TeacherPo findById(@PathVariable("teacherId") Integer teacherId) {
+	public Teacher findById(@PathVariable("teacherId") Integer teacherId) {
 		return teacherService.selectById(teacherId);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody TeacherPo teacherPo) {
+	public Map<String, String> modify(@RequestBody Teacher teacher) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer teacherId = teacherService.updateById(teacherPo);
+		Integer teacherId = teacherService.updateById(teacher);
 		if (teacherId != null) {
 			result.put("teacherId", teacherId.toString());
 		}

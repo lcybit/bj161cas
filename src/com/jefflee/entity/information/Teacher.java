@@ -1,35 +1,20 @@
 package com.jefflee.entity.information;
 
-import com.jefflee.po.information.TeacherPo;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
+@Table(name = "info_teacher")
 public class Teacher {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer teacherId;
+	@OrderBy
 	private String teacherNo;
 	private String name;
 	private Integer type;
-
-	public Teacher() {
-	}
-
-	public Teacher(Integer teacherId) {
-		this.teacherId = teacherId;
-	}
-
-	public Teacher(TeacherPo teacherPo) {
-		teacherId = teacherPo.getTeacherId();
-		teacherNo = teacherPo.getTeacherNo();
-		name = teacherPo.getName();
-		type = teacherPo.getType();
-	}
-
-	public TeacherPo toPo() {
-		TeacherPo teacherPo = new TeacherPo();
-		teacherPo.setTeacherId(teacherId);
-		teacherPo.setTeacherNo(teacherNo);
-		teacherPo.setName(name);
-		teacherPo.setType(type);
-		return teacherPo;
-	}
 
 	public Integer getTeacherId() {
 		return teacherId;

@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.entity.information.Tclass;
-import com.jefflee.po.information.TclassPo;
-import com.jefflee.po.schedule.GroupPo;
+import com.jefflee.entity.schedule.Grade;
 import com.jefflee.service.information.TclassService;
-import com.jefflee.service.schedule.GroupService;
+import com.jefflee.service.schedule.GradeService;
 
 @RestController
 @RequestMapping(value = "/tclass")
@@ -25,13 +24,13 @@ public class TclassController {
 	@Resource(name = "tclassService")
 	TclassService tclassService;
 
-	@Resource(name = "groupService")
-	GroupService groupService;
+	@Resource(name = "gradeService")
+	GradeService gradeService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody TclassPo tclassPo) {
+	public Map<String, String> create(@RequestBody Tclass tclass) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer tclassId = tclassService.insert(tclassPo);
+		Integer tclassId = tclassService.insert(tclass);
 		if (tclassId != null) {
 			result.put("tclassId", tclassId.toString());
 		}
@@ -39,29 +38,29 @@ public class TclassController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<TclassPo> listAll() {
-		return tclassService.selectAll();
+	public List<Tclass> listAll() {
+		return tclassService.selectList();
 	}
 
 	@RequestMapping(value = "/find/{tclassId}", method = RequestMethod.GET)
-	public TclassPo findById(@PathVariable("tclassId") Integer tclassId) {
+	public Tclass findById(@PathVariable("tclassId") Integer tclassId) {
 		return tclassService.selectById(tclassId);
 	}
 
 	// TODO delete
-	@RequestMapping(value = "/check/{groupId}", method = RequestMethod.GET)
-	public List<Tclass> checkById(@PathVariable("groupId") Integer groupId) {
-		// 根据groupid获取相应的year ，再根据year从tclass表中获取该年级的多个班级
-		GroupPo groupPo = groupService.selectById(groupId);
-		Integer year = groupPo.getYear();
+	@RequestMapping(value = "/check/{gradeId}", method = RequestMethod.GET)
+	public List<Tclass> checkById(@PathVariable("gradeId") Integer gradeId) {
+		// 根据gradeid获取相应的year ，再根据year从tclass表中获取该年级的多个班级
+		Grade grade = gradeService.selectById(gradeId);
+		Integer year = grade.getYear();
 
-		return tclassService.checkByYear(year);
+		return tclassService.selectListByYear(year);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody TclassPo tclassPo) {
+	public Map<String, String> modify(@RequestBody Tclass tclass) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer tclassId = tclassService.updateById(tclassPo);
+		Integer tclassId = tclassService.updateById(tclass);
 		if (tclassId != null) {
 			result.put("tclassId", tclassId.toString());
 		}

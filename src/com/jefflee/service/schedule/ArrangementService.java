@@ -5,30 +5,25 @@ import java.util.Map;
 
 import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.entity.schedule.Schedule;
-import com.jefflee.po.schedule.ArrangementPo;
 import com.jefflee.view.ScheduleView;
 
 public interface ArrangementService {
 
-	Integer insert(ArrangementPo arrangementPo);
-	
-	List<Arrangement> selectListByScheduleId(Integer scheduleId);
+	Integer insert(Arrangement arrangement);
 
-	List<ArrangementPo> selectAll();
+	List<Arrangement> selectList();
 
-	ArrangementPo selectById(Integer arrangementId);
+	Arrangement selectById(Integer arrangementId);
 
-	Integer updateById(ArrangementPo arrangementPo);
+	Integer updateById(Arrangement arrangement);
 
 	Integer deleteById(Integer arrangementId);
-	
-	void deleteByScheduleId (Integer scheduleId);
 
-	Arrangement selectArrangementById(Integer arrangementId);
+	void deleteByScheduleId(Integer scheduleId);
 
 	void gnrArrangementList(Integer scheduleId);
 
-	Integer insertList(List<ArrangementPo> arrangementPoList);
+	Integer insertList(List<Arrangement> arrangementList);
 
 	void initial(Integer scheduleId);
 
@@ -42,6 +37,8 @@ public interface ArrangementService {
 
 	void saveAdjustment(Integer scheduleId);
 
-	void resetArrangementList(Integer scheduleId);
+	void resetList(Integer scheduleId);
+
+	void copyListByScheduleId(Integer srcScheduleId, Integer destScheduleId);
 
 }

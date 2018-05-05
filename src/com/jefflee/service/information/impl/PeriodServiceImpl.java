@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Period;
 import com.jefflee.mapper.information.PeriodMapper;
-import com.jefflee.po.information.PeriodPo;
 import com.jefflee.service.information.PeriodService;
 
 @Service("periodService")
@@ -18,28 +17,28 @@ public class PeriodServiceImpl implements PeriodService {
 	private PeriodMapper periodMapper;
 
 	@Override
-	public Integer insert(PeriodPo periodPo) {
-		if (periodMapper.insert(periodPo) == 1) {
-			return periodPo.getPeriodId();
+	public Integer insert(Period period) {
+		if (periodMapper.insert(period) == 1) {
+			return period.getPeriodId();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public List<PeriodPo> selectAll() {
+	public List<Period> selectList() {
 		return periodMapper.selectAll();
 	}
 
 	@Override
-	public PeriodPo selectById(Integer periodId) {
+	public Period selectById(Integer periodId) {
 		return periodMapper.selectByPrimaryKey(periodId);
 	}
 
 	@Override
-	public Integer updateById(PeriodPo periodPo) {
-		if (periodMapper.updateByPrimaryKey(periodPo) == 1) {
-			return periodPo.getPeriodId();
+	public Integer updateById(Period period) {
+		if (periodMapper.updateByPrimaryKey(period) == 1) {
+			return period.getPeriodId();
 		} else {
 			return null;
 		}
@@ -55,17 +54,15 @@ public class PeriodServiceImpl implements PeriodService {
 	}
 
 	@Override
-	public List<PeriodPo> select(PeriodPo periodPo) {
-		return periodMapper.select(periodPo);
+	public Period selectByPosition(Integer dayOfWeek, Integer orderOfDay) {
+		Period period = new Period();
+		period.setDayOfWeek(dayOfWeek);
+		period.setOrderOfDay(orderOfDay);
+		return periodMapper.selectOne(period);
 	}
 
 	@Override
-	public Period selectPeriodByOrder(Integer dayOfWeek, Integer orderOfDay) {
-		return periodMapper.selectEntityByOrder(dayOfWeek, orderOfDay);
-	}
-
-	@Override
-	public List<Period> selectPeriodListByScope(Integer daysPerWeek, Integer periodsPerDay) {
-		return periodMapper.selectEntityListByScope(daysPerWeek, periodsPerDay);
+	public List<Period> selectListByRange(Integer daysPerWeek, Integer periodsPerDay) {
+		return periodMapper.selectListByScope(daysPerWeek, periodsPerDay);
 	}
 }

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.entity.schedule.Plan;
-import com.jefflee.po.schedule.PlanPo;
 import com.jefflee.service.schedule.PlanService;
+import com.jefflee.view.SchedulePlanView;
 
 @RestController
 @RequestMapping(value = "/plan")
@@ -26,9 +26,9 @@ public class PlanController {
 	PlanService planService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody PlanPo planPo) {
+	public Map<String, String> create(@RequestBody Plan plan) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer planId = planService.insert(planPo);
+		Integer planId = planService.insert(plan);
 		if (planId != null) {
 			result.put("planId", planId.toString());
 		}
@@ -36,22 +36,22 @@ public class PlanController {
 	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public List<PlanPo> listAll() {
-		return planService.selectAll();
+	public List<Plan> listAll() {
+		return planService.selectList();
 	}
 
 	@RequestMapping(value = "/find/{planId}", method = RequestMethod.GET)
-	public PlanPo findById(@PathVariable("planId") Integer planId) {
+	public Plan findById(@PathVariable("planId") Integer planId) {
 		return planService.selectById(planId);
 	}
 
 	@RequestMapping(value = "/check/{planId}", method = RequestMethod.GET)
 	public Plan checkById(@PathVariable("planId") Integer planId) {
-		return planService.findById(planId);
+		return planService.selectById(planId);
 	}
 
 	@RequestMapping(value = "/look/{courseId}/{scheduleId}", method = RequestMethod.GET)
-	public List<PlanPo> lookById(@PathVariable("courseId") Integer courseId,
+	public List<Plan> lookById(@PathVariable("courseId") Integer courseId,
 			@PathVariable("scheduleId") Integer scheduleId) {
 		return planService.getPlanById(courseId, scheduleId);
 	}
@@ -60,12 +60,12 @@ public class PlanController {
 	public Map<String, String> rewrite(@RequestParam("pidNum") Integer pidNum,
 			@RequestParam("courseId") Integer courseId, @RequestParam("scheduleId") Integer scheduleId) {
 		Map<String, String> result = new HashMap<String, String>();
-		List<PlanPo> planPoList = new ArrayList<PlanPo>();
-		planPoList = planService.getPlanById(courseId, scheduleId);
+		List<Plan> planList = new ArrayList<Plan>();
+		planList = planService.getPlanById(courseId, scheduleId);
 
-		for (PlanPo planPo : planPoList) {
-			planPo.setPeriodNum(pidNum);
-			planService.updateById(planPo);
+		for (Plan plan : planList) {
+			plan.setPeriodNum(pidNum);
+			planService.updateById(plan);
 		}
 
 		return result;
@@ -75,17 +75,17 @@ public class PlanController {
 	public Map<String, String> change(@RequestParam("planId") Integer planid,
 			@RequestParam("teacherId") Integer teacherid) {
 		Map<String, String> result = new HashMap<String, String>();
-		PlanPo planPo = new PlanPo();
-		planPo = planService.selectById(planid);
-		planPo.setTeacherId(teacherid);
-		planService.updateById(planPo);
+		Plan plan = new Plan();
+		plan = planService.selectById(planid);
+		plan.setTeacherId(teacherid);
+		planService.updateById(plan);
 		return result;
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody PlanPo planPo) {
+	public Map<String, String> modify(@RequestBody Plan plan) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer planId = planService.updateById(planPo);
+		Integer planId = planService.updateById(plan);
 		if (planId != null) {
 			result.put("planId", planId.toString());
 		}
@@ -102,4 +102,18 @@ public class PlanController {
 		return result;
 	}
 
+	@RequestMapping(value = "/copy/{srcScheduleId}/{destScheduleId}", method = RequestMethod.POST)
+	public Map<String, String> copy(@PathVariable("srcScheduleId") Integer srcScheduleId,
+			@PathVariable("destScheduleId") Integer destScheduleId) {
+		Map<String, String> result = new HashMap<String, String>();
+		planService.copyListByScheduleId(srcScheduleId, destScheduleId);
+		result.put("done", "true");
+		return result;
+	}
+
+	@RequestMapping(value = "/display/{gradeId}/{scheduleId}", method = RequestMethod.GET)
+	public SchedulePlanView display(@PathVariable("gradeId") Integer gradeId,
+			@PathVariable("scheduleId") Integer scheduleId) {
+		return planService.gnrSchedulePlanView(gradeId, scheduleId);
+	}
 }

@@ -18,17 +18,17 @@ public class PlanPredicate implements Predicate<Plan> {
 	@Override
 	public boolean evaluate(Plan plan) {
 		Integer planId1 = this.plan.getPlanId();
-		Integer courseId1 = this.plan.getCourse().getCourseId();
-		Integer roomId1 = this.plan.getRoom().getRoomId();
-		Integer tclassId1 = this.plan.getTclass().getTclassId();
-		Integer teacherId1 = this.plan.getTeacher().getTeacherId();
+		Integer courseId1 = this.plan.getCourseId();
+		Integer roomId1 = this.plan.getRoomId();
+		Integer tclassId1 = this.plan.getTclassId();
+		Integer teacherId1 = this.plan.getTeacherId();
 		Integer periodNum1 = this.plan.getPeriodNum();
 
 		Integer planId2 = plan.getPlanId();
-		Integer courseId2 = plan.getCourse().getCourseId();
-		Integer roomId2 = plan.getRoom().getRoomId();
-		Integer tclassId2 = plan.getTclass().getTclassId();
-		Integer teacherId2 = plan.getTeacher().getTeacherId();
+		Integer courseId2 = plan.getCourseId();
+		Integer roomId2 = plan.getRoomId();
+		Integer tclassId2 = plan.getTclassId();
+		Integer teacherId2 = plan.getTeacherId();
 		Integer periodNum2 = plan.getPeriodNum();
 
 		if (planId1 != null && !Objects.equals(planId1, planId2)) {

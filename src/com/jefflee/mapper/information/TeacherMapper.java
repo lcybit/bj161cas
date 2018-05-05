@@ -8,23 +8,13 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import com.jefflee.entity.information.Teacher;
-import com.jefflee.po.information.TeacherPo;
-
-import tk.mybatis.mapper.common.Mapper;
+import com.jefflee.util.MyMapper;
 
 @Repository("teacherMapper")
-public interface TeacherMapper extends Mapper<TeacherPo> {
+public interface TeacherMapper extends MyMapper<Teacher> {
 
-	@Select("select * from info_teacher where teacher_id = #{teacherId}")
-	@Results({ @Result(id = true, column = "teacher_id", property = "teacherId"),
-			@Result(column = "teacher_no", property = "teacherNo"), @Result(column = "name", property = "name"),
-			@Result(column = "type", property = "type") })
-	public Teacher selectEntityById(Integer teacherId);
-
-	@Select("select * from info_teacher")
-	@Results({ @Result(id = true, column = "teacher_id", property = "teacherId"),
-			@Result(column = "teacher_no", property = "teacherNo"), @Result(column = "name", property = "name"),
-			@Result(column = "type", property = "type") })
-	public List<Teacher> selectEntityList();
-
+	@Select("SELECT * FROM info_teacher t, schd_grade g, schd_schedule s, rlat_grade_teacher r "
+			+ "WHERE g.grade_id = s.grade_id AND g.grade_id = r.grade_id AND t.teacher_id = r.teacher_id AND s.schedule_id = #{scheduleId}")
+	@Results({ @Result(id = true, column = "teacher_id", property = "teacherId") })
+	List<Teacher> selectListByScheduleId(Integer scheduleId);
 }

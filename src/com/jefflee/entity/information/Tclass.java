@@ -1,40 +1,30 @@
 package com.jefflee.entity.information;
 
-import com.jefflee.po.information.TclassPo;
+import java.util.Calendar;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
+import javax.persistence.Transient;
+
+@Table(name = "info_tclass")
 public class Tclass {
+	@Id
+	// TODO 定好顺序
+	@OrderBy
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer tclassId;
+	@OrderBy
 	private String tclassNo;
+	@Transient
 	private String name;
+	@Transient
 	private String shortName;
 	private Integer type;
 	private Integer year;
 	private Integer level;
-
-	public Tclass() {
-	}
-
-	public Tclass(Integer tclassId) {
-		this.tclassId = tclassId;
-	}
-
-	public Tclass(TclassPo tclassPo) {
-		tclassId = tclassPo.getTclassId();
-		tclassNo = tclassPo.getTclassNo();
-		type = tclassPo.getType();
-		year = tclassPo.getYear();
-		level = tclassPo.getLevel();
-	}
-
-	public TclassPo toPo() {
-		TclassPo tclassPo = new TclassPo();
-		tclassPo.setTclassId(tclassId);
-		tclassPo.setTclassNo(tclassNo);
-		tclassPo.setType(type);
-		tclassPo.setYear(year);
-		tclassPo.setLevel(level);
-		return tclassPo;
-	}
 
 	public Integer getTclassId() {
 		return tclassId;
@@ -53,19 +43,68 @@ public class Tclass {
 	}
 
 	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+		StringBuilder name = new StringBuilder();
+		switch (this.level) {
+		case 0:
+			name.append("初");
+			break;
+		case 1:
+			name.append("高");
+			break;
+		default:
+			break;
+		}
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		if (month < Calendar.AUGUST) {
+			year -= 1;
+		}
+		switch (year - this.year) {
+		case 0:
+			name.append("一");
+			break;
+		case 1:
+			name.append("二");
+			break;
+		case 2:
+			name.append("三");
+			break;
+		default:
+			name.insert(0, "级");
+			name.insert(0, this.year);
+			name.append("中");
+			break;
+		}
+		name.append(this.tclassNo);
+		name.append("班");
+		return name.toString();
 	}
 
 	public String getShortName() {
-		return shortName;
-	}
-
-	public void setShortName(String shortName) {
-		this.shortName = shortName;
+		StringBuilder name = new StringBuilder();
+		Calendar calendar = Calendar.getInstance();
+		int year = calendar.get(Calendar.YEAR);
+		int month = calendar.get(Calendar.MONTH);
+		if (month < Calendar.AUGUST) {
+			year -= 1;
+		}
+		switch (year - this.year) {
+		case 0:
+			name.append("-");
+			break;
+		case 1:
+			name.append("=");
+			break;
+		case 2:
+			name.append("三");
+			break;
+		default:
+			name.append("?");
+			break;
+		}
+		name.append(this.tclassNo);
+		return name.toString();
 	}
 
 	public Integer getType() {

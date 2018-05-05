@@ -1,65 +1,35 @@
 package com.jefflee.entity.schedule;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 import com.jefflee.entity.information.Course;
 import com.jefflee.entity.information.Period;
 import com.jefflee.entity.information.Room;
 import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.information.Teacher;
-import com.jefflee.po.schedule.ArrangementPo;
 
+@Table(name = "schd_arrangement")
 public class Arrangement {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer arrangementId;
 	private Integer scheduleId;
+	private Integer periodId;
+	private Integer courseId;
+	private Integer roomId;
+	private Integer tclassId;
+	private Integer teacherId;
+	private Integer arranged;
+	private Integer priority;
+
 	private Period period;
 	private Course course;
 	private Room room;
 	private Tclass tclass;
 	private Teacher teacher;
-	private Integer arranged;
-	private Integer priority;
-
-	public Arrangement() {
-		this.period = new Period();
-		this.course = new Course();
-		this.room = new Room();
-		this.tclass = new Tclass();
-		this.teacher = new Teacher();
-	}
-
-	public Arrangement(Integer arrangementId) {
-		this.arrangementId = arrangementId;
-		this.period = new Period();
-		this.course = new Course();
-		this.room = new Room();
-		this.tclass = new Tclass();
-		this.teacher = new Teacher();
-	}
-
-	public Arrangement(ArrangementPo arrangementPo) {
-		arrangementId = arrangementPo.getArrangementId();
-		scheduleId = arrangementPo.getScheduleId();
-		period = new Period(arrangementPo.getPeriodId());
-		course = new Course(arrangementPo.getCourseId());
-		room = new Room(arrangementPo.getRoomId());
-		tclass = new Tclass(arrangementPo.getTclassId());
-		teacher = new Teacher(arrangementPo.getTeacherId());
-		arranged = arrangementPo.getArranged();
-		priority = arrangementPo.getPriority();
-	}
-
-	public ArrangementPo toPo() {
-		ArrangementPo arrangementPo = new ArrangementPo();
-		arrangementPo.setArrangementId(arrangementId);
-		arrangementPo.setScheduleId(scheduleId);
-		arrangementPo.setPeriodId(period.getPeriodId());
-		arrangementPo.setCourseId(course.getCourseId());
-		arrangementPo.setRoomId(room.getRoomId());
-		arrangementPo.setTclassId(tclass.getTclassId());
-		arrangementPo.setTeacherId(teacher.getTeacherId());
-		arrangementPo.setArranged(arranged);
-		arrangementPo.setPriority(priority);
-		return arrangementPo;
-	}
 
 	public Integer getArrangementId() {
 		return arrangementId;
@@ -131,5 +101,45 @@ public class Arrangement {
 
 	public void setPriority(Integer priority) {
 		this.priority = priority;
+	}
+
+	public Integer getPeriodId() {
+		return periodId;
+	}
+
+	public void setPeriodId(Integer periodId) {
+		this.periodId = periodId;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	public Integer getRoomId() {
+		return roomId;
+	}
+
+	public void setRoomId(Integer roomId) {
+		this.roomId = roomId;
+	}
+
+	public Integer getTclassId() {
+		return tclassId;
+	}
+
+	public void setTclassId(Integer tclassId) {
+		this.tclassId = tclassId;
+	}
+
+	public Integer getTeacherId() {
+		return teacherId;
+	}
+
+	public void setTeacherId(Integer teacherId) {
+		this.teacherId = teacherId;
 	}
 }

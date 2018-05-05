@@ -3,26 +3,23 @@ package com.jefflee.service.schedule;
 import java.util.List;
 
 import com.jefflee.entity.schedule.Adjustment;
-import com.jefflee.po.schedule.AdjustmentPo;
 
 public interface AdjustmentService {
 
-	Integer insertPo(AdjustmentPo adjustmentPo);
+	Integer insert(Adjustment adjustment);
 
-	AdjustmentPo selectPoById(Integer adjustmentId);
+	Adjustment selectById(Integer adjustmentId);
 
-	List<AdjustmentPo> selectPoList();
+	List<Adjustment> selectList();
 
-	int updatePoById(AdjustmentPo adjustmentPo);
+	int updateById(Adjustment adjustment);
 
-	int deletePoById(Integer adjustmentId);
+	int deleteById(Integer adjustmentId);
 
-	List<AdjustmentPo> selectPoListByScheduleId(Integer scheduleId);
+	List<Adjustment> selectListByScheduleId(Integer scheduleId);
 
 	List<Adjustment> selectTempListByScheduleId(Integer scheduleId);
 
-	Adjustment selectAdjustmentById(Integer adjustmentId);
-
-	Integer selectLatestId(Integer scheduleId);
+	Adjustment selectLatest(Integer scheduleId);
 
 }

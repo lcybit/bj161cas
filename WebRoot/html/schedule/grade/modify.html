@@ -12,9 +12,9 @@
 
 <body>
   <div class="layui-container" style="margin:30px;">
-    <form class="layui-form layui-form-pane" id="group" method="post">
+    <form class="layui-form layui-form-pane" id="grade" method="post">
       <!-- 隐藏年级组ID -->
-      <input class="layui-input" name="groupId" id="groupId" type="hidden" />
+      <input class="layui-input" name="gradeId" id="gradeId" type="hidden" />
       <div class="layui-form-item">
         <label class="layui-form-label">入学年份:</label>
         <div class="layui-input-block">
@@ -66,18 +66,18 @@
     var laydate = layui.laydate;
   
     $(document).ready(function() {
-      var groupId = sessionStorage.getItem('currentGroupId');
-      $('#groupId').attr('value', groupId);
+      var gradeId = sessionStorage.getItem('currentGradeId');
+      $('#gradeId').attr('value', gradeId);
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/group/find/' + groupId,
-        success: function(group) {
-          $('#year').attr('value', group.year);
-          $(":radio[name='semester'][value='" + group.semester + "']").prop("checked", "checked");
-          $(":radio[name='level'][value='" + group.level + "']").prop("checked", "checked");
-          $(":radio[name='grade'][value='" + group.grade + "']").prop("checked", "checked", "checked");
-          $('#startDate').attr('value', group.startDate);
+        url: '/grade/find/' + gradeId,
+        success: function(grade) {
+          $('#year').attr('value', grade.year);
+          $(":radio[name='semester'][value='" + grade.semester + "']").prop("checked", "checked");
+          $(":radio[name='level'][value='" + grade.level + "']").prop("checked", "checked");
+          $(":radio[name='grade'][value='" + grade.grade + "']").prop("checked", "checked", "checked");
+          $('#startDate').attr('value', grade.startDate);
         }
       });
       form.render();
@@ -105,11 +105,11 @@
     function modify() {
       $.ajax({
         async: false, //同步请求（锁住浏览器，请求完毕后才可执行其他操作），true为异步请求
-        url: '/group/modify', //请求url
+        url: '/grade/modify', //请求url
         type: 'POST',
         dataType: 'json', //预期服务器返回的数据类型
         contentType: 'application/json', //发送信息至服务器时内容编码类型
-        data: JSON.stringify($('#group').serializeJSON()), //发送到服务器的数据类型,序列化表格内容为字符串
+        data: JSON.stringify($('#grade').serializeJSON()), //发送到服务器的数据类型,序列化表格内容为字符串
         success: function(result) { //请求成功后回调函数。这个方法有两个参数：服务器返回数据，返回状态
           var index = parent.layer.getFrameIndex(window.name); //获取当前界面的url
           parent.layer.close(index); //关闭当前界面

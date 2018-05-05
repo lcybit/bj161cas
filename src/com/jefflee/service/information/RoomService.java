@@ -3,20 +3,17 @@ package com.jefflee.service.information;
 import java.util.List;
 
 import com.jefflee.entity.information.Room;
-import com.jefflee.po.information.RoomPo;
 
 public interface RoomService {
 
-	Integer insert(RoomPo roomPo);
+	Integer insert(Room room);
 
-	List<RoomPo> selectAll();
+	List<Room> selectList();
 
-	RoomPo selectById(Integer roomId);
+	Room selectById(Integer roomId);
 
-	Integer updateById(RoomPo roomPo);
+	Integer updateById(Room room);
 
 	Integer deleteById(Integer roomId);
-
-	List<Room> selectRoomList();
 
 }

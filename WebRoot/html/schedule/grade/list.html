@@ -11,6 +11,14 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
+    <div class="layui-btn-group">
+      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
+        <i class="layui-icon">&#xe65c;</i>返回
+      </button>
+      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
+        <i class="layui-icon">&#xe654;</i>新增
+      </button>
+    </div>
     <table class="layui-table">
       <thead>
         <tr>
@@ -18,36 +26,28 @@
           <th>入学年份</th>
           <th>学期</th>
           <th>初/高中</th>
-          <th>年级</th>
           <th>起始日期</th>
           <th>操作</th>
         </tr>
       </thead>
-      <tbody id="groupList">
+      <tbody id="gradeList">
       </tbody>
     </table>
-    <div class="layui-input-inline">
-      <div class="layui-btn-group">
-        <button class="layui-btn layui-btn-sm" onclick="goBack()">返回</button>
-        <button class="layui-btn layui-btn-sm" onclick="goCreate()">新增</button>
-      </div>
-    </div>
   </div>
-  <script id="tmpl-groupList" type="text/x-jsrender">
+  <script id="tmpl-gradeList" type="text/x-jsrender">
     <tr>
       <td>{{:#index + 1}}</td>
       <td>{{:year}}</td>
-      <td>{{:semester}}</td>
-      <td>{{:level}}</td>
-      <td>{{:grade}}</td>
+      <td>{{if semester == 0}}上学期{{else semester == 1}}下学期{{/if}}</td>
+      <td>{{if level == 0}}初中{{else level == 1}}高中{{/if}}</td>
       <td>{{:startDate}}</td>
       <td>
         <div class="layui-btn-group">
-          <button class="layui-btn layui-btn-sm" onclick="goModify('{{:groupId}}')">修改</button>
-          <button class="layui-btn layui-btn-sm" onclick="remove('{{:groupId}}')">删除</button>
-          <button class="layui-btn layui-btn-sm" id="chcourse" onclick="chcourse('{{:groupId}}')">选择课程</button>
-          <button class="layui-btn layui-btn-sm" id="chteacher" onclick="chteacher('{{:groupId}}')">选择教师</button>
-          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="enter('{{:groupId}}')">进入</button>
+          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:gradeId}}')">修改</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:gradeId}}')">删除</button>
+          <button class="layui-btn layui-btn-sm" id="chcourse" onclick="chcourse('{{:gradeId}}')">选择课程</button>
+          <button class="layui-btn layui-btn-sm" id="chteacher" onclick="chteacher('{{:gradeId}}')">选择教师</button>
+          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="enter('{{:gradeId}}')">查看</button>
         </div>
       </td>
     </tr>
@@ -70,7 +70,7 @@
           type: 2,
           id: 'create',
           title: '新增年级组信息',
-          content: '/html/schedule/group/create.html',
+          content: '/html/schedule/grade/create.html',
           area: [ '700px', '500px' ],
           shade: 0.5,
           shadeClose: true,
@@ -79,13 +79,13 @@
       });
     }
   
-    function goModify(groupId) {
-      sessionStorage.setItem('currentGroupId', groupId);
+    function goModify(gradeId) {
+      sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
         id: 'modify',
         title: '修改年级组信息',
-        content: '/html/schedule/group/modify.html',
+        content: '/html/schedule/grade/modify.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -93,13 +93,13 @@
       });
     }
   
-    function chcourse(groupId) {
-      sessionStorage.setItem('currentGroupId', groupId);
+    function chcourse(gradeId) {
+      sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
         id: 'choosecourse',
         title: '选择年级组课程',
-        content: '/html/schedule/group/choose.html',
+        content: '/html/schedule/grade/choose.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -107,26 +107,26 @@
       });
     }
   
-    function chteacher(groupId) {
-      sessionStorage.setItem('currentGroupId', groupId);
+    function chteacher(gradeId) {
+      sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
         id: 'chooseteacher',
         title: '选择年级组教师',
-        content: '/html/schedule/group/chteacher.html',
+        content: '/html/schedule/grade/chteacher.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
       });
     }
-    
-    function enter(groupId) {
-      sessionStorage.setItem('currentGroupId', groupId);
+  
+    function enter(gradeId) {
+      sessionStorage.setItem('currentGradeId', gradeId);
       jump('html/schedule/schedule/list.html');
     }
   
-    function remove(groupId) {
+    function remove(gradeId) {
       layer.confirm('确认要删除吗？',
         {
           title: '删除年级组信息'
@@ -135,7 +135,7 @@
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/group/delete/' + groupId,
+            url: '/grade/delete/' + gradeId,
             success: function() {
               layer.close(index);
               list();
@@ -148,9 +148,9 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/group/list',
-        success: function(groupList) {
-          $('#groupList').html($.templates('#tmpl-groupList').render(groupList));
+        url: '/grade/list',
+        success: function(gradeList) {
+          $('#gradeList').html($.templates('#tmpl-gradeList').render(gradeList));
         }
       });
     }

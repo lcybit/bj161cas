@@ -1,38 +1,22 @@
 package com.jefflee.entity.information;
 
-import com.jefflee.po.information.CoursePo;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 
+@Table(name = "info_course")
 public class Course {
+	@Id
+	// TODO 定好顺序
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer courseId;
+	@OrderBy
 	private String courseNo;
 	private String name;
 	private String shortName;
 	private Integer type;
-
-	public Course() {
-	}
-
-	public Course(Integer courseId) {
-		this.courseId = courseId;
-	}
-
-	public Course(CoursePo coursePo) {
-		courseId = coursePo.getCourseId();
-		courseNo = coursePo.getCourseNo();
-		name = coursePo.getName();
-		shortName = coursePo.getName();
-		type = coursePo.getType();
-	}
-
-	public CoursePo toPo() {
-		CoursePo coursePo = new CoursePo();
-		coursePo.setCourseId(courseId);
-		coursePo.setCourseNo(courseNo);
-		coursePo.setName(name);
-		coursePo.setShortName(shortName);
-		coursePo.setType(type);
-		return coursePo;
-	}
 
 	public Integer getCourseId() {
 		return courseId;

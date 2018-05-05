@@ -13,41 +13,37 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
+    <div class="layui-btn-group">
+      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
+        <i class="layui-icon">&#xe65c;</i>返回
+      </button>
+      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
+        <i class="layui-icon">&#xe654;</i>新增
+      </button>
+    </div>
     <table class="layui-table">
       <thead>
         <tr>
           <th>编号</th>
-          <th>上午课时数</th>
-          <th>下午课时数</th>
-          <th>傍晚课时数</th>
-          <th>每周天数</th>
-          <th>起始教学周</th>
+          <th>名称</th>
           <th>操作</th>
         </tr>
       </thead>
       <tbody id="scheduleList">
       </tbody>
     </table>
-    <div class="layui-input-inline layui-btn-group">
-      <button class="layui-btn layui-btn-sm" onclick="goBack()">返回</button>
-      <button class="layui-btn layui-btn-sm" onclick="goCreate()">新增</button>
-    </div>
   </div>
   <script id="tmpl-scheduleList" type="text/x-jsrender">
     <tr>
       <td>{{:#index + 1}}</td>
-      <td>{{:forenoon}}</td>
-      <td>{{:afternoon}}</td>
-      <td>{{:evening}}</td>
-      <td>{{:days}}</td>
-      <td>{{:startWeek}}</td>
+      <td>{{:grade.name}}{{if grade.semester == 0}}上学期{{else grade.semester == 1}}下学期{{/if}}{{:name}}</td>
       <td>
         <div class="layui-btn-group">
-          <button class="layui-btn layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
-          <button class="layui-btn layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
-          <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:groupId}}','{{:scheduleId}}')">教学计划</button>
+          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
+          <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:gradeId}}','{{:scheduleId}}')">教学计划</button>
           <button class="layui-btn layui-btn-sm" onclick="generate('{{:scheduleId}}')">生成课表</button>
-          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="choose('{{:scheduleId}}')">查看课表</button>
+          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="choose('{{:scheduleId}}')">查看</button>
         </div>
       </td>
     </tr>
@@ -58,14 +54,14 @@
     var table = layui.table;
     var upload = layui.upload;
     var form = layui.form;
-    var groupId = sessionStorage.getItem('currentGroupId');
+    var gradeId = sessionStorage.getItem('currentGradeId');
   
     $(document).ready(function() {
       list();
     })
   
     function goCreate() {
-      sessionStorage.setItem('currentGroupId', groupId);
+      sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
         id: 'create',
@@ -122,9 +118,9 @@
       })
     }
   
-    function selectTeacher(groupId, scheduleId) {
+    function selectTeacher(gradeId, scheduleId) {
       sessionStorage.setItem('currentScheduleId', scheduleId);
-      sessionStorage.setItem('currentGroupId', groupId);
+      sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
         id: 'modify',
@@ -141,7 +137,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/schedule/list/' + groupId,
+        url: '/schedule/list/' + gradeId,
         success: function(scheduleList) {
           $('#scheduleList').html($.templates('#tmpl-scheduleList').render(scheduleList));
         }
@@ -167,7 +163,7 @@
     }
   
     function goBack() {
-      jump('html/schedule/group/list.html');
+      jump('html/schedule/grade/list.html');
     }
   </script>
 </body>

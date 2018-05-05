@@ -3,23 +3,23 @@ package com.jefflee.view;
 import java.util.List;
 
 public class DayView {
-	private List<PeriodView> arrangedPeriodViewList;
-	private List<PeriodView> highestPeriodViewList;
+	private String dayName;
+	private List<PeriodView> periodViewList;
 
-	public List<PeriodView> getArrangedPeriodViewList() {
-		return arrangedPeriodViewList;
+	public List<PeriodView> getPeriodViewList() {
+		return periodViewList;
 	}
 
-	public void setArrangedPeriodViewList(List<PeriodView> arrangedPeriodViewList) {
-		this.arrangedPeriodViewList = arrangedPeriodViewList;
+	public void setPeriodViewList(List<PeriodView> periodViewList) {
+		this.periodViewList = periodViewList;
 	}
 
-	public List<PeriodView> getHighestPeriodViewList() {
-		return highestPeriodViewList;
+	public String getDayName() {
+		return dayName;
 	}
 
-	public void setHighestPeriodViewList(List<PeriodView> highestPeriodViewList) {
-		this.highestPeriodViewList = highestPeriodViewList;
+	public void setDayName(String dayName) {
+		this.dayName = dayName;
 	}
 
 }

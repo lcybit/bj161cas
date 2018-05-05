@@ -9,33 +9,18 @@ import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 
 import com.jefflee.entity.information.Period;
-import com.jefflee.po.information.PeriodPo;
-
-import tk.mybatis.mapper.common.Mapper;
+import com.jefflee.util.MyMapper;
 
 @Repository("periodMapper")
-public interface PeriodMapper extends Mapper<PeriodPo> {
+public interface PeriodMapper extends MyMapper<Period> {
 
-	@Select("select * from info_period where period_id = #{periodId}")
-	@Results({ @Result(id = true, column = "period_id", property = "periodId"),
-			@Result(column = "period_no", property = "periodNo"),
-			@Result(column = "day_of_week", property = "dayOfWeek"),
-			@Result(column = "order_of_day", property = "orderOfDay") })
-	public Period selectEntityById(Integer periodId);
-
-	@Select("select * from info_period where day_of_week = #{dayOfWeek} and order_of_day = #{orderOfDay}")
-	@Results({ @Result(id = true, column = "period_id", property = "periodId"),
-			@Result(column = "period_no", property = "periodNo"),
-			@Result(column = "day_of_week", property = "dayOfWeek"),
-			@Result(column = "order_of_day", property = "orderOfDay") })
-	public Period selectEntityByOrder(@Param("dayOfWeek") Integer dayOfWeek, @Param("orderOfDay") Integer orderOfDay);
-
+	// TODO order -> period
 	@Select("select * from info_period where day_of_week <= #{daysPerWeek} and order_of_day <= #{periodsPerDay}")
 	@Results({ @Result(id = true, column = "period_id", property = "periodId"),
 			@Result(column = "period_no", property = "periodNo"),
 			@Result(column = "day_of_week", property = "dayOfWeek"),
 			@Result(column = "order_of_day", property = "orderOfDay") })
-	public List<Period> selectEntityListByScope(@Param("daysPerWeek") Integer daysPerWeek,
+	public List<Period> selectListByScope(@Param("daysPerWeek") Integer daysPerWeek,
 			@Param("periodsPerDay") Integer periodsPerDay);
 
 }

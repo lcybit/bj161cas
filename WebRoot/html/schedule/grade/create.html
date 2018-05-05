@@ -12,7 +12,7 @@
 
 <body>
   <div class="layui-container" style="margin:30px;">
-    <form class="layui-form layui-form-pane" id="group" method="post">
+    <form class="layui-form layui-form-pane" id="grade" method="post">
       <div class="layui-form-item">
         <label class="layui-form-label">入学年份:</label>
         <div class="layui-input-block">
@@ -82,12 +82,12 @@
     function create() {
       $.ajax({
         async : false,
-        url : '/group/create',
+        url : '/grade/create',
         type : 'POST',
         dataType : 'json',//后台返回数据类型
         contentType : 'application/json',
-        data : JSON.stringify($('#group').serializeJSON()),//前台上传数据类型
-        success : function(groupId) {
+        data : JSON.stringify($('#grade').serializeJSON()),//前台上传数据类型
+        success : function(gradeId) {
           var index = parent.layer.getFrameIndex(window.name);
           parent.layer.close(index);
           parent.list();

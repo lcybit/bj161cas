@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Room;
 import com.jefflee.mapper.information.RoomMapper;
-import com.jefflee.po.information.RoomPo;
 import com.jefflee.service.information.RoomService;
 
 @Service("roomService")
@@ -18,28 +17,28 @@ public class RoomServiceImpl implements RoomService {
 	private RoomMapper roomMapper;
 
 	@Override
-	public Integer insert(RoomPo roomPo) {
-		if (roomMapper.insert(roomPo) == 1) {
-			return roomPo.getRoomId();
+	public Integer insert(Room room) {
+		if (roomMapper.insert(room) == 1) {
+			return room.getRoomId();
 		} else {
 			return null;
 		}
 	}
 
 	@Override
-	public List<RoomPo> selectAll() {
+	public List<Room> selectList() {
 		return roomMapper.selectAll();
 	}
 
 	@Override
-	public RoomPo selectById(Integer roomId) {
+	public Room selectById(Integer roomId) {
 		return roomMapper.selectByPrimaryKey(roomId);
 	}
 
 	@Override
-	public Integer updateById(RoomPo roomPo) {
-		if (roomMapper.updateByPrimaryKey(roomPo) == 1) {
-			return roomPo.getRoomId();
+	public Integer updateById(Room room) {
+		if (roomMapper.updateByPrimaryKey(room) == 1) {
+			return room.getRoomId();
 		} else {
 			return null;
 		}
@@ -54,8 +53,4 @@ public class RoomServiceImpl implements RoomService {
 		}
 	}
 
-	@Override
-	public List<Room> selectRoomList() {
-		return roomMapper.selectEntityList();
-	}
 }

@@ -13,10 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jefflee.po.schedule.SchedulePo;
+import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.service.information.TclassService;
 import com.jefflee.service.schedule.ScheduleService;
-import com.jefflee.view.SchdPlanView;
 import com.jefflee.view.ScheduleView;
 
 @RestController
@@ -30,29 +29,34 @@ public class ScheduleController {
 	TclassService tclassService;
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
-	public Map<String, String> create(@RequestBody SchedulePo schedulePo) {
+	public Map<String, String> create(@RequestBody Schedule schedule) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer scheduleId = scheduleService.insert(schedulePo);
+		Integer scheduleId = scheduleService.insert(schedule);
 		if (scheduleId != null) {
 			result.put("scheduleId", scheduleId.toString());
 		}
 		return result;
 	}
 
-	@RequestMapping(value = "/list/{groupId}", method = RequestMethod.GET)
-	public List<SchedulePo> listAll(@PathVariable("groupId") Integer groupId) {
-		return scheduleService.selectListByGroupId(groupId);
+	@RequestMapping(value = "/list/{gradeId}", method = RequestMethod.GET)
+	public List<Schedule> listByGradeId(@PathVariable("gradeId") Integer gradeId) {
+		return scheduleService.selectListByGradeId(gradeId);
+	}
+
+	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	public List<Schedule> listAll() {
+		return scheduleService.selectList();
 	}
 
 	@RequestMapping(value = "/find/{scheduleId}", method = RequestMethod.GET)
-	public SchedulePo findById(@PathVariable("scheduleId") Integer scheduleId) {
+	public Schedule findById(@PathVariable("scheduleId") Integer scheduleId) {
 		return scheduleService.selectById(scheduleId);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
-	public Map<String, String> modify(@RequestBody SchedulePo schedulePo) {
+	public Map<String, String> modify(@RequestBody Schedule schedule) {
 		Map<String, String> result = new HashMap<String, String>();
-		Integer scheduleId = scheduleService.updateById(schedulePo);
+		Integer scheduleId = scheduleService.updateById(schedule);
 		if (scheduleId != null) {
 			result.put("scheduleId", scheduleId.toString());
 		}
@@ -74,11 +78,6 @@ public class ScheduleController {
 		return scheduleService.gnrScheduleView(scheduleId);
 	}
 
-	@RequestMapping(value = "/show/{groupId}/{scheduleId}", method = RequestMethod.GET)
-	public SchdPlanView show(@PathVariable("groupId") Integer groupId, @PathVariable("scheduleId") Integer scheduleId) {
-		return scheduleService.gnrSchdPlanView(groupId, scheduleId);
-	}
-
 	@RequestMapping(value = "/generate/{scheduleId}", method = RequestMethod.GET)
 	public void generate(@PathVariable("scheduleId") Integer scheduleId) {
 		scheduleService.gnrEmptyArrangementList(scheduleId);
@@ -91,7 +90,7 @@ public class ScheduleController {
 
 	@RequestMapping(value = "/export/{scheduleId}", method = RequestMethod.GET)
 	public void export(HttpServletResponse response, @PathVariable("scheduleId") Integer scheduleId) throws Exception {
-		scheduleService.gnrScheduleViewExcel(response, scheduleId);
+		scheduleService.exportExcelView(response, scheduleId);
 	}
 
 	@RequestMapping(value = "/initial/{id}", method = RequestMethod.GET)
