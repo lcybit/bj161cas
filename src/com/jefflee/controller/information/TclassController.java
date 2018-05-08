@@ -53,8 +53,8 @@ public class TclassController {
 		// 根据gradeid获取相应的year ，再根据year从tclass表中获取该年级的多个班级
 		Grade grade = gradeService.selectById(gradeId);
 		Integer year = grade.getYear();
-
-		return tclassService.selectListByYear(year);
+		Integer level = grade.getLevel();
+		return tclassService.selectListByYearAndLevel(year, level);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)

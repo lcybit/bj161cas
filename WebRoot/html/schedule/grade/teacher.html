@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>选择教师</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form" id="gradeTeacher" method="post" style="display:none">
+      <!-- 隐藏年级组ID -->
+      <div class="layui-form-item">
+        <input class="layui-input-inline" name="gradeId" id="gradeId" />
+        <input class="layui-input-inline" name="teacherId" id="teacherId" />
+      </div>
+    </form>
+    <div class="layui-form">
+      <div class="layui-form-item" id="teacherList">
+      </div></div>
+    <div class="layui-input-inline layui-btn-group">
+      <button class="layui-btn layui-btn-sm" type="button" onclick="cancel()">确定</button>
+    </div>
+  </div>
+  <script id="tmpl-teacherList" type="text/x-jsrender">
+    <div class="layui-input-inline">
+      <input type="checkbox" lay-filter="teacher" name="teacher" lay-skin="primary" value="{{:teacherId}}" title="{{:name}}"">
+    </div>
+  </script>
+
+  <script>
+    var layer = layui.layer;
+    var laypage = layui.laypage;
+    var table = layui.table;
+    var upload = layui.upload;
+    var form = layui.form;
+  
+    var gradeId = sessionStorage.getItem('currentGradeId');
+  
+    $(document).ready(function() {
+      $('#gradeId').attr('value', gradeId);
+      list();
+      fill();
+      form.on('checkbox(teacher)', function(data) {
+        var teacher = $(data.elem);
+        $('#teacherId').attr('value', teacher.attr('value'));
+        if (teacher.prop('checked')) {
+          create();
+        } else {
+          remove();
+        }
+      });
+      form.render();
+    });
+  
+    function list() {
+      $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/teacher/list',
+        success: function(teacherList) {
+          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+        }
+      });
+    }
+  
+    function fill() {
+      $.ajax({
+        async: false,
+        url: '/grade_teacher/find/' + gradeId,
+        type: 'GET',
+        dataType: 'json',
+        success: function(gradeTeacherList) {
+          for (var i = 0; i < gradeTeacherList.length; i++) {
+            $('input[name="teacher"][value="' + gradeTeacherList[i].teacherId + '"]').prop('checked', true);
+          }
+        }
+      });
+    }
+  
+    function create() {
+      $.ajax({
+        async: false,
+        url: '/grade_teacher/create',
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify($('#gradeTeacher').serializeJSON()),
+        contentType: 'application/json',
+        success: function(result) {
+          layer.msg("已选择");
+        }
+      });
+    }
+  
+    function remove() {
+      $.ajax({
+        async: false,
+        url: '/grade_teacher/remove',
+        type: 'DELETE',
+        dataType: 'json',
+        data: JSON.stringify($('#gradeTeacher').serializeJSON()),
+        contentType: 'application/json',
+        success: function(result) {
+          layer.msg("已移除");
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>

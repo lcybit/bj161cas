@@ -8,7 +8,7 @@ import com.jefflee.entity.information.Tclass;
 public class SchedulePlanView {
 
 	private List<Tclass> tclassList;
-	private Map<String, CoursePlanView> coursePlanViewMap;
+	private Map<Integer, CoursePlanView> coursePlanViewMap;
 
 	public List<Tclass> getTclassList() {
 		return tclassList;
@@ -18,11 +18,11 @@ public class SchedulePlanView {
 		this.tclassList = tclassList;
 	}
 
-	public Map<String, CoursePlanView> getCoursePlanViewMap() {
+	public Map<Integer, CoursePlanView> getCoursePlanViewMap() {
 		return coursePlanViewMap;
 	}
 
-	public void setCoursePlanViewMap(Map<String, CoursePlanView> coursePlanViewMap) {
+	public void setCoursePlanViewMap(Map<Integer, CoursePlanView> coursePlanViewMap) {
 		this.coursePlanViewMap = coursePlanViewMap;
 	}
 

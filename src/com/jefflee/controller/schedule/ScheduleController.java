@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.service.information.TclassService;
 import com.jefflee.service.schedule.ScheduleService;
-import com.jefflee.view.ScheduleView;
 
 @RestController
 @RequestMapping(value = "/schedule")
@@ -71,31 +69,6 @@ public class ScheduleController {
 			result.put("scheduleId", scheduleId.toString());
 		}
 		return result;
-	}
-
-	@RequestMapping(value = "/display/{scheduleId}", method = RequestMethod.GET)
-	public ScheduleView display(@PathVariable("scheduleId") Integer scheduleId) {
-		return scheduleService.gnrScheduleView(scheduleId);
-	}
-
-	@RequestMapping(value = "/generate/{scheduleId}", method = RequestMethod.GET)
-	public void generate(@PathVariable("scheduleId") Integer scheduleId) {
-		scheduleService.gnrEmptyArrangementList(scheduleId);
-	}
-
-	@RequestMapping(value = "/arrange/{scheduleId}", method = RequestMethod.GET)
-	public void arrange(@PathVariable("scheduleId") Integer scheduleId) {
-		scheduleService.gnrSchedule(scheduleId);
-	}
-
-	@RequestMapping(value = "/export/{scheduleId}", method = RequestMethod.GET)
-	public void export(HttpServletResponse response, @PathVariable("scheduleId") Integer scheduleId) throws Exception {
-		scheduleService.exportExcelView(response, scheduleId);
-	}
-
-	@RequestMapping(value = "/initial/{id}", method = RequestMethod.GET)
-	public void initial(@PathVariable("id") Integer scheduleId) {
-		scheduleService.initial(scheduleId);
 	}
 
 }

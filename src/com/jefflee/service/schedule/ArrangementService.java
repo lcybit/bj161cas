@@ -3,8 +3,9 @@ package com.jefflee.service.schedule;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.jefflee.entity.schedule.Arrangement;
-import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.view.ScheduleView;
 
 public interface ArrangementService {
@@ -27,7 +28,7 @@ public interface ArrangementService {
 
 	void initial(Integer scheduleId);
 
-	ScheduleView gnrScheduleView(Schedule schedule);
+	ScheduleView gnrScheduleView(Integer scheduleId);
 
 	void doAdjust(Integer adjustmentId);
 
@@ -40,5 +41,9 @@ public interface ArrangementService {
 	void resetList(Integer scheduleId);
 
 	void copyListByScheduleId(Integer srcScheduleId, Integer destScheduleId);
+
+	void gnrEmptyArrangementList(Integer scheduleId);
+
+	void exportExcelView(HttpServletResponse response, Integer scheduleId) throws Exception;
 
 }

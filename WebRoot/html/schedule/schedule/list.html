@@ -21,6 +21,7 @@
         <i class="layui-icon">&#xe654;</i>新增
       </button>
     </div>
+    <blockquote class="layui-elem-quote">课表列表</blockquote>
     <table class="layui-table">
       <thead>
         <tr>
@@ -41,9 +42,9 @@
         <div class="layui-btn-group">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
           <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
+          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="choose('{{:scheduleId}}')">查看</button>
           <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:gradeId}}','{{:scheduleId}}')">教学计划</button>
           <button class="layui-btn layui-btn-sm" onclick="generate('{{:scheduleId}}')">生成课表</button>
-          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="choose('{{:scheduleId}}')">查看</button>
         </div>
       </td>
     </tr>
@@ -111,7 +112,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/schedule/initial/' + scheduleId,
+        url: '/arrangement/initial/' + scheduleId,
         success: function() {
           jump('/html/schedule/schedule/display.html');
         }
@@ -153,7 +154,7 @@
           $.ajax({
             async: false,
             type: 'GET',
-            url: '/schedule/generate/' + scheduleId,
+            url: '/arrangement/generate/' + scheduleId,
             success: function() {
               layer.close(index);
               layer.msg('生成成功！');

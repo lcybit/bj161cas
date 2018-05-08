@@ -54,8 +54,8 @@ public class TeacherServiceImpl implements TeacherService {
 	}
 
 	@Override
-	public List<Teacher> selectListByScheduleId(Integer scheduleId) {
-		return teacherMapper.selectListByScheduleId(scheduleId);
+	public List<Teacher> selectListByGradeId(Integer gradeId) {
+		return teacherMapper.selectListByGradeId(gradeId);
 	}
 
 }

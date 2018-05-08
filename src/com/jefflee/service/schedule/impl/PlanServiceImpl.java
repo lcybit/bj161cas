@@ -1,5 +1,6 @@
 package com.jefflee.service.schedule.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -7,7 +8,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.commons.collections4.ListUtils;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Course;
@@ -15,19 +15,23 @@ import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.information.Teacher;
 import com.jefflee.entity.schedule.Grade;
 import com.jefflee.entity.schedule.Plan;
+import com.jefflee.entity.schedule.Schedule;
 import com.jefflee.mapper.schedule.PlanMapper;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.service.information.TclassService;
 import com.jefflee.service.information.TeacherService;
 import com.jefflee.service.schedule.GradeService;
 import com.jefflee.service.schedule.PlanService;
+import com.jefflee.service.schedule.ScheduleService;
 import com.jefflee.util.Cache;
-import com.jefflee.util.PlanPredicate;
 import com.jefflee.view.CoursePlanView;
 import com.jefflee.view.SchedulePlanView;
 
 @Service("planService")
 public class PlanServiceImpl implements PlanService {
+
+	@Resource(name = "cache")
+	private Cache cache;
 
 	@Resource(name = "planMapper")
 	private PlanMapper planMapper;
@@ -40,8 +44,8 @@ public class PlanServiceImpl implements PlanService {
 
 	@Resource(name = "gradeService")
 	private GradeService gradeService;
-	@Resource(name = "cache")
-	private Cache cache;
+	@Resource(name = "scheduleService")
+	private ScheduleService scheduleService;
 
 	@Override
 	public Integer insert(Plan plan) {
@@ -100,7 +104,8 @@ public class PlanServiceImpl implements PlanService {
 	public void copyListByScheduleId(Integer srcScheduleId, Integer destScheduleId) {
 		List<Plan> srcPlanList = selectDetailListByScheduleId(srcScheduleId);
 		List<Plan> destPlanList = selectDetailListByScheduleId(destScheduleId);
-		List<Teacher> destTeacherList = teacherService.selectListByScheduleId(destScheduleId);
+		Grade destGrade = scheduleService.selectById(destScheduleId).getGrade();
+		List<Teacher> destTeacherList = teacherService.selectListByGradeId(destGrade.getGradeId());
 		Map<Integer, Teacher> destTeacherMap = new HashMap<Integer, Teacher>();
 		for (Teacher teacher : destTeacherList) {
 			destTeacherMap.put(teacher.getTeacherId(), teacher);
@@ -126,79 +131,103 @@ public class PlanServiceImpl implements PlanService {
 		}
 	}
 
-	// TODO 待完善 初始化planlist
 	@Override
-	public SchedulePlanView gnrSchedulePlanView(Integer gradeId, Integer scheduleId) {
-
-		SchedulePlanView schedulePlanView = new SchedulePlanView();
-
-		// 获取tclasslist
-		// 根据gradeid获取相应的year ，再根据year从tclass表中获取该年级的多个班级
-		Grade grade = gradeService.selectById(gradeId);
-		List<Tclass> tclassList = tclassService.selectListByYear(grade.getYear());
-		schedulePlanView.setTclassList(tclassList);
-
-		// 获取courselist
-		List<Course> courseList = courseService.selectListByGradeId(gradeId);
-
-		// 根据scheduleId获得planList
-		List<Plan> planList = selectDetailListByScheduleId(scheduleId);
-
-		// 根据courselist 、tclasslist 生成具有部分属性的coursePlanViewMap
-		Map<String, CoursePlanView> coursePlanViewMap = new LinkedHashMap<String, CoursePlanView>();
-
+	public void gnrEmptyPlanList(Integer scheduleId) {
+		Schedule schedule = scheduleService.selectById(scheduleId);
+		Grade grade = schedule.getGrade();
+		List<Tclass> tclassList = tclassService.selectListByYearAndLevel(grade.getYear(), grade.getLevel());
+		List<Course> courseList = courseService.selectListByGradeId(grade.getGradeId());
+		List<Plan> planList = new ArrayList<Plan>();
 		for (Course course : courseList) {
-			CoursePlanView coursePlanView = new CoursePlanView();
-			Map<String, Plan> paneMap = new LinkedHashMap<String, Plan>();
-
+			// TODO type
 			Integer courseId = course.getCourseId();
-			coursePlanView.setCourse(course);
-
-			for (Tclass tclass : tclassList) {
-				Integer tclassId = tclass.getTclassId();
-				paneMap.put(tclassId.toString(), new Plan());
-
-				// schd_plan表里没有一条scheduleId的数据时，插入x*y条数据到该表,这样 planlist 只有两种情况
-				// 1. null 2. planlist.size()=x*y
-				Plan queryPlan = new Plan();
-				queryPlan.setCourseId(courseId);
-				queryPlan.setTclassId(tclassId);
-				if (ListUtils.select(planList, new PlanPredicate(queryPlan)).isEmpty()) {
+			if (courseId != 23 && courseId != 24 && courseId != 25) {
+				for (Tclass tclass : tclassList) {
+					Integer tclassId = tclass.getTclassId();
 					Plan plan = new Plan();
 					plan.setScheduleId(scheduleId);
 					plan.setCourseId(courseId);
+					plan.setTclassId(tclassId);
+					plan.setTeacherId(0);
 					// TODO type
-					// 默认教室，体育课（courseid=10）roomid=9，其他的课程roomid=tclassid;
 					if (courseId == 10) {
 						plan.setRoomId(9);
 					} else {
 						plan.setRoomId(tclassId);
 					}
-					plan.setTclassId(tclassId);
-					plan.setPeriodNum(0);// 默认值0
-					insert(plan);
+					plan.setPeriodNum(0);
+					planList.add(plan);
 				}
+			} else {
+
 			}
-			coursePlanView.setPaneMap(paneMap);
-			coursePlanViewMap.put(courseId.toString(), coursePlanView);
+		}
+		planMapper.insertList(planList);
+	}
+
+	// TODO 待完善 初始化planlist
+	@Override
+	public SchedulePlanView gnrSchedulePlanView(Integer scheduleId) {
+		Schedule schedule = scheduleService.selectById(scheduleId);
+		SchedulePlanView schedulePlanView = new SchedulePlanView();
+
+		schedulePlanView.setCoursePlanViewMap(new LinkedHashMap<Integer, CoursePlanView>());
+
+		Grade grade = schedule.getGrade();
+		List<Tclass> tclassList = tclassService.selectListByYearAndLevel(grade.getYear(), grade.getLevel());
+		schedulePlanView.setTclassList(tclassList);
+
+		Map<Integer, CoursePlanView> coursePlanViewMap = schedulePlanView.getCoursePlanViewMap();
+		List<Course> courseList = courseService.selectListByGradeId(grade.getGradeId());
+		for (Course course : courseList) {
+			coursePlanViewMap.put(course.getCourseId(), gnrCoursePlanView(course, tclassList));
 		}
 
-		// 定位 planList中的plan元素
-		// 即将用planList中的每一个plan的plan.getPeriodNum()、plan.getTeacher()填充coursePlanViewMap，使其完善
+		List<Plan> planList = selectDetailListByScheduleId(scheduleId);
+
 		for (Plan plan : planList) {
 			Integer courseId = plan.getCourseId();
 			Integer tclassId = plan.getTclassId();
-			CoursePlanView coursePlanView = coursePlanViewMap.get(courseId.toString());
-
-			// 判断coursePlanView是否存在，即 coursePlanViewMap是否包含courseId的元素
+			Integer periodNum = plan.getPeriodNum();
+			CoursePlanView coursePlanView = coursePlanViewMap.get(courseId);
 			if (coursePlanView != null) {
-				coursePlanView.setPeriodNum(plan.getPeriodNum());
-				coursePlanView.getPaneMap().put(tclassId.toString(), plan);
+				if (coursePlanView.getPeriodNum() < periodNum) {
+					coursePlanView.setPeriodNum(periodNum);
+				}
+				String coursePlanViewId = "c-" + courseId + "-s-" + tclassId;
+				coursePlanView.getPaneMap().get(coursePlanViewId).add(plan);
 			}
 		}
 
 		schedulePlanView.setCoursePlanViewMap(coursePlanViewMap);
 		return schedulePlanView;
+	}
+
+	private CoursePlanView gnrCoursePlanView(Course course, List<Tclass> tclassList) {
+		CoursePlanView coursePlanView = new CoursePlanView();
+		coursePlanView.setCourse(course);
+		Integer courseId = course.getCourseId();
+		// TODO type
+		if (courseId != 23 && courseId != 24 && courseId != 25) {
+			coursePlanView.setPaneMap(gnrPaneMap(courseId, tclassList));
+		} else {
+			coursePlanView.setPaneMap(gnrPaneMap(courseId, null));
+		}
+		coursePlanView.setPeriodNum(0);
+		return coursePlanView;
+	}
+
+	private Map<String, List<Plan>> gnrPaneMap(Integer courseId, List<Tclass> tclassList) {
+		Map<String, List<Plan>> paneMap = new LinkedHashMap<String, List<Plan>>();
+		if (tclassList == null) {
+			paneMap.put("c-" + courseId + "-s-0", new ArrayList<Plan>());
+		} else {
+			for (Tclass tclass : tclassList) {
+				Integer tclassId = tclass.getTclassId();
+				paneMap.put("c-" + courseId + "-s-" + tclassId, new ArrayList<Plan>());
+			}
+		}
+		return paneMap;
 	}
 
 }

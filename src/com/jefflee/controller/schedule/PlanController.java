@@ -111,9 +111,8 @@ public class PlanController {
 		return result;
 	}
 
-	@RequestMapping(value = "/display/{gradeId}/{scheduleId}", method = RequestMethod.GET)
-	public SchedulePlanView display(@PathVariable("gradeId") Integer gradeId,
-			@PathVariable("scheduleId") Integer scheduleId) {
-		return planService.gnrSchedulePlanView(gradeId, scheduleId);
+	@RequestMapping(value = "/display/{scheduleId}", method = RequestMethod.GET)
+	public SchedulePlanView display(@PathVariable("scheduleId") Integer scheduleId) {
+		return planService.gnrSchedulePlanView(scheduleId);
 	}
 }

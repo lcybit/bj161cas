@@ -10,7 +10,7 @@ public interface TclassService {
 
 	List<Tclass> selectList();
 
-	List<Tclass> selectListByYear(Integer year);
+	List<Tclass> selectListByYearAndLevel(Integer year, Integer level);
 
 	Tclass selectById(Integer tclassId);
 

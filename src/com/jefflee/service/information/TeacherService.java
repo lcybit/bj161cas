@@ -16,6 +16,6 @@ public interface TeacherService {
 
 	Integer deleteById(Integer teacherId);
 
-	List<Teacher> selectListByScheduleId(Integer scheduleId);
+	List<Teacher> selectListByGradeId(Integer scheduleId);
 
 }

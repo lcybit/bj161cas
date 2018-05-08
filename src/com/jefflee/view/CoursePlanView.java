@@ -1,5 +1,6 @@
 package com.jefflee.view;
 
+import java.util.List;
 import java.util.Map;
 
 import com.jefflee.entity.information.Course;
@@ -8,7 +9,7 @@ import com.jefflee.entity.schedule.Plan;
 public class CoursePlanView {
 	private Course course;
 	private Integer periodNum;
-	private Map<String, Plan> paneMap;
+	private Map<String, List<Plan>> paneMap;
 
 	public Course getCourse() {
 		return course;
@@ -26,11 +27,11 @@ public class CoursePlanView {
 		this.periodNum = periodNum;
 	}
 
-	public Map<String, Plan> getPaneMap() {
+	public Map<String, List<Plan>> getPaneMap() {
 		return paneMap;
 	}
 
-	public void setPaneMap(Map<String, Plan> paneMap) {
+	public void setPaneMap(Map<String, List<Plan>> paneMap) {
 		this.paneMap = paneMap;
 	}
 

@@ -13,4 +13,5 @@ public interface GradeCourseService {
 
 	public void deleteByGradeId(Integer gradeId);
 
+	void delete(GradeCourse gradeCourse);
 }

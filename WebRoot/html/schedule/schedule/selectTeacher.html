@@ -4,9 +4,9 @@
 <head>
 <title>设置教学计划</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
 </head>
 
@@ -40,18 +40,16 @@
     <th id="{{:tclassId}}">{{:name}}</th>  
   </script>
   <script id="tmpl-coursePlanView" type="text/x-jsrender">   
-   {{for prop}}
+    {{for prop}}
     <tr>    
-      <td >{{:course.name}}</td> 
-      <td class="layui-td" onclick="clickSelectPidNum('{{:course.courseId}}')">{{:periodNum}}</td> 
+      <td>{{:course.name}}</td> 
+      <td onclick="clickSelectPidNum('{{:course.courseId}}')">{{:periodNum}}</td> 
       {{props paneMap tmpl="#tmpl-paneMapView" /}}
     </tr>   
-   {{/for }} 
+    {{/for }} 
   </script>
   <script id="tmpl-paneMapView" type="text/x-jsrender">
-   {{for prop}}
-     <td class="layui-td" onclick="clickSelectTeacher('{{:planId}}')">{{if teacher!=null}}{{:teacher.name}}{{/if}}</td>         
-   {{/for }} 
+    <td id="{{:key}}">{{for prop}}{{if teacher!=null}}<p>{{:teacher.name}}</p>{{/if}}{{/for}}</td>         
   </script>
 
   <script>
@@ -60,7 +58,6 @@
     var table = layui.table;
     var upload = layui.upload;
     var form = layui.form;
-    var gradeId = sessionStorage.getItem('currentGradeId');
     var scheduleId = sessionStorage.getItem('currentScheduleId');
   
     $(document).ready(function() {
@@ -70,7 +67,7 @@
     function display() {
       $.ajax({
         async: false,
-        url: '/plan/display/' + gradeId + '/' + scheduleId,
+        url: '/plan/display/' + scheduleId,
         type: 'GET',
         success: function(schedulePlanView) {
           $('#schedulePlanView').html($.templates('#tmpl-schedulePlanView').render(schedulePlanView));

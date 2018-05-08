@@ -38,4 +38,9 @@ public class GradeCourseServiceImpl implements GradeCourseService {
 		gradeCourse.setGradeId(gradeId);
 		gradeCourseMapper.delete(gradeCourse);
 	}
+
+	@Override
+	public void delete(GradeCourse gradeCourse) {
+		gradeCourseMapper.delete(gradeCourse);
+	}
 }

@@ -26,7 +26,7 @@ public class GradeTeacherServiceImpl implements GradeTeacherService {
 	}
 
 	@Override
-	public List<GradeTeacher> selectByGradeId(Integer gradeId) {
+	public List<GradeTeacher> selectListByGradeId(Integer gradeId) {
 		GradeTeacher gradeTeacher = new GradeTeacher();
 		gradeTeacher.setGradeId(gradeId);
 		return gradeTeacherMapper.select(gradeTeacher);
@@ -36,6 +36,11 @@ public class GradeTeacherServiceImpl implements GradeTeacherService {
 	public void deleteByGradeId(Integer gradeId) {
 		GradeTeacher gradeTeacher = new GradeTeacher();
 		gradeTeacher.setGradeId(gradeId);
+		gradeTeacherMapper.delete(gradeTeacher);
+	}
+
+	@Override
+	public void delete(GradeTeacher gradeTeacher) {
 		gradeTeacherMapper.delete(gradeTeacher);
 	}
 }

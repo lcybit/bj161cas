@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.entity.schedule.Arrangement;
 import com.jefflee.service.schedule.ArrangementService;
+import com.jefflee.view.ScheduleView;
 
 @RestController
 @RequestMapping(value = "/arrangement")
@@ -104,4 +106,28 @@ public class ArrangementController {
 		return result;
 	}
 
+	@RequestMapping(value = "/generate/{scheduleId}", method = RequestMethod.GET)
+	public void generate(@PathVariable("scheduleId") Integer scheduleId) {
+		arrangementService.gnrEmptyArrangementList(scheduleId);
+	}
+
+	@RequestMapping(value = "/display/{scheduleId}", method = RequestMethod.GET)
+	public ScheduleView display(@PathVariable("scheduleId") Integer scheduleId) {
+		return arrangementService.gnrScheduleView(scheduleId);
+	}
+
+	@RequestMapping(value = "/arrange/{scheduleId}", method = RequestMethod.GET)
+	public void arrange(@PathVariable("scheduleId") Integer scheduleId) {
+		arrangementService.gnrArrangementList(scheduleId);
+	}
+
+	@RequestMapping(value = "/export/{scheduleId}", method = RequestMethod.GET)
+	public void export(HttpServletResponse response, @PathVariable("scheduleId") Integer scheduleId) throws Exception {
+		arrangementService.exportExcelView(response, scheduleId);
+	}
+
+	@RequestMapping(value = "/initial/{scheduleId}", method = RequestMethod.GET)
+	public void initial(@PathVariable("scheduleId") Integer scheduleId) {
+		arrangementService.initial(scheduleId);
+	}
 }

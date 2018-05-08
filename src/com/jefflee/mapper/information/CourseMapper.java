@@ -14,8 +14,7 @@ import com.jefflee.util.MyMapper;
 public interface CourseMapper extends MyMapper<Course> {
 
 	@Select("select * from info_course c, rlat_grade_course r where c.course_id = r.course_id and r.grade_id = #{gradeId}")
-	@Results({ @Result(id = true, column = "course_id", property = "courseId"),
-			@Result(column = "course_no", property = "courseNo") })
+	@Results({ @Result(id = true, column = "course_id", property = "courseId") })
 	public List<Course> selectListByGradeId(Integer gradeId);
 
 }

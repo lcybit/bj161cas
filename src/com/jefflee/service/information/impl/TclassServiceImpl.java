@@ -30,11 +30,11 @@ public class TclassServiceImpl implements TclassService {
 		return tclassMapper.selectAll();
 	}
 
-	// TODO checkByYear
 	@Override
-	public List<Tclass> selectListByYear(Integer year) {
+	public List<Tclass> selectListByYearAndLevel(Integer year, Integer level) {
 		Tclass tclass = new Tclass();
 		tclass.setYear(year);
+		tclass.setLevel(level);
 		List<Tclass> tclassList = tclassMapper.select(tclass);
 		return tclassList;
 	}

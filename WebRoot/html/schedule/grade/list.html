@@ -19,6 +19,7 @@
         <i class="layui-icon">&#xe654;</i>新增
       </button>
     </div>
+    <blockquote class="layui-elem-quote">学年学期</blockquote>
     <table class="layui-table">
       <thead>
         <tr>
@@ -43,11 +44,11 @@
       <td>{{:startDate}}</td>
       <td>
         <div class="layui-btn-group">
-          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:gradeId}}')">修改</button>
-          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:gradeId}}')">删除</button>
+          <button class="layui-btn layui-btn-sm layui-bg-orange" onclick="goModify('{{:gradeId}}')">修改</button>
+          <button class="layui-btn layui-btn-sm layui-bg-red" onclick="remove('{{:gradeId}}')">删除</button>
+          <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="enter('{{:gradeId}}')">查看</button>
           <button class="layui-btn layui-btn-sm" id="chcourse" onclick="chcourse('{{:gradeId}}')">选择课程</button>
           <button class="layui-btn layui-btn-sm" id="chteacher" onclick="chteacher('{{:gradeId}}')">选择教师</button>
-          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="enter('{{:gradeId}}')">查看</button>
         </div>
       </td>
     </tr>
@@ -69,7 +70,7 @@
         layer.open({
           type: 2,
           id: 'create',
-          title: '新增年级组信息',
+          title: '新增年级信息',
           content: '/html/schedule/grade/create.html',
           area: [ '700px', '500px' ],
           shade: 0.5,
@@ -84,7 +85,7 @@
       layer.open({
         type: 2,
         id: 'modify',
-        title: '修改年级组信息',
+        title: '修改年级信息',
         content: '/html/schedule/grade/modify.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
@@ -97,9 +98,9 @@
       sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
-        id: 'choosecourse',
-        title: '选择年级组课程',
-        content: '/html/schedule/grade/choose.html',
+        id: 'selectCourse',
+        title: '选择课程',
+        content: '/html/schedule/grade/course.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -111,9 +112,9 @@
       sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
-        id: 'chooseteacher',
-        title: '选择年级组教师',
-        content: '/html/schedule/grade/chteacher.html',
+        id: 'selectTeacher',
+        title: '选择教师',
+        content: '/html/schedule/grade/teacher.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,

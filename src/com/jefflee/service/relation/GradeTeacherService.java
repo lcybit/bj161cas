@@ -6,10 +6,12 @@ import com.jefflee.entity.relation.GradeTeacher;
 
 public interface GradeTeacherService {
 
-	public Integer insert(GradeTeacher gradeTeacher);
+	Integer insert(GradeTeacher gradeTeacher);
 
-	public List<GradeTeacher> selectByGradeId(Integer gradeId);
+	List<GradeTeacher> selectListByGradeId(Integer gradeId);
 
-	public void deleteByGradeId(Integer gradeId);
+	void deleteByGradeId(Integer gradeId);
+
+	void delete(GradeTeacher gradeTeacher);
 
 }

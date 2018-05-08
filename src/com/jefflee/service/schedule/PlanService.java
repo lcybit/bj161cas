@@ -25,6 +25,8 @@ public interface PlanService {
 
 	void copyListByScheduleId(Integer srcScheduleId, Integer destScheduleId);
 
-	SchedulePlanView gnrSchedulePlanView(Integer gradeId, Integer scheduleId);
+	SchedulePlanView gnrSchedulePlanView(Integer scheduleId);
+
+	void gnrEmptyPlanList(Integer scheduleId);
 
 }

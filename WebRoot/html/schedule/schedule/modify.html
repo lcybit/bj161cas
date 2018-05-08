@@ -93,10 +93,10 @@
         url: '/schedule/find/' + scheduleId,
         success: function(schedule) {
           $('#gradeId').attr('value', schedule.gradeId);
-          $(":radio[name='forenoon'][value='" + schedule.forenoon + "']").prop("checked", "checked", "checked", "checked");
-          $(":radio[name='afternoon'][value='" + schedule.afternoon + "']").prop("checked", "checked", "checked", "checked");
-          $(":radio[name='evening'][value='" + schedule.evening + "']").prop("checked", "checked", "checked", "checked");
-          $(":radio[name='days'][value='" + schedule.days + "']").prop("checked", "checked", "checked", "checked");
+          $(":radio[name='forenoon'][value='" + schedule.forenoon + "']").prop("checked", true);
+          $(":radio[name='afternoon'][value='" + schedule.afternoon + "']").prop("checked", true);
+          $(":radio[name='evening'][value='" + schedule.evening + "']").prop("checked", true);
+          $(":radio[name='days'][value='" + schedule.days + "']").prop("checked", true);
           $('#startWeek').attr('value', schedule.startWeek);
         }
       });
