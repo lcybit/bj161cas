@@ -7,10 +7,25 @@
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
+<script src="/plugin/layui/layui.all.js"></script>
 </head>
+
 
 <body>
   <div class="layui-container" style="width:100%;">
+   <div class="layui-btn-group">
+      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
+        <i class="layui-icon">&#xe65c;</i>返回
+      </button>
+      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
+        <i class="layui-icon">&#xe654;</i>新增
+      </button>
+     
+      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goRoomHtml()">
+        <i class="layui-icon"> &#xe619;</i>上一步
+      </button>
+      
+    </div>
     <table class="layui-table">
       <thead>
         <tr>
@@ -26,10 +41,7 @@
       <tbody id="tclassList">
       </tbody>
     </table>
-    <div class="layui-input-inline">
-      <button class="layui-btn" onclick="goBack()">返回</button>
-      <button class="layui-btn" onclick="goCreate()">新增</button>
-    </div>
+    <div id="page"></div>
   </div>
   <script id="tmpl-tclassList" type="text/x-jsrender">
     <tr>
@@ -40,12 +52,13 @@
       <td>{{:year}}</td>
       <td>{{:level}}</td>
       <td>
-        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:tclassId}}')">修改</button>
-        <button class="layui-btn layui-btn-sm" onclick="remove('{{:tclassId}}')">删除</button>
+        <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:tclassId}}')">修改</button>
+        <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:tclassId}}')">删除</button>
       </td>
     </tr>
   </script>
   <script>
+    var laypage = layui.laypage;
     $(document).ready(function() {
       list();
     })
@@ -81,6 +94,10 @@
       });
     }
 
+    function goRoomHtml(){
+      jump('html/information/room/list.html');   
+    }
+    
     function remove(tclassId) {
       layer.confirm('确认要删除吗？',
         {title : '删除班级信息'},
@@ -103,11 +120,32 @@
         type : 'GET',
         url : '/tclass/list',
         success : function(tclassList) {
-          $('#tclassList').html($.templates('#tmpl-tclassList').render(tclassList));
+          //$('#tclassList').html($.templates('#tmpl-tclassList').render(tclassList));
+          loadData(tclassList);
         }
       });
     }
-  
+    function loadData(data){ 
+       laypage.render({
+         elem:'page'
+         ,count:Math.ceil(data.length)
+         ,limit:10
+         ,jump: function(obj,first){
+            //console.log(data.length);
+            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
+            console.log(obj.limit);//得到每页显示的条数 10
+            var start=(obj.curr-1)*obj.limit;//获得数据 的数组起始下标
+            var end=obj.curr*obj.limit-1;//获得数据 的数组终点下标
+            var arr=[];//存放该页展示的数据 
+            for(var i=start;i<=end&&i<data.length;i++)
+            {
+                arr.push(data[i]);
+            }
+            document.getElementById('tclassList').innerHTML = $.templates('#tmpl-tclassList').render(arr);
+         
+         }
+       });   
+    }   
     function goBack() {
       jump('html/information/tclass/list.html');
     }

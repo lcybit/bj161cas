@@ -7,11 +7,25 @@
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
+<script src="/plugin/layui/layui.all.js"></script>
+
 </head>
 
 <body>
   <div class="layui-container" style="width:100%;">
-    <table class="layui-table">
+   <div class="layui-btn-group">
+      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
+        <i class="layui-icon">&#xe65c;</i>返回
+      </button>
+      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
+        <i class="layui-icon">&#xe654;</i>新增
+      </button>
+     
+      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCourseHtml()">
+        <i class="layui-icon"> &#xe61a;</i>下一步
+      </button>
+    </div> 
+    <table class="layui-table" id="test">
       <thead>
         <tr>
           <th>教师ID</th>
@@ -24,10 +38,7 @@
       <tbody id="teacherList">
       </tbody>
     </table>
-    <div class="layui-input-inline">
-      <button class="layui-btn" onclick="goBack()">返回</button>
-      <button class="layui-btn" onclick="goCreate()">新增</button>
-    </div>
+    <div id="page"></div>
   </div>
   <script id="tmpl-teacherList" type="text/x-jsrender">
     <tr>
@@ -36,12 +47,14 @@
       <td>{{:name}}</td>
       <td>{{:type}}</td>
       <td>
-        <button class="layui-btn layui-btn-sm" onclick="goModify('{{:teacherId}}')">修改</button>
-        <button class="layui-btn layui-btn-sm" onclick="remove('{{:teacherId}}')">删除</button>
+        <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:teacherId}}')">修改</button>
+        <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:teacherId}}')">删除</button>
       </td>
     </tr>
   </script>
+  
   <script>
+    var laypage = layui.laypage;
     $(document).ready(function() {
       list();
     })
@@ -77,6 +90,10 @@
       });
     }
 
+    function goCourseHtml(){
+      jump('html/information/course/list.html');   
+    }
+    
     function remove(teacherId) {
       layer.confirm('确认要删除吗？',
         {title : '删除教师信息'},
@@ -98,10 +115,37 @@
         async : false,
         type : 'GET',
         url : '/teacher/list',
+        dataType: 'json',
         success : function(teacherList) {
-          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+          //$('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+          //var loaddata=jQuery.parseJSON(teacherList);//将后台获取的json对象转化成数组
+          //loadData(loaddata);
+          loadData(teacherList);
+       
         }
       });
+    }
+    
+    function loadData(data){ 
+       laypage.render({
+         elem:'page'
+         ,count:Math.ceil(data.length)
+         ,limit:10
+         ,jump: function(obj,first){
+            //console.log(data.length);
+            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
+            console.log(obj.limit);//得到每页显示的条数 10
+            var start=(obj.curr-1)*obj.limit;//获得数据 的数组起始下标
+            var end=obj.curr*obj.limit-1;//获得数据 的数组终点下标
+            var arr=[];//存放该页展示的数据 
+            for(var i=start;i<=end&&i<data.length;i++)
+            {
+                arr.push(data[i]);
+            }
+            document.getElementById('teacherList').innerHTML = $.templates('#tmpl-teacherList').render(arr);
+         
+         }
+       });   
     }
   
     function goBack() {

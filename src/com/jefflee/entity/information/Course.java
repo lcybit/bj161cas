@@ -11,8 +11,8 @@ public class Course {
 	@Id
 	// TODO 定好顺序
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer courseId;
 	@OrderBy
+	private Integer courseId;
 	private String courseNo;
 	private String name;
 	private String shortName;

@@ -40,7 +40,9 @@ public class CourseController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public List<Course> listAll() {
-		return courseService.selectList();
+		List<Course> courseList = new ArrayList<Course>();
+		courseList = courseService.selectList();
+		return courseList;
 	}
 
 	// TODO 可以delete

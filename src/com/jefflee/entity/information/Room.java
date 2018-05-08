@@ -11,8 +11,8 @@ public class Room {
 	@Id
 	// TODO 定好顺序
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer roomId;
 	@OrderBy
+	private Integer roomId;
 	private String roomNo;
 	private String name;
 	private Integer type;
