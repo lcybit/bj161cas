@@ -75,5 +75,13 @@ public class StringUtil {
 		}
 		return camelString;
 	}
+	
+	public static String aviodNumericValue(Object object) {
+		if (object instanceof Double) {
+			return String.valueOf(((Double) object).longValue());
+		} else {
+			return object.toString();
+		}
+	}
 
 }
