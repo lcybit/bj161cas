@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>选择课时数</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form" id="plan" method="post" style="display:none">
+      <div class="layui-form-item">
+        <input class="layui-input-inline" name="scheduleId" id="scheduleId" />
+        <input class="layui-input-inline" name="courseId" id="courseId" />
+        <input class="layui-input-inline" name="periodNum" id="periodNum" />
+      </div>
+    </form>
+    <div class="layui-form">
+      <div class="layui-form-item">
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="0" title="0">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="1" title="1">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="2" title="2">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="3" title="3">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="4" title="4">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="5" title="5">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="6" title="6">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="7" title="7">
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="8" title="8">        
+        </div>
+        <div class="layui-input-inline">
+          <input type="radio" lay-filter="periodNum" name="periodNum" value="9" title="9">        
+        </div>
+      </div>
+    </div>
+    <div class="layui-input-inline layui-btn-group">
+      <button class="layui-btn layui-btn-sm" type="button" onclick="cancel()">确定</button>
+    </div>
+  </div>
+
+  <script>
+    var layer = layui.layer;
+    var laypage = layui.laypage;
+    var table = layui.table;
+    var upload = layui.upload;
+    var form = layui.form;
+  
+    var scheduleId = sessionStorage.getItem('currentScheduleId');
+    var courseId = sessionStorage.getItem('currentCourseId');
+    var periodNum = sessionStorage.getItem('currentPeriodNum');
+  
+    $(document).ready(function() {
+      $('#scheduleId').attr('value', scheduleId);
+      $('#courseId').attr('value', courseId);
+      $('#periodNum').attr('value', periodNum);
+      $('input[name="periodNum"][value="' + periodNum + '"]').prop('checked', true);
+      form.on('radio(periodNum)', function(data) {
+        var periodNum = $(data.elem);
+        $('#periodNum').attr('value', periodNum.attr('value'));
+        set();
+      });
+      form.render();
+    });
+  
+    function set() {
+      $.ajax({
+        async: false,
+        url: '/plan/updatePeriodNum',
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify($('#plan').serializeJSON()),
+        contentType: 'application/json',
+        success: function(result) {
+          layer.msg("已设置");
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+</html>
+

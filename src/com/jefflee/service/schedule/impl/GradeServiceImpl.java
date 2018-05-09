@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.schedule.Grade;
 import com.jefflee.mapper.schedule.GradeMapper;
+import com.jefflee.service.relation.GradeCourseService;
+import com.jefflee.service.relation.GradeTeacherService;
 import com.jefflee.service.schedule.GradeService;
 
 @Service("gradeService")
@@ -15,6 +17,11 @@ public class GradeServiceImpl implements GradeService {
 
 	@Resource(name = "gradeMapper")
 	private GradeMapper gradeMapper;
+
+	@Resource(name = "gradeTeacherService")
+	private GradeTeacherService gradeTeacherService;
+	@Resource(name = "gradeCourseService")
+	private GradeCourseService gradeCourseService;
 
 	@Override
 	public Integer insert(Grade grade) {
@@ -46,6 +53,8 @@ public class GradeServiceImpl implements GradeService {
 
 	@Override
 	public Integer deleteById(Integer gradeId) {
+		gradeCourseService.deleteByGradeId(gradeId);
+		gradeTeacherService.deleteByGradeId(gradeId);
 		if (gradeMapper.deleteByPrimaryKey(gradeId) == 1) {
 			return gradeId;
 		} else {

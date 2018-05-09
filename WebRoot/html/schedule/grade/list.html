@@ -47,8 +47,8 @@
           <button class="layui-btn layui-btn-sm layui-bg-orange" onclick="goModify('{{:gradeId}}')">修改</button>
           <button class="layui-btn layui-btn-sm layui-bg-red" onclick="remove('{{:gradeId}}')">删除</button>
           <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="enter('{{:gradeId}}')">查看</button>
-          <button class="layui-btn layui-btn-sm" id="chcourse" onclick="chcourse('{{:gradeId}}')">选择课程</button>
-          <button class="layui-btn layui-btn-sm" id="chteacher" onclick="chteacher('{{:gradeId}}')">选择教师</button>
+          <button class="layui-btn layui-btn-sm" id="chcourse" onclick="goCourse('{{:gradeId}}')">选择课程</button>
+          <button class="layui-btn layui-btn-sm" id="chteacher" onclick="goTeacher('{{:gradeId}}')">选择教师</button>
         </div>
       </td>
     </tr>
@@ -94,7 +94,7 @@
       });
     }
   
-    function chcourse(gradeId) {
+    function goCourse(gradeId) {
       sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
@@ -108,7 +108,7 @@
       });
     }
   
-    function chteacher(gradeId) {
+    function goTeacher(gradeId) {
       sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
@@ -128,21 +128,33 @@
     }
   
     function remove(gradeId) {
-      layer.confirm('确认要删除吗？',
-        {
-          title: '删除年级组信息'
-        },
-        function(index) {
-          $.ajax({
-            async: false,
-            type: 'DELETE',
-            url: '/grade/delete/' + gradeId,
-            success: function() {
-              layer.close(index);
-              list();
-            }
-          });
-        });
+      $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/schedule/list/' + gradeId,
+        success: function(scheduleList) {
+          if (scheduleList.length != 0) {
+            layer.msg('请先删除该年级所有课表！');
+            return;
+          }
+          layer.confirm('将删除该学期所有相关信息！',
+            {
+              title: '删除年级组信息'
+            },
+            function(index) {
+              $.ajax({
+                async: false,
+                type: 'DELETE',
+                url: '/grade/delete/' + gradeId,
+                success: function() {
+                  layer.close(index);
+                  list();
+                }
+              });
+            });
+        }
+      })
+  
     }
   
     function list() {

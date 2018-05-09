@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>bj161cas</groupId>
   <artifactId>bj161cas</artifactId>
@@ -94,6 +95,11 @@
       <artifactId>poi-ooxml</artifactId>
       <version>3.17</version>
     </dependency>
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper</artifactId>
+      <version>4.1.4</version>
+    </dependency>
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
@@ -118,16 +124,6 @@
       </resource>
     </resources>
     <plugins>
-     
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
-        <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
-        </configuration>
-      </plugin>
-      
       <plugin>
         <artifactId>maven-war-plugin</artifactId>
         <version>2.6</version>
@@ -165,7 +161,6 @@
           </execution>
         </executions>
       </plugin>
-      
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>2.3.2</version>
@@ -174,12 +169,10 @@
           <target>1.7</target>
         </configuration>
       </plugin>
-      
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
-        <!--  <version>1.10</version>-->
+        <!-- <version>1.10</version> -->
         <artifactId>build-helper-maven-plugin</artifactId>
-        
         <executions>
           <execution>
             <phase>generate-sources</phase>
@@ -193,14 +186,6 @@
             </configuration>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>2.6</version>
-        <configuration>
-          <warSourceDirectory>${basedir}/WebRoot</warSourceDirectory>
-          <failOnMissingWebXml>false</failOnMissingWebXml>
-        </configuration>
       </plugin>
     </plugins>
   </build>

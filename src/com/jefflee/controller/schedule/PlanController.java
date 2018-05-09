@@ -1,6 +1,5 @@
 package com.jefflee.controller.schedule;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.entity.schedule.Plan;
@@ -45,41 +43,9 @@ public class PlanController {
 		return planService.selectById(planId);
 	}
 
-	@RequestMapping(value = "/check/{planId}", method = RequestMethod.GET)
-	public Plan checkById(@PathVariable("planId") Integer planId) {
-		return planService.selectById(planId);
-	}
-
-	@RequestMapping(value = "/look/{courseId}/{scheduleId}", method = RequestMethod.GET)
-	public List<Plan> lookById(@PathVariable("courseId") Integer courseId,
-			@PathVariable("scheduleId") Integer scheduleId) {
-		return planService.getPlanById(courseId, scheduleId);
-	}
-
-	@RequestMapping(value = "/rewrite", method = RequestMethod.POST)
-	public Map<String, String> rewrite(@RequestParam("pidNum") Integer pidNum,
-			@RequestParam("courseId") Integer courseId, @RequestParam("scheduleId") Integer scheduleId) {
-		Map<String, String> result = new HashMap<String, String>();
-		List<Plan> planList = new ArrayList<Plan>();
-		planList = planService.getPlanById(courseId, scheduleId);
-
-		for (Plan plan : planList) {
-			plan.setPeriodNum(pidNum);
-			planService.updateById(plan);
-		}
-
-		return result;
-	}
-
-	@RequestMapping(value = "/change", method = RequestMethod.POST)
-	public Map<String, String> change(@RequestParam("planId") Integer planid,
-			@RequestParam("teacherId") Integer teacherid) {
-		Map<String, String> result = new HashMap<String, String>();
-		Plan plan = new Plan();
-		plan = planService.selectById(planid);
-		plan.setTeacherId(teacherid);
-		planService.updateById(plan);
-		return result;
+	@RequestMapping(value = "/find", method = RequestMethod.POST)
+	public List<Plan> find(@RequestBody Plan plan) {
+		return planService.selectList(plan);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)
@@ -102,6 +68,22 @@ public class PlanController {
 		return result;
 	}
 
+	@RequestMapping(value = "/deleteAll/{scheduleId}", method = RequestMethod.DELETE)
+	public Map<String, String> deleteAll(@PathVariable("scheduleId") Integer scheduleId) {
+		Map<String, String> result = new HashMap<String, String>();
+		planService.deleteByScheduleId(scheduleId);
+		result.put("done", "true");
+		return result;
+	}
+
+	@RequestMapping(value = "/remove", method = RequestMethod.DELETE)
+	public Map<String, String> remove(@RequestBody Plan plan) {
+		Map<String, String> result = new HashMap<String, String>();
+		planService.delete(plan);
+		result.put("success", "true");
+		return result;
+	}
+
 	@RequestMapping(value = "/copy/{srcScheduleId}/{destScheduleId}", method = RequestMethod.POST)
 	public Map<String, String> copy(@PathVariable("srcScheduleId") Integer srcScheduleId,
 			@PathVariable("destScheduleId") Integer destScheduleId) {
@@ -114,5 +96,13 @@ public class PlanController {
 	@RequestMapping(value = "/display/{scheduleId}", method = RequestMethod.GET)
 	public SchedulePlanView display(@PathVariable("scheduleId") Integer scheduleId) {
 		return planService.gnrSchedulePlanView(scheduleId);
+	}
+
+	@RequestMapping(value = "/updatePeriodNum", method = RequestMethod.POST)
+	public Map<String, String> updatePeriodNum(@RequestBody Plan plan) {
+		Map<String, String> result = new HashMap<String, String>();
+		planService.updatePeriodNum(plan);
+		result.put("done", "true");
+		return result;
 	}
 }

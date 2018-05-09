@@ -12,16 +12,23 @@
 
 <body>
   <div class="layui-container" style="margin:30px;">
-    <form class="layui-form" id="gradeTeacher" method="post" style="display:none">
-      <!-- 隐藏年级组ID -->
+    <form class="layui-form" id="plan" method="post" style="display:none">
       <div class="layui-form-item">
-        <input class="layui-input-inline" name="gradeId" id="gradeId" />
+        <input class="layui-input-inline" name="scheduleId" id="scheduleId" />
+        <input class="layui-input-inline" name="courseId" id="courseId" />
+        <input class="layui-input-inline" name="roomId" id="roomId" value="0"/>
+        <input class="layui-input-inline" name="tclassId" id="tclassId" />
         <input class="layui-input-inline" name="teacherId" id="teacherId" />
+        <input class="layui-input-inline" name="periodNum" id="periodNum" />
       </div>
     </form>
     <div class="layui-form">
       <div class="layui-form-item" id="teacherList">
-      </div></div>
+        <div class="layui-input-inline">
+          <input type="checkbox" lay-filter="teacher" name="teacher" lay-skin="primary" value="0" title="无"">
+        </div>
+      </div>
+    </div>
     <div class="layui-input-inline layui-btn-group">
       <button class="layui-btn layui-btn-sm" type="button" onclick="cancel()">确定</button>
     </div>
@@ -39,10 +46,13 @@
     var upload = layui.upload;
     var form = layui.form;
   
-    var gradeId = sessionStorage.getItem('currentGradeId');
+    var scheduleId = sessionStorage.getItem('currentScheduleId');
+    var courseId = sessionStorage.getItem('currentCourseId');
+    var tclassId = sessionStorage.getItem('currentTclassId');
+    var periodNum = sessionStorage.getItem('currentPeriodNum');
   
     $(document).ready(function() {
-      $('#gradeId').attr('value', gradeId);
+      $('#scheduleId').attr('value', scheduleId);
       list();
       fill();
       form.on('checkbox(teacher)', function(data) {
@@ -58,25 +68,35 @@
     });
   
     function list() {
+      $('#courseId').attr('value', courseId);
+      $('#tclassId').attr('value', tclassId);
+      $('#periodNum').attr('value', periodNum);
       $.ajax({
         async: false,
         type: 'GET',
         url: '/teacher/list',
         success: function(teacherList) {
-          $('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
+          $('#teacherList').append($.templates('#tmpl-teacherList').render(teacherList));
         }
       });
     }
   
     function fill() {
+      var plan = {
+          'scheduleId': scheduleId,
+          'courseId': courseId,
+          'tclassId': tclassId
+        };
       $.ajax({
         async: false,
-        url: '/grade_teacher/find/' + gradeId,
-        type: 'GET',
+        url: '/plan/find',
+        type: 'POST',
         dataType: 'json',
-        success: function(gradeTeacherList) {
-          for (var i = 0; i < gradeTeacherList.length; i++) {
-            $('input[name="teacher"][value="' + gradeTeacherList[i].teacherId + '"]').prop('checked', true);
+        contentType: 'application/json',
+        data: JSON.stringify(plan),
+        success: function(planList) {
+          for (var i = 0; i < planList.length; i++) {
+            $('input[name="teacher"][value="' + planList[i].teacherId + '"]').prop('checked', true);
           }
         }
       });
@@ -85,12 +105,13 @@
     function create() {
       $.ajax({
         async: false,
-        url: '/grade_teacher/create',
+        url: '/plan/create',
         type: 'POST',
         dataType: 'json',
-        data: JSON.stringify($('#gradeTeacher').serializeJSON()),
+        data: JSON.stringify($('#plan').serializeJSON()),
         contentType: 'application/json',
         success: function(result) {
+          layer.msg("已选择");
         }
       });
     }
@@ -98,12 +119,13 @@
     function remove() {
       $.ajax({
         async: false,
-        url: '/grade_teacher/remove',
+        url: '/plan/remove',
         type: 'DELETE',
         dataType: 'json',
-        data: JSON.stringify($('#gradeTeacher').serializeJSON()),
+        data: JSON.stringify($('#plan').serializeJSON()),
         contentType: 'application/json',
         success: function(result) {
+          layer.msg("已移除");
         }
       });
     }

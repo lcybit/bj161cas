@@ -90,18 +90,36 @@
     }
   
     function remove(scheduleId) {
-      layer.confirm('确认要删除吗？',
+      layer.confirm('将删除该课表所有相关信息！',
         {
           title: '删除课表信息'
         },
         function(index) {
+          //删除相关Arrangement
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/schedule/delete/' + scheduleId,
+            url: '/arrangement/deleteAll/' + scheduleId,
             success: function() {
-              layer.close(index);
-              list();
+              //删除相关Plan
+              $.ajax({
+                async: false,
+                type: 'DELETE',
+                url: '/plan/deleteAll/' + scheduleId,
+                success: function() {
+                  //删除Schedule
+                  $.ajax({
+                    async: false,
+                    type: 'DELETE',
+                    url: '/schedule/delete/' + scheduleId,
+                    success: function() {
+                      layer.close(index);
+                      layer.msg('删除完毕！')
+                      list();
+                    }
+                  });
+                }
+              });
             }
           });
         });
@@ -126,7 +144,7 @@
         type: 2,
         id: 'modify',
         title: '设置教学计划',
-        content: '/html/schedule/schedule/selectTeacher.html',
+        content: '/html/schedule/schedule/plan.html',
         area: [ '1000px', '600px' ],
         shade: 0.5,
         shadeClose: true,

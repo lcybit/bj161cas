@@ -13,8 +13,6 @@ public interface PlanService {
 
 	Plan selectById(Integer planId);
 
-	List<Plan> getPlanById(Integer courseId, Integer scheduleId);
-
 	Integer updateById(Plan plan);
 
 	Integer deleteById(Integer planId);
@@ -28,5 +26,13 @@ public interface PlanService {
 	SchedulePlanView gnrSchedulePlanView(Integer scheduleId);
 
 	void gnrEmptyPlanList(Integer scheduleId);
+
+	void deleteByScheduleId(Integer scheduleId);
+
+	void delete(Plan plan);
+
+	List<Plan> selectList(Plan plan);
+
+	void updatePeriodNum(Plan plan);
 
 }

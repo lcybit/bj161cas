@@ -59,7 +59,7 @@
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
     <property name="properties">
       <value>
-        mappers=tk.mybatis.mapper.common.Mapper,com.jefflee.util.MyMapper
+        mappers=com.jefflee.util.MyMapper
       </value>
     </property>
   </bean>

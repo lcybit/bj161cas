@@ -39,15 +39,6 @@ public interface PlanMapper extends MyMapper<Plan> {
 			@Result(column = "period_num", property = "periodNum") })
 	public List<Plan> selectDetailListByScheduleId(Integer scheduleId);
 
-	@Select("select * from schd_plan where course_id = #{courseId} and schedule_id = #{scheduleId}")
-	@Results({ @Result(id = true, column = "plan_id", property = "planId"),
-			@Result(column = "schedule_id", property = "scheduleId"),
-			@Result(column = "course_id", property = "courseId"), @Result(column = "room_id", property = "roomId"),
-			@Result(column = "tclass_id", property = "tclassId"),
-			@Result(column = "teacher_id", property = "teacherId"),
-			@Result(column = "period_num", property = "periodNum") })
-	public List<Plan> selectListByCourseIdAndScheduleId(@Param("courseId") Integer courseId, @Param("scheduleId") Integer scheduleId);
-
 	@Select("SELECT * FROM schd_plan WHERE course_id = #{courseId} AND schedule_id = #{scheduleId} GROUP BY teacher_id")
 	@Results({ @Result(id = true, column = "plan_id", property = "planId") })
 	public List<Plan> selectPlanListByScheduleIdAndCourseIdGradeByTeacherId(@Param("courseId") Integer courseId,

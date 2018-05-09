@@ -83,6 +83,18 @@ public class PlanServiceImpl implements PlanService {
 		}
 	}
 
+	@Override
+	public void delete(Plan plan) {
+		planMapper.delete(plan);
+	}
+
+	@Override
+	public void deleteByScheduleId(Integer scheduleId) {
+		Plan plan = new Plan();
+		plan.setScheduleId(scheduleId);
+		planMapper.delete(plan);
+	}
+
 	// TODO
 	@Override
 	public List<Plan> selectListByScheduleId(Integer scheduleId) {
@@ -91,8 +103,9 @@ public class PlanServiceImpl implements PlanService {
 		return planMapper.select(plan);
 	}
 
-	public List<Plan> getPlanById(Integer courseId, Integer scheduleId) {
-		return planMapper.selectListByCourseIdAndScheduleId(courseId, scheduleId);
+	@Override
+	public List<Plan> selectList(Plan plan) {
+		return planMapper.select(plan);
 	}
 
 	@Override
@@ -103,30 +116,51 @@ public class PlanServiceImpl implements PlanService {
 	@Override
 	public void copyListByScheduleId(Integer srcScheduleId, Integer destScheduleId) {
 		List<Plan> srcPlanList = selectDetailListByScheduleId(srcScheduleId);
-		List<Plan> destPlanList = selectDetailListByScheduleId(destScheduleId);
+		// 清空原Plan列表
+		deleteByScheduleId(destScheduleId);
+
 		Grade destGrade = scheduleService.selectById(destScheduleId).getGrade();
-		List<Teacher> destTeacherList = teacherService.selectListByGradeId(destGrade.getGradeId());
+		Integer destGradeId = destGrade.getGradeId();
+
+		List<Teacher> destTeacherList = teacherService.selectListByGradeId(destGradeId);
 		Map<Integer, Teacher> destTeacherMap = new HashMap<Integer, Teacher>();
+		Teacher emptyTeacher = new Teacher();
+		emptyTeacher.setTeacherId(0);
+		destTeacherMap.put(0, emptyTeacher);
 		for (Teacher teacher : destTeacherList) {
 			destTeacherMap.put(teacher.getTeacherId(), teacher);
 		}
-		for (Plan destPlan : destPlanList) {
-			Integer destCourseId = destPlan.getCourseId();
-			Tclass destTclass = destPlan.getTclass();
-			String destTclassNo = destTclass == null ? "0" : destTclass.getTclassNo();
-			for (Plan srcPlan : srcPlanList) {
-				Integer srcCourseId = srcPlan.getCourseId();
-				Tclass srcTclass = srcPlan.getTclass();
-				String srcTclassNo = srcTclass == null ? "0" : srcTclass.getTclassNo();
-				Integer srcTeacherId = srcPlan.getTeacherId();
-				if (destCourseId.equals(srcCourseId) && destTclassNo.equals(srcTclassNo)) {
-					if (destTeacherMap.containsKey(srcTeacherId)) {
-						destPlan.setTeacherId(srcTeacherId);
-						planMapper.updateByPrimaryKeySelective(destPlan);
-						srcPlanList.remove(srcPlan);
-						break;
-					}
-				}
+
+		List<Course> destCourseList = courseService.selectListByGradeId(destGradeId);
+		Map<Integer, Course> destCourseMap = new HashMap<Integer, Course>();
+		for (Course course : destCourseList) {
+			destCourseMap.put(course.getCourseId(), course);
+		}
+
+		List<Tclass> destTclassList = tclassService.selectListByGrade(destGrade);
+		Map<String, Tclass> destTclassMap = new HashMap<String, Tclass>();
+		Tclass emptyTclass = new Tclass();
+		emptyTclass.setTclassId(0);
+		destTclassMap.put("0", emptyTclass);
+		for (Tclass tclass : destTclassList) {
+			destTclassMap.put(tclass.getTclassNo(), tclass);
+		}
+
+		for (Plan srcPlan : srcPlanList) {
+			Integer srcCourseId = srcPlan.getCourseId();
+			Integer srcTeacherId = srcPlan.getTeacherId();
+			Tclass srcTclass = srcPlan.getTclass();
+			String srcTclassNo = srcTclass == null ? "0" : srcTclass.getTclassNo();
+			if (destCourseMap.containsKey(srcCourseId) && destTeacherMap.containsKey(srcTeacherId)
+					&& destTclassMap.containsKey(srcTclassNo)) {
+				Plan destPlan = new Plan();
+				destPlan.setScheduleId(destScheduleId);
+				destPlan.setCourseId(srcCourseId);
+				destPlan.setTeacherId(srcTeacherId);
+				destPlan.setTclassId(destTclassMap.get(srcTclassNo).getTclassId());
+				destPlan.setRoomId(srcPlan.getRoomId());
+				destPlan.setPeriodNum(srcPlan.getPeriodNum());
+				planMapper.insert(destPlan);
 			}
 		}
 	}
@@ -135,7 +169,7 @@ public class PlanServiceImpl implements PlanService {
 	public void gnrEmptyPlanList(Integer scheduleId) {
 		Schedule schedule = scheduleService.selectById(scheduleId);
 		Grade grade = schedule.getGrade();
-		List<Tclass> tclassList = tclassService.selectListByYearAndLevel(grade.getYear(), grade.getLevel());
+		List<Tclass> tclassList = tclassService.selectListByGrade(grade);
 		List<Course> courseList = courseService.selectListByGradeId(grade.getGradeId());
 		List<Plan> planList = new ArrayList<Plan>();
 		for (Course course : courseList) {
@@ -169,7 +203,7 @@ public class PlanServiceImpl implements PlanService {
 		schedulePlanView.setCoursePlanViewMap(new LinkedHashMap<Integer, CoursePlanView>());
 
 		Grade grade = schedule.getGrade();
-		List<Tclass> tclassList = tclassService.selectListByYearAndLevel(grade.getYear(), grade.getLevel());
+		List<Tclass> tclassList = tclassService.selectListByGrade(grade);
 		schedulePlanView.setTclassList(tclassList);
 
 		Map<Integer, CoursePlanView> coursePlanViewMap = schedulePlanView.getCoursePlanViewMap();
@@ -189,8 +223,7 @@ public class PlanServiceImpl implements PlanService {
 				if (coursePlanView.getPeriodNum() < periodNum) {
 					coursePlanView.setPeriodNum(periodNum);
 				}
-				String coursePlanViewId = "c-" + courseId + "-s-" + tclassId;
-				coursePlanView.getPaneMap().get(coursePlanViewId).add(plan);
+				coursePlanView.getPaneMap().get(tclassId).add(plan);
 			}
 		}
 
@@ -212,17 +245,28 @@ public class PlanServiceImpl implements PlanService {
 		return coursePlanView;
 	}
 
-	private Map<String, List<Plan>> gnrPaneMap(Integer courseId, List<Tclass> tclassList) {
-		Map<String, List<Plan>> paneMap = new LinkedHashMap<String, List<Plan>>();
+	private Map<Integer, List<Plan>> gnrPaneMap(Integer courseId, List<Tclass> tclassList) {
+		Map<Integer, List<Plan>> paneMap = new LinkedHashMap<Integer, List<Plan>>();
 		if (tclassList == null) {
-			paneMap.put("c-" + courseId + "-s-0", new ArrayList<Plan>());
+			paneMap.put(0, new ArrayList<Plan>());
 		} else {
 			for (Tclass tclass : tclassList) {
 				Integer tclassId = tclass.getTclassId();
-				paneMap.put("c-" + courseId + "-s-" + tclassId, new ArrayList<Plan>());
+				paneMap.put(tclassId, new ArrayList<Plan>());
 			}
 		}
 		return paneMap;
+	}
+
+	@Override
+	public void updatePeriodNum(Plan plan) {
+		Integer periodNum = plan.getPeriodNum();
+		plan.setPeriodNum(null);
+		List<Plan> planList = selectList(plan);
+		for (Plan queryPlan : planList) {
+			queryPlan.setPeriodNum(periodNum);
+			planMapper.updateByPrimaryKeySelective(queryPlan);
+		}
 	}
 
 }

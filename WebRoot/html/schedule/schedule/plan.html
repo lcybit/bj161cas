@@ -14,42 +14,51 @@
   <div class="layui-container" style="width:100%;">
     <div class="layui-row" id="schedulePlanView"></div>
     <div class="layui-form-item">
-      <div class="layui-input-inline layui-button-group">
-        <button class="layui-btn layui-btn-sm" type="button" onclick="goCopy()">复制</button>
+      <div class="layui-input-inline layui-btn-group">
+        <button class="layui-btn layui-btn-sm layui-bg-blue" type="button" onclick="goCopy()">复制</button>
         <button class="layui-btn layui-btn-sm" type="button" onclick="cancel()">确定</button>
       </div>
     </div>
   </div>
   <script id="tmpl-schedulePlanView" type="text/x-jsrender">
-    <div class="layui-col-md12" id="tclassSchedule" style="overflow-x:hidden; overflow-y:auto;">
-      <table class="layui-table" id="{{:key}}" lay-size="sm">      
+    <div class="layui-col-md12" id="schedulePlan" style="overflow-x:hidden; overflow-y:auto;">
+      <table class="layui-table" lay-size="sm">      
         <thead>        
           <tr>
             <th></th>
-            <th>课时</th>
+            <th>课时数</th>
             {{for tclassList tmpl="#tmpl-tclassListView" /}}      
           </tr>
         </thead>
         <tbody>
-	      {{props coursePlanViewMap tmpl="#tmpl-coursePlanView" /}}
+	      {{props coursePlanViewMap tmpl="#tmpl-coursePlanView" ~tclassNum = tclassList.length/}}
         </tbody>
       </table>     
     </div>
   </script>
   <script id="tmpl-tclassListView" type="text/x-jsrender">
-    <th id="{{:tclassId}}">{{:name}}</th>  
+    <th id="{{:tclassId}}" style="cursor:pointer">{{:name}}</th>  
   </script>
   <script id="tmpl-coursePlanView" type="text/x-jsrender">   
     {{for prop}}
     <tr>    
       <td>{{:course.name}}</td> 
-      <td onclick="clickSelectPidNum('{{:course.courseId}}')">{{:periodNum}}</td> 
-      {{props paneMap tmpl="#tmpl-paneMapView" /}}
+      <td onclick="goPeriodNum({courseId:{{:course.courseId}},periodNum:{{:periodNum}}})" style="cursor:pointer">{{:periodNum}}</td> 
+      {{props paneMap tmpl="#tmpl-paneMapView" ~courseId = course.courseId ~courseType = course.type ~periodNum = periodNum/}}
     </tr>   
     {{/for }} 
   </script>
   <script id="tmpl-paneMapView" type="text/x-jsrender">
-    <td id="{{:key}}">{{for prop}}{{if teacher!=null}}<p>{{:teacher.name}}</p>{{/if}}{{/for}}</td>         
+    <td onclick="goTeacher({
+          courseId:{{:~courseId}},
+          tclassId:{{:key}},
+          periodNum:{{:~periodNum}}
+        })"
+        style="cursor:pointer"
+        {{if ~courseType == 1}}
+          colspan="{{:~tclassNum}}"
+        {{/if}}>
+      {{for prop}}{{if teacherId != 0}}{{:teacher.name}} {{else}}无  {{/if}}{{/for}}</td>         
   </script>
 
   <script>
@@ -71,38 +80,48 @@
         type: 'GET',
         success: function(schedulePlanView) {
           $('#schedulePlanView').html($.templates('#tmpl-schedulePlanView').render(schedulePlanView));
+          $('th,td').css('text-align', 'center');
         }
       });
     }
   
-    function clickSelectPidNum(courseId) {
-      sessionStorage.setItem('currentCourseId', courseId);
+    function goPeriodNum(plan) {
+      sessionStorage.setItem('currentCourseId', plan.courseId);
+      sessionStorage.setItem('currentPeriodNum', plan.periodNum);
       layer.open({
         type: 2,
-        id: 'clickSelectPidNum',
+        id: 'periodNum',
         title: '选择课时数',
-        content: '/html/schedule/schedule/showPidNum.html',
-        area: [ '400px', '250px' ],
+        content: '/html/schedule/schedule/periodNum.html',
+        area: [ '600px', '300px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
+        end: function() {
+          display();
+        }
       });
     }
   
-    function clickSelectTeacher(planId) {
-      sessionStorage.setItem('currentPlanId', planId);
+    function goTeacher(plan) {
+      sessionStorage.setItem('currentCourseId', plan.courseId);
+      sessionStorage.setItem('currentTclassId', plan.tclassId);
+      sessionStorage.setItem('currentPeriodNum', plan.periodNum);
       layer.open({
         type: 2,
-        id: 'clickSelectTeacher',
+        id: 'teacher',
         title: '选择教师',
-        content: '/html/schedule/schedule/showTeacherList.html',
-        area: [ '800px', '400px' ],
+        content: '/html/schedule/schedule/teacher.html',
+        area: [ '800px', '500px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
+        end: function() {
+          display();
+        }
       });
     }
-    
+  
     function goCopy() {
       sessionStorage.setItem('copyingObject', 'plan');
       layer.open({

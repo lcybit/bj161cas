@@ -64,6 +64,14 @@ public class ArrangementController {
 		return result;
 	}
 
+	@RequestMapping(value = "/deleteAll/{scheduleId}", method = RequestMethod.DELETE)
+	public Map<String, String> deleteAll(@PathVariable("scheduleId") Integer scheduleId) {
+		Map<String, String> result = new HashMap<String, String>();
+		arrangementService.deleteByScheduleId(scheduleId);
+		result.put("done", "true");
+		return result;
+	}
+
 	@RequestMapping(value = "/doAdjust/{adjustmentId}", method = RequestMethod.POST)
 	public Map<String, String> doAdjust(@PathVariable Integer adjustmentId) {
 		Map<String, String> result = new HashMap<String, String>();

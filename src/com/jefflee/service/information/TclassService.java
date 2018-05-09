@@ -3,6 +3,7 @@ package com.jefflee.service.information;
 import java.util.List;
 
 import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.schedule.Grade;
 
 public interface TclassService {
 
@@ -10,7 +11,7 @@ public interface TclassService {
 
 	List<Tclass> selectList();
 
-	List<Tclass> selectListByYearAndLevel(Integer year, Integer level);
+	List<Tclass> selectListByGrade(Grade grade);
 
 	Tclass selectById(Integer tclassId);
 

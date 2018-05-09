@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.jefflee.entity.information.Tclass;
+import com.jefflee.entity.schedule.Grade;
 import com.jefflee.mapper.information.TclassMapper;
 import com.jefflee.service.information.TclassService;
 
@@ -31,10 +32,10 @@ public class TclassServiceImpl implements TclassService {
 	}
 
 	@Override
-	public List<Tclass> selectListByYearAndLevel(Integer year, Integer level) {
+	public List<Tclass> selectListByGrade(Grade grade) {
 		Tclass tclass = new Tclass();
-		tclass.setYear(year);
-		tclass.setLevel(level);
+		tclass.setYear(grade.getYear());
+		tclass.setLevel(grade.getLevel());
 		List<Tclass> tclassList = tclassMapper.select(tclass);
 		return tclassList;
 	}
