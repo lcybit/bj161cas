@@ -12,29 +12,26 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-   <div class="layui-btn-group">
+    <div class="layui-btn-group">
       <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
         <i class="layui-icon">&#xe65c;</i>返回
       </button>
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
-      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goTeacherHtml()">
+      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goTeacherHtml()">
         <i class="layui-icon"> &#xe619;</i>上一步
       </button>
-      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goPeriodHtml()">
+      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goPeriodHtml()">
         <i class="layui-icon"> &#xe61a;</i>下一步
       </button>
-     
     </div>
     <table class="layui-table">
       <thead>
         <tr>
-          <th>课程ID</th><!-- tr:行    td:列    th:标题   -->
-          <th>课程编号</th>
-          <th>课程名称</th>
-          <th>课程简称</th>
-          <th>课程类型</th>
+          <th>名称</th>
+          <th>简称</th>
+          <th>类型</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -45,20 +42,20 @@
   </div>
   <script id="tmpl-courseList" type="text/x-jsrender">
     <tr>
-      <td>{{:courseId}}</td>
-      <td>{{:courseNo}}</td>
       <td>{{:name}}</td>
       <td>{{:shortName}}</td>
       <td>{{:type}}</td>
       <td>
-        <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:courseId}}')">修改</button>
-        <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:courseId}}')">删除</button>
+        <div class="layui-btn-group">
+          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:courseId}}')">修改</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:courseId}}')">删除</button>
+        </div>
       </td>
     </tr>
   </script>
   <script>
     var laypage = layui.laypage;
-    
+  
     $(document).ready(function() {
       list();
     })
@@ -67,13 +64,13 @@
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
-          type : 2,
-          id : 'create',
-          title : '新增课程信息',
-          content : '/html/information/course/create.html',
-          area : [ '700px', '500px' ],
-          shade : 0.5,
-          closeBtn : false
+          type: 2,
+          id: 'create',
+          title: '新增课程信息',
+          content: '/html/information/course/create.html',
+          area: [ '700px', '500px' ],
+          shade: 0.5,
+          closeBtn: false
         });
       });
     }
@@ -83,79 +80,79 @@
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
-          type : 2,
-          id : 'modify',
-          title : '修改课程信息',
-          content : '/html/information/course/modify.html',
-          area : [ '700px', '500px' ],
-          shade : 0.5,
-          closeBtn : false,
+          type: 2,
+          id: 'modify',
+          title: '修改课程信息',
+          content: '/html/information/course/modify.html',
+          area: [ '700px', '500px' ],
+          shade: 0.5,
+          closeBtn: false,
         });
       });
     }
-
-    function goTeacherHtml(){
-      jump('html/information/teacher/list.html'); 
+  
+    function goTeacherHtml() {
+      jump('html/information/teacher/list.html');
     }
-    function goPeriodHtml(){
-      jump('html/information/period/list.html');   
+    function goPeriodHtml() {
+      jump('html/information/period/list.html');
     }
-    
+  
     function remove(courseId) {
       layer.confirm('确认要删除吗？',
-        {title : '删除课程信息'},
+        {
+          title: '删除课程信息'
+        },
         function(index) {
           $.ajax({
-            async : false,
-            type : 'DELETE',
-            url : '/course/delete/' + courseId,
-            success : function() {
+            async: false,
+            type: 'DELETE',
+            url: '/course/delete/' + courseId,
+            success: function() {
               layer.close(index);
               list();
             }
           });
         });
     }
-
+  
     function list() {
       $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/course/list',
-        success : function(courseList) {
+        async: false,
+        type: 'GET',
+        url: '/course/list',
+        success: function(courseList) {
           //$('#courseList').html($.templates('#tmpl-courseList').render(courseList));
           //测试 显示courseList
-          for(var i=0;i<courseList.length;i++)
-          {
-             console.log(courseList[i]);
+          for (var i = 0; i < courseList.length; i++) {
+            console.log(courseList[i]);
           }
           loadData(courseList);
         }
       });
     }
-    
-    function loadData(data){ 
-       laypage.render({
-         elem:'page'
-         ,count:Math.ceil(data.length)
-         ,limit:10
-         ,jump: function(obj,first){
-            //console.log(data.length);
-            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
-            console.log(obj.limit);//得到每页显示的条数 10
-            var start=(obj.curr-1)*obj.limit;//获得数据 的数组起始下标
-            var end=obj.curr*obj.limit-1;//获得数据 的数组终点下标
-            var arr=[];//存放该页展示的数据 
-            for(var i=start;i<=end&&i<data.length;i++)
-            {
-                arr.push(data[i]);
-            }
-            document.getElementById('courseList').innerHTML = $.templates('#tmpl-courseList').render(arr);
-         
-         }
-       });   
+  
+    function loadData(data) {
+      laypage.render({
+        elem: 'page',
+        count: Math.ceil(data.length),
+        limit: 10,
+        jump: function(obj, first) {
+          //console.log(data.length);
+          console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
+          console.log(obj.limit); //得到每页显示的条数 10
+          var start = (obj.curr - 1) * obj.limit; //获得数据 的数组起始下标
+          var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
+          var arr = []; //存放该页展示的数据 
+          for (var i = start; i <= end && i < data.length; i++) {
+            arr.push(data[i]);
+          }
+          document.getElementById('courseList').innerHTML = $.templates('#tmpl-courseList').render(arr);
+  
+        }
+      });
     }
-    
+  
     function goBack() {
       jump('html/information/course/list.html');
     }

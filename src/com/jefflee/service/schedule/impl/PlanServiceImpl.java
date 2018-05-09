@@ -139,7 +139,7 @@ public class PlanServiceImpl implements PlanService {
 		List<Course> courseList = courseService.selectListByGradeId(grade.getGradeId());
 		List<Plan> planList = new ArrayList<Plan>();
 		for (Course course : courseList) {
-			// TODO type
+			// TODO type 23 24 25
 			Integer courseId = course.getCourseId();
 			if (courseId != 23 && courseId != 24 && courseId != 25) {
 				for (Tclass tclass : tclassList) {
@@ -149,12 +149,7 @@ public class PlanServiceImpl implements PlanService {
 					plan.setCourseId(courseId);
 					plan.setTclassId(tclassId);
 					plan.setTeacherId(0);
-					// TODO type
-					if (courseId == 10) {
-						plan.setRoomId(9);
-					} else {
-						plan.setRoomId(tclassId);
-					}
+					plan.setRoomId(0);
 					plan.setPeriodNum(0);
 					planList.add(plan);
 				}
@@ -207,7 +202,7 @@ public class PlanServiceImpl implements PlanService {
 		CoursePlanView coursePlanView = new CoursePlanView();
 		coursePlanView.setCourse(course);
 		Integer courseId = course.getCourseId();
-		// TODO type
+		// TODO type 23 24 25
 		if (courseId != 23 && courseId != 24 && courseId != 25) {
 			coursePlanView.setPaneMap(gnrPaneMap(courseId, tclassList));
 		} else {

@@ -198,7 +198,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 				String teacherWeekViewId = "t-" + teacher.getTeacherId() + "-c-" + courseId;
 				WeekView teacherWeekView = null;
 				// 若不存在该教师课程课表，新建之
-				// TODO type !11&!23&!24&!25
+				// TODO type 11 23 24 25
 				if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
 					if (!teacherWeekViewMap.containsKey(teacherWeekViewId)) {
 						teacherWeekView = gnrWeekView(schedule, periodList);
@@ -227,7 +227,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 				String tclassWeekViewId = "s-" + tclassId;
 				String tclassPlanViewId = "c-" + courseId;
 				WeekView tclassWeekView = null;
-				// TODO type !23&!24&!25
+				// TODO type 23 24 25
 				// if (course.getType() == 0) {
 				if (courseId != 23 && courseId != 24 && courseId != 25) {
 					tclassWeekView = tclassWeekViewMap.get(tclassWeekViewId);
@@ -242,7 +242,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 				String teacherWeekViewId = "t-" + teacherId;
 				String teacherPlanViewId = "";
 				WeekView teacherWeekView = null;
-				// TODO type !11&!23&!24&!25
+				// TODO type 11 23 24 25
 				// if (course.getType() == 0) {
 				if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
 					teacherWeekViewId = teacherWeekViewId + "-c-" + courseId;
@@ -277,14 +277,14 @@ public class ArrangementServiceImpl implements ArrangementService {
 					WeekView tclassWeekView = null;
 					PeriodView tclassPeriodView = null;
 					PlanView tclassPlanView = null;
-					// TODO type !23&!24&!25
+					// TODO type 23 24 25
 					// if (course.getType() == 0) {
 					if (courseId != 23 && courseId != 24 && courseId != 25) {
 						tclassWeekView = tclassWeekViewMap.get(tclassWeekViewId);
 						tclassPeriodView = tclassWeekView.getDayViewList().get(period.getDayOfWeek() - 1)
 								.getPeriodViewList().get(period.getOrderOfDay() - 1);
 
-						// TODO type
+						// TODO type 19 20
 						if (tclassPeriodView.getArrangementList().isEmpty() || (courseId != 19 && courseId != 20)) {
 							if (!tclassPeriodView.getArrangementList().isEmpty()) {
 								conflictingMap.put(tclassPeriodView.getPeriodViewId(), 0);
@@ -304,7 +304,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 					WeekView teacherWeekView = null;
 					PeriodView teacherPeriodView = null;
 					PlanView teacherPlanView = null;
-					// TODO type !11&!23&!24&!25
+					// TODO type 11 23 24 25
 					// if (course.getType() == 0) {
 					if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
 						teacherWeekViewId = teacherWeekViewId + "-c-" + courseId;
@@ -422,6 +422,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 			dayName = "日";
 			break;
 		default:
+			dayName = "";
 			break;
 		}
 		dayView.setDayName(dayName);
@@ -503,7 +504,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 		while (!unselectedArrangementList.isEmpty()) {
 			Arrangement selectedArrangement = ListUtil.randomlyChoose(unselectedArrangementList);
 			courseId = selectedArrangement.getCourseId();
-			// TODO type
+			// TODO type 23 24 25
 			if (courseId == 23 || courseId == 24 || courseId == 25) {
 				selectedArrangement.setArranged(-1);
 				unselectedArrangementList.remove(selectedArrangement);
@@ -669,7 +670,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 		List<Arrangement> conditionArrangementList = new ArrayList<Arrangement>();
 
 		Integer courseId = arrangement.getCourseId();
-		// TODO type
+		// TODO type 23 24
 		if (courseId == 23 || courseId == 24) {
 			conditionArrangementList = getSameGradeArrangementList(arrangementList, planList, arrangement);
 		} else {
@@ -770,7 +771,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 		List<Arrangement> conditionArrangementList = new ArrayList<Arrangement>();
 
 		Integer courseId = arrangement.getCourseId();
-		// TODO type
+		// TODO type 23 24
 		if (courseId == 23 || courseId == 24) {
 			conditionArrangementList = getSameGradeArrangementList(arrangementList, planList, arrangement);
 		} else {
@@ -814,13 +815,14 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return teacherIdSet;
 	}
 
+	// 获取该教师主要负责课程
 	private Integer getMainCourseIdByTeacherId(List<Plan> planList, Integer teacherId) {
 		Plan teacherPlan = new Plan();
 		teacherPlan.setTeacherId(teacherId);
 		List<Plan> teacherPlanList = ListUtils.select(planList, new PlanPredicate(teacherPlan));
 		for (Plan plan : teacherPlanList) {
 			Integer courseId = plan.getCourseId();
-			// TODO type
+			// TODO type 16 17 18 19 20 23 24
 			if (courseId != 16 && courseId != 17 && courseId != 18 && courseId != 19 && courseId != 20 && courseId != 23
 					&& courseId != 24) {
 				return courseId;
@@ -925,12 +927,6 @@ public class ArrangementServiceImpl implements ArrangementService {
 	public void copyListByScheduleId(Integer srcScheduleId, Integer destScheduleId) {
 		List<Arrangement> srcArrangementList = arrangementMapper.selectDetailListByScheduleId(srcScheduleId);
 		List<Arrangement> destArrangementList = cache.getScheduleArrangementList();
-		Grade destGrade = scheduleService.selectById(destScheduleId).getGrade();
-		List<Teacher> destTeacherList = teacherService.selectListByGradeId(destGrade.getGradeId());
-		Map<Integer, Teacher> destTeacherMap = new HashMap<Integer, Teacher>();
-		for (Teacher teacher : destTeacherList) {
-			destTeacherMap.put(teacher.getTeacherId(), teacher);
-		}
 		for (Arrangement destArrangement : destArrangementList) {
 			Integer destCourseId = destArrangement.getCourseId();
 			Tclass destTclass = destArrangement.getTclass();
@@ -957,7 +953,6 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public void exportExcelView(HttpServletResponse response, Integer scheduleId) throws Exception {
-		// TODO 周几用汉字表示
 		ScheduleView scheduleView = gnrScheduleView(scheduleId);
 		Schedule schedule = scheduleView.getSchedule();
 		List<WeekView> tclassWeekViewList = new ArrayList<WeekView>(scheduleView.getTclassWeekViewMap().values());
@@ -1218,7 +1213,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 						periodArrangementList = teacherWeekView.getDayViewList().get(rowIdx - 3).getPeriodViewList()
 								.get(colIdx - 1).getArrangementList();
 						if (!periodArrangementList.isEmpty()) {
-							// TODO type
+							// TODO type 11 23 24 25
 							Integer courseId = periodArrangementList.get(0).getCourse().getCourseId();
 							if (courseId == 11 || courseId == 23 || courseId == 24 || courseId == 25) {
 								teacherCell.setCellValue(periodArrangementList.get(0).getCourse().getShortName());

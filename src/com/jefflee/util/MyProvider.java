@@ -14,7 +14,6 @@ public class MyProvider extends MapperTemplate {
 
 	public MyProvider(Class<?> mapperClass, MapperHelper mapperHelper) {
 		super(mapperClass, mapperHelper);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

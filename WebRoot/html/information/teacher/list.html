@@ -13,25 +13,22 @@
 
 <body>
   <div class="layui-container" style="width:100%;">
-   <div class="layui-btn-group">
+    <div class="layui-btn-group">
       <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
         <i class="layui-icon">&#xe65c;</i>返回
       </button>
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
-     
-      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCourseHtml()">
+      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goCourseHtml()">
         <i class="layui-icon"> &#xe61a;</i>下一步
       </button>
-    </div> 
+    </div>
     <table class="layui-table" id="test">
       <thead>
         <tr>
-          <th>教师ID</th>
-          <th>教师工号</th>
-          <th>教师姓名</th>
-          <th>教师类型</th>
+          <th>工号</th>
+          <th>姓名</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -42,17 +39,17 @@
   </div>
   <script id="tmpl-teacherList" type="text/x-jsrender">
     <tr>
-      <td>{{:teacherId}}</td>
       <td>{{:teacherNo}}</td>
       <td>{{:name}}</td>
-      <td>{{:type}}</td>
       <td>
-        <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:teacherId}}')">修改</button>
-        <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:teacherId}}')">删除</button>
+        <div class="layui-btn-group">
+          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:teacherId}}')">修改</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:teacherId}}')">删除</button>
+        </div>
       </td>
     </tr>
   </script>
-  
+
   <script>
     var laypage = layui.laypage;
     $(document).ready(function() {
@@ -63,13 +60,13 @@
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
-          type : 2,
-          id : 'create',
-          title : '新增教师信息',
-          content : '/html/information/teacher/create.html',
-          area : [ '700px', '500px' ],
-          shade : 0.5,
-          closeBtn : false
+          type: 2,
+          id: 'create',
+          title: '新增教师信息',
+          content: '/html/information/teacher/create.html',
+          area: [ '700px', '500px' ],
+          shade: 0.5,
+          closeBtn: false
         });
       });
     }
@@ -79,73 +76,74 @@
       layui.use('layer', function() {
         var layer = layui.layer;
         layer.open({
-          type : 2,
-          id : 'modify',
-          title : '修改教师信息',
-          content : '/html/information/teacher/modify.html',
-          area : [ '700px', '500px' ],
-          shade : 0.5,
-          closeBtn : false,
+          type: 2,
+          id: 'modify',
+          title: '修改教师信息',
+          content: '/html/information/teacher/modify.html',
+          area: [ '700px', '500px' ],
+          shade: 0.5,
+          closeBtn: false,
         });
       });
     }
-
-    function goCourseHtml(){
-      jump('html/information/course/list.html');   
+  
+    function goCourseHtml() {
+      jump('html/information/course/list.html');
     }
-    
+  
     function remove(teacherId) {
       layer.confirm('确认要删除吗？',
-        {title : '删除教师信息'},
+        {
+          title: '删除教师信息'
+        },
         function(index) {
           $.ajax({
-            async : false,
-            type : 'DELETE',
-            url : '/teacher/delete/' + teacherId,
-            success : function() {
+            async: false,
+            type: 'DELETE',
+            url: '/teacher/delete/' + teacherId,
+            success: function() {
               layer.close(index);
               list();
             }
           });
         });
     }
-
+  
     function list() {
       $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/teacher/list',
+        async: false,
+        type: 'GET',
+        url: '/teacher/list',
         dataType: 'json',
-        success : function(teacherList) {
+        success: function(teacherList) {
           //$('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
           //var loaddata=jQuery.parseJSON(teacherList);//将后台获取的json对象转化成数组
           //loadData(loaddata);
           loadData(teacherList);
-       
+  
         }
       });
     }
-    
-    function loadData(data){ 
-       laypage.render({
-         elem:'page'
-         ,count:Math.ceil(data.length)
-         ,limit:10
-         ,jump: function(obj,first){
-            //console.log(data.length);
-            console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
-            console.log(obj.limit);//得到每页显示的条数 10
-            var start=(obj.curr-1)*obj.limit;//获得数据 的数组起始下标
-            var end=obj.curr*obj.limit-1;//获得数据 的数组终点下标
-            var arr=[];//存放该页展示的数据 
-            for(var i=start;i<=end&&i<data.length;i++)
-            {
-                arr.push(data[i]);
-            }
-            document.getElementById('teacherList').innerHTML = $.templates('#tmpl-teacherList').render(arr);
-         
-         }
-       });   
+  
+    function loadData(data) {
+      laypage.render({
+        elem: 'page',
+        count: Math.ceil(data.length),
+        limit: 10,
+        jump: function(obj, first) {
+          //console.log(data.length);
+          console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
+          console.log(obj.limit); //得到每页显示的条数 10
+          var start = (obj.curr - 1) * obj.limit; //获得数据 的数组起始下标
+          var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
+          var arr = []; //存放该页展示的数据 
+          for (var i = start; i <= end && i < data.length; i++) {
+            arr.push(data[i]);
+          }
+          document.getElementById('teacherList').innerHTML = $.templates('#tmpl-teacherList').render(arr);
+  
+        }
+      });
     }
   
     function goBack() {

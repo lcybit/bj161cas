@@ -20,7 +20,6 @@ public class ArrangementPredicate implements Predicate<Arrangement> {
 		Integer arrangementId1 = this.arrangement.getArrangementId();
 		Integer periodId1 = this.arrangement.getPeriodId();
 		Integer courseId1 = this.arrangement.getCourseId();
-		Integer roomId1 = this.arrangement.getRoomId();
 		Integer tclassId1 = this.arrangement.getTclassId();
 		Integer teacherId1 = this.arrangement.getTeacherId();
 		Integer arranged1 = this.arrangement.getArranged();
@@ -29,7 +28,6 @@ public class ArrangementPredicate implements Predicate<Arrangement> {
 		Integer arrangementId2 = arrangement.getArrangementId();
 		Integer periodId2 = arrangement.getPeriodId();
 		Integer courseId2 = arrangement.getCourseId();
-		Integer roomId2 = arrangement.getRoomId();
 		Integer tclassId2 = arrangement.getTclassId();
 		Integer teacherId2 = arrangement.getTeacherId();
 		Integer arranged2 = arrangement.getArranged();
@@ -42,9 +40,6 @@ public class ArrangementPredicate implements Predicate<Arrangement> {
 			return false;
 		}
 		if (courseId1 != null && !Objects.equals(courseId1, courseId2)) {
-			return false;
-		}
-		if (roomId1 != null && !Objects.equals(roomId1, roomId2)) {
 			return false;
 		}
 		if (tclassId1 != null && !Objects.equals(tclassId1, tclassId2)) {
