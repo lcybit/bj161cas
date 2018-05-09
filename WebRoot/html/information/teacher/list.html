@@ -20,6 +20,9 @@
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
+      <button class="layui-btn layui-bg-green layui-btn-sm" id="importExcel">
+        <i class="layui-icon">&#xe654;</i>导入
+      </button>
       <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goCourseHtml()">
         <i class="layui-icon"> &#xe61a;</i>下一步
       </button>
@@ -52,8 +55,20 @@
 
   <script>
     var laypage = layui.laypage;
+    var upload = layui.upload;
+    
     $(document).ready(function() {
       list();
+      upload.render({
+        elem: '#importExcel',
+        url: '/teacher/import',
+        accept: 'file',
+        acceptMime: '.xls,.xlsx',
+        exts: 'xls|xlsx',
+        done: function(result) {
+          layer.msg('导入成功！', {icon: 1});
+        }
+      });
     })
   
     function goCreate() {
@@ -70,7 +85,7 @@
         });
       });
     }
-  
+
     function goModify(teacherId) {
       sessionStorage.setItem('currentTeacherId', teacherId);
       layui.use('layer', function() {

@@ -1,6 +1,9 @@
 package com.jefflee.service.information;
 
 import java.util.List;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jefflee.entity.information.Teacher;
 
@@ -17,5 +20,7 @@ public interface TeacherService {
 	Integer deleteById(Integer teacherId);
 
 	List<Teacher> selectListByGradeId(Integer scheduleId);
+
+	Map<String, Object> importExcel(MultipartFile file) throws Exception;
 
 }

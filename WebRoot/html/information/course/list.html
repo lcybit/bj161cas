@@ -22,7 +22,10 @@
       <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goTeacherHtml()">
         <i class="layui-icon"> &#xe619;</i>上一步
       </button>
-      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goPeriodHtml()">
+      <!--  <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goPeriodHtml()">
+        <i class="layui-icon"> &#xe61a;</i>下一步
+      </button>-->
+      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goTclassHtml()">
         <i class="layui-icon"> &#xe61a;</i>下一步
       </button>
     </div>
@@ -96,8 +99,10 @@
     }
     function goPeriodHtml() {
       jump('html/information/period/list.html');
+    }   
+    function goTclassHtml() {
+      jump('html/information/tclass/list.html');
     }
-  
     function remove(courseId) {
       layer.confirm('确认要删除吗？',
         {
