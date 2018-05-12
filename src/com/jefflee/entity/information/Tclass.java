@@ -13,17 +13,17 @@ import javax.persistence.Transient;
 public class Tclass {
 	@Id
 	// TODO 定好顺序
-	@OrderBy
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer tclassId;
 	@OrderBy
-	private String tclassNo;
+	private Integer year;
+	@OrderBy
+	private Integer tclassNo;
 	@Transient
 	private String name;
 	@Transient
 	private String shortName;
 	private Integer type;
-	private Integer year;
 	private Integer level;
 
 	public Integer getTclassId() {
@@ -34,11 +34,11 @@ public class Tclass {
 		this.tclassId = tclassId;
 	}
 
-	public String getTclassNo() {
+	public Integer getTclassNo() {
 		return tclassNo;
 	}
 
-	public void setTclassNo(String tclassNo) {
+	public void setTclassNo(Integer tclassNo) {
 		this.tclassNo = tclassNo;
 	}
 

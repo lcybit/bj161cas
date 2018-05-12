@@ -19,7 +19,7 @@ public interface TeacherService {
 
 	Integer deleteById(Integer teacherId);
 
-	List<Teacher> selectListByGradeId(Integer scheduleId);
+	List<Teacher> selectListByGradeId(Integer gradeId);
 
 	Map<String, Object> importExcel(MultipartFile file) throws Exception;
 

@@ -7,8 +7,6 @@
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
-<script src="/plugin/layui/layui.all.js"></script>
-
 </head>
 
 <body>
@@ -20,11 +18,8 @@
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
-      <button class="layui-btn layui-bg-green layui-btn-sm" id="importExcel">
-        <i class="layui-icon">&#xe654;</i>导入
-      </button>
-      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goCourseHtml()">
-        <i class="layui-icon"> &#xe61a;</i>下一步
+      <button class="layui-btn layui-bg-blue layui-btn-sm" id="importExcel">
+        <i class="layui-icon">&#xe67c;</i>导入
       </button>
     </div>
     <table class="layui-table" id="test">
@@ -54,9 +49,12 @@
   </script>
 
   <script>
+    var layer = layui.layer;
     var laypage = layui.laypage;
+    var table = layui.table;
     var upload = layui.upload;
-    
+    var form = layui.form;
+  
     $(document).ready(function() {
       list();
       upload.render({
@@ -66,39 +64,41 @@
         acceptMime: '.xls,.xlsx',
         exts: 'xls|xlsx',
         done: function(result) {
-          layer.msg('导入成功！', {icon: 1});
+          layer.msg('导入完毕！');
         }
       });
     })
   
     function goCreate() {
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type: 2,
-          id: 'create',
-          title: '新增教师信息',
-          content: '/html/information/teacher/create.html',
-          area: [ '700px', '500px' ],
-          shade: 0.5,
-          closeBtn: false
-        });
+      layer.open({
+        type: 2,
+        id: 'create',
+        title: '新增教师信息',
+        content: '/html/information/teacher/create.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false,
+        end: function() {
+          list();
+        }
       });
     }
-
+  
     function goModify(teacherId) {
       sessionStorage.setItem('currentTeacherId', teacherId);
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type: 2,
-          id: 'modify',
-          title: '修改教师信息',
-          content: '/html/information/teacher/modify.html',
-          area: [ '700px', '500px' ],
-          shade: 0.5,
-          closeBtn: false,
-        });
+      layer.open({
+        type: 2,
+        id: 'modify',
+        title: '修改教师信息',
+        content: '/html/information/teacher/modify.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false,
+        end: function() {
+          list();
+        }
       });
     }
   
@@ -131,11 +131,7 @@
         url: '/teacher/list',
         dataType: 'json',
         success: function(teacherList) {
-          //$('#teacherList').html($.templates('#tmpl-teacherList').render(teacherList));
-          //var loaddata=jQuery.parseJSON(teacherList);//将后台获取的json对象转化成数组
-          //loadData(loaddata);
           loadData(teacherList);
-  
         }
       });
     }
@@ -146,23 +142,19 @@
         count: Math.ceil(data.length),
         limit: 10,
         jump: function(obj, first) {
-          //console.log(data.length);
-          console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
-          console.log(obj.limit); //得到每页显示的条数 10
           var start = (obj.curr - 1) * obj.limit; //获得数据 的数组起始下标
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
           var arr = []; //存放该页展示的数据 
           for (var i = start; i <= end && i < data.length; i++) {
             arr.push(data[i]);
           }
-          document.getElementById('teacherList').innerHTML = $.templates('#tmpl-teacherList').render(arr);
-  
+          $('#teacherList').html($.templates('#tmpl-teacherList').render(arr));
         }
       });
     }
   
     function goBack() {
-      jump('html/information/teacher/list.html');
+      jump('html/common/home.html');
     }
   </script>
 </body>

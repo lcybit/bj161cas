@@ -20,6 +20,7 @@ public class ConflictPredicate implements Predicate<Arrangement> {
 
 		Integer periodId1 = this.arrangement.getPeriodId();
 		Integer courseId1 = this.arrangement.getCourseId();
+		Integer courseType = this.arrangement.getCourse().getType();
 		Integer tclassId1 = this.arrangement.getTclassId();
 		Integer teacherId1 = this.arrangement.getTeacherId();
 
@@ -33,7 +34,7 @@ public class ConflictPredicate implements Predicate<Arrangement> {
 		}
 		if (Objects.equals(courseId1, courseId2)) {
 			// TODO type 23 24 25
-			if (courseId1 == 23 || courseId1 == 24 || courseId1 == 25) {
+			if (courseType == 4) {
 				return false;
 			}
 		}

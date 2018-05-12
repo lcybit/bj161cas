@@ -40,6 +40,11 @@ public class TeacherController {
 		return teacherService.selectList();
 	}
 
+	@RequestMapping(value = "/list/{gradeId}", method = RequestMethod.GET)
+	public List<Teacher> listByGradeId(@PathVariable("gradeId") Integer gradeId) {
+		return teacherService.selectListByGradeId(gradeId);
+	}
+
 	@RequestMapping(value = "/find/{teacherId}", method = RequestMethod.GET)
 	public Teacher findById(@PathVariable("teacherId") Integer teacherId) {
 		return teacherService.selectById(teacherId);
@@ -76,18 +81,15 @@ public class TeacherController {
 		}
 		// 验证文件名是否合格
 		if (!ExcelUtil.validateExcel(file.getOriginalFilename())) {
-
 			result.put("result", "必须是Excel文件！");
 			return result;
 		}
 		// 批量导入
 		Map<String, Object> outcome = teacherService.importExcel(file);
-		if (result == null) {
-
+		if (outcome == null) {
 			result.put("result", "导入失败！");
 			return result;
 		} else {
-
 			result.put("result", "导入成功！");
 			return result;
 		}

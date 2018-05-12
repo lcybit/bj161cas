@@ -16,34 +16,37 @@
       <!-- 隐藏课程ID -->
       <input class="layui-input" name="courseId" id="courseId" type="hidden" />
       <div class="layui-form-item">
-        <label class="layui-form-label">课程编号:</label>
+        <label class="layui-form-label">编号:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="courseNo" id="courseNo" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">课程名称:</label>
+        <label class="layui-form-label">名称:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="name" id="name" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">课程简称:</label>
+        <label class="layui-form-label">简称:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="shortName" id="shortName" type="text" />
         </div>
       </div>
       <div class="layui-form-item" pane="">
-        <label class="layui-form-label">课程类型:</label>
+        <label class="layui-form-label">类型:</label>
         <div class="layui-input-block">
-          <input type="radio" name="type" id="type" value="0" title="普通课" checked="">
-          <input type="radio" name="type" id="type" value="1" title="多教师课">
+          <input type="radio" name="type" id="type" value="0" title="普通" checked="checked"/>
+          <input type="radio" name="type" id="type" value="1" title="班会"/>
+          <input type="radio" name="type" id="type" value="2" title="单双周"/>
+          <input type="radio" name="type" id="type" value="3" title="无教师"/>
+          <input type="radio" name="type" id="type" value="4" title="无班级"/>
         </div>
       </div>
       <div class="layui-form-item">
-        <div class="layui-input-block">
-          <button class="layui-btn" type="button" onclick="modify()">保存</button>
-          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        <div class="layui-input-inline layui-btn-group">
+          <button class="layui-btn layui-btn-sm" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" type="button" onclick="cancel()">取消</button>
         </div>
       </div>
     </form>
@@ -77,9 +80,7 @@
         contentType : 'application/json',
         data : JSON.stringify($('#course').serializeJSON()),
         success : function(result) {
-          var index = parent.layer.getFrameIndex(window.name);
-          parent.layer.close(index);
-          parent.list();
+          cancel();
         }
       });
     }

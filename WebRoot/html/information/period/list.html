@@ -7,7 +7,6 @@
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
-<script src="/plugin/layui/layui.all.js"></script>
 </head>
 
 <body>
@@ -52,39 +51,46 @@
     </tr>
   </script>
   <script>
+    var layer = layui.layer;
     var laypage = layui.laypage;
+    var table = layui.table;
+    var upload = layui.upload;
+    var form = layui.form;
+  
     $(document).ready(function() {
       list();
     })
   
     function goCreate() {
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type: 2,
-          id: 'create',
-          title: '新增课时信息',
-          content: '/html/information/period/create.html',
-          area: [ '700px', '500px' ],
-          shade: 0.5,
-          closeBtn: false
-        });
+      layer.open({
+        type: 2,
+        id: 'create',
+        title: '新增课时信息',
+        content: '/html/information/period/create.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false,
+        end: function() {
+          list();
+        }
       });
     }
   
     function goModify(periodId) {
       sessionStorage.setItem('currentPeriodId', periodId);
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type: 2,
-          id: 'modify',
-          title: '修改课时信息',
-          content: '/html/information/period/modify.html',
-          area: [ '700px', '500px' ],
-          shade: 0.5,
-          closeBtn: false,
-        });
+      layer.open({
+        type: 2,
+        id: 'modify',
+        title: '修改课时信息',
+        content: '/html/information/period/modify.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false,
+        end: function() {
+          list();
+        }
       });
     }
   
@@ -119,7 +125,6 @@
         type: 'GET',
         url: '/period/list',
         success: function(periodList) {
-          //$('#periodList').html($.templates('#tmpl-periodList').render(periodList));
           loadData(periodList);
         }
       });
@@ -130,22 +135,19 @@
         count: Math.ceil(data.length),
         limit: 10,
         jump: function(obj, first) {
-          //console.log(data.length);
-          console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
-          console.log(obj.limit); //得到每页显示的条数 10
           var start = (obj.curr - 1) * obj.limit; //获得数据 的数组起始下标
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
           var arr = []; //存放该页展示的数据 
           for (var i = start; i <= end && i < data.length; i++) {
             arr.push(data[i]);
           }
-          document.getElementById('periodList').innerHTML = $.templates('#tmpl-periodList').render(arr);
+          $('#periodList').html($.templates('#tmpl-periodList').render(arr));
   
         }
       });
     }
     function goBack() {
-      jump('html/information/period/list.html');
+      jump('html/common/home.html');
     }
   </script>
 </body>

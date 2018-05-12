@@ -55,7 +55,7 @@
           periodNum:{{:~periodNum}}
         })"
         style="cursor:pointer"
-        {{if ~courseType == 1}}
+        {{if ~courseType == 4}}
           colspan="{{:~tclassNum}}"
         {{/if}}>
       {{for prop}}{{if teacherId != 0}}{{:teacher.name}} {{else}}无  {{/if}}{{/for}}</td>         
@@ -93,7 +93,7 @@
         id: 'periodNum',
         title: '选择课时数',
         content: '/html/schedule/schedule/periodNum.html',
-        area: [ '600px', '300px' ],
+        area: [ '800px', '400px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -112,7 +112,7 @@
         id: 'teacher',
         title: '选择教师',
         content: '/html/schedule/schedule/teacher.html',
-        area: [ '800px', '500px' ],
+        area: [ '1000px', '500px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,

@@ -43,7 +43,7 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public List<Teacher> selectList() {
-		return teacherMapper.selectAll();
+		return teacherMapper.selectList();
 	}
 
 	@Override
@@ -126,7 +126,6 @@ public class TeacherServiceImpl implements TeacherService {
 				continue;
 			}
 			Teacher teacher = new Teacher();
-			Integer rowNo = row.getRowNum() + 1;
 			for (Cell cell : row) {
 				Object cellValue = ExcelUtil.getValue(cell);
 				switch (cell.getColumnIndex()) {
@@ -141,8 +140,11 @@ public class TeacherServiceImpl implements TeacherService {
 				}
 			}
 			teacher.setType(0);
-			importedTeacherList.add(teacher);
-			// allTeacherMap.put(teacher.getTeacherNo(), teacher);
+			String teacherNo = teacher.getTeacherNo();
+			if (!allTeacherMap.containsKey(teacherNo)) {
+				importedTeacherList.add(teacher);
+				allTeacherMap.put(teacherNo, teacher);
+			}
 		}
 
 		// 写入数据库
@@ -154,13 +156,10 @@ public class TeacherServiceImpl implements TeacherService {
 				System.out.println(teacherid);
 				successNum++;
 			}
-
 		} else {
 			successNum = 0;
 		}
-
 		result.put("successNum", successNum);
-
 		return result;
 	}
 

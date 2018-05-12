@@ -3,7 +3,6 @@ package com.jefflee.entity.information;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 @Table(name = "info_teacher")
@@ -11,7 +10,6 @@ public class Teacher {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer teacherId;
-	@OrderBy
 	private String teacherNo;
 	private String name;
 	private Integer type;

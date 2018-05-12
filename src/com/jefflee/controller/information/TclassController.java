@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.entity.information.Tclass;
-import com.jefflee.entity.schedule.Grade;
 import com.jefflee.service.information.TclassService;
 import com.jefflee.service.schedule.GradeService;
 
@@ -45,14 +44,6 @@ public class TclassController {
 	@RequestMapping(value = "/find/{tclassId}", method = RequestMethod.GET)
 	public Tclass findById(@PathVariable("tclassId") Integer tclassId) {
 		return tclassService.selectById(tclassId);
-	}
-
-	// TODO delete
-	@RequestMapping(value = "/check/{gradeId}", method = RequestMethod.GET)
-	public List<Tclass> checkById(@PathVariable("gradeId") Integer gradeId) {
-		// 根据gradeid获取相应的year ，再根据year从tclass表中获取该年级的多个班级
-		Grade grade = gradeService.selectById(gradeId);
-		return tclassService.selectListByGrade(grade);
 	}
 
 	@RequestMapping(value = "/modify", method = RequestMethod.POST)

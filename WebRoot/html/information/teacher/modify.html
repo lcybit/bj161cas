@@ -14,30 +14,30 @@
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="teacher" method="post">
       <!-- 隐藏教师ID -->
-          <input class="layui-input" name="teacherId" id="teacherId" type="hidden" />
+      <input class="layui-input" name="teacherId" id="teacherId" type="hidden" />
       <div class="layui-form-item">
-        <label class="layui-form-label">教师工号:</label>
+        <label class="layui-form-label">工号:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="teacherNo" id="teacherNo" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">教师姓名:</label>
+        <label class="layui-form-label">姓名:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="name" id="name" type="text" />
         </div>
       </div>
-      <div class="layui-form-item" pane="">
-        <label class="layui-form-label">教师类型:</label>
+      <div class="layui-form-item" pane="" hidden="hidden">
+        <label class="layui-form-label">类型:</label>
         <div class="layui-input-block">
           <input type="radio" name="type" id="type" value="0" title="男" checked="">
           <input type="radio" name="type" id="type" value="1" title="女">
         </div>
       </div>
       <div class="layui-form-item">
-        <div class="layui-input-block">
-          <button class="layui-btn" type="button" onclick="modify()">保存</button>
-          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        <div class="layui-input-inline layui-btn-group">
+          <button class="layui-btn layui-btn-sm" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" type="button" onclick="cancel()">取消</button>
         </div>
       </div>
     </form>
@@ -47,13 +47,13 @@
       var teacherId = sessionStorage.getItem('currentTeacherId');
       $('#teacherId').attr('value', teacherId);
       $.ajax({
-        async : false,
-        type : 'GET',
-        url : '/teacher/find/' + teacherId,
-        success : function(teacher) {
+        async: false,
+        type: 'GET',
+        url: '/teacher/find/' + teacherId,
+        success: function(teacher) {
           $('#teacherNo').attr('value', teacher.teacherNo);
-          $('#name').attr('value',teacher.name);
-          $(":radio[name='type'][value='"+teacher.type+"']").prop("checked","checked");
+          $('#name').attr('value', teacher.name);
+          $(":radio[name='type'][value='" + teacher.type + "']").prop("checked", "checked");
         }
       });
       layui.use('form', function() {
@@ -63,16 +63,14 @@
   
     function modify() {
       $.ajax({
-        async : false,
-        url : '/teacher/modify',
-        type : 'POST',
-        dataType : 'json',
-        contentType : 'application/json',
-        data : JSON.stringify($('#teacher').serializeJSON()),
-        success : function(result) {
-          var index = parent.layer.getFrameIndex(window.name);
-          parent.layer.close(index);
-          parent.list();
+        async: false,
+        url: '/teacher/modify',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify($('#teacher').serializeJSON()),
+        success: function(result) {
+          cancel();
         }
       });
     }
