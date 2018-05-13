@@ -11,7 +11,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="stylesheet" href="../../../layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="../../../plugin/layui/css/layui.css" media="all" />
 	<link rel="stylesheet" href="../../../css/font_eolqem241z66flxr.css" media="all" />
 	<link rel="stylesheet" href="../../../css/list.css" media="all" />
 </head>
@@ -29,7 +29,7 @@
 	</blockquote>
 	<!-- 数据表格 -->
 	<table id="roleList" class="roleList" lay-filter="roleList"></table>
-	<script type="text/javascript" src="../../../layui/layui.js"></script>
+	<script type="text/javascript" src="../../../plugin/layui/layui.js"></script>
 	<script type="text/javascript" src="../../page/admin/roleList.js"></script>
 	<script type="text/html" id="barEdit">
   <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>

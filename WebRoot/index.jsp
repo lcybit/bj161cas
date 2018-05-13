@@ -14,7 +14,7 @@
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
 	<link rel="icon" href="favicon.ico">
-	<link rel="stylesheet" href="layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="plugin/layui/css/layui.css" media="all" />
 	<link rel="stylesheet" href="${pageContext.request.contextPath}//at.alicdn.com/t/font_tnyc012u2rlwstt9.css" media="all" />
 	<link rel="stylesheet" href="css/main.css" media="all" />
 </head>
@@ -86,7 +86,7 @@
 	<div class="site-tree-mobile layui-hide"><i class="layui-icon">&#xe602;</i></div>
 	<div class="site-mobile-shade"></div>
 
-	<script type="text/javascript" src="layui/layui.js"></script>
+	<script type="text/javascript" src="plugin/layui/layui.js"></script>
 	<script type="text/javascript" src="js/leftNav.js"></script>
 	<script type="text/javascript" src="js/index.js"></script>
 </body>

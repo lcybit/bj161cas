@@ -13,7 +13,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="format-detection" content="telephone=no">
-<link rel="stylesheet" href="../../../layui/css/layui.css" media="all" />
+<link rel="stylesheet" href="../../../plugin/layui/css/layui.css" media="all" />
 <style type="text/css">
 .layui-form-item .layui-inline {
 	width: 33.333%;
@@ -109,7 +109,7 @@
 			</div>
 		</div>
 	</form>
-	<script type="text/javascript" src="../../../layui/layui.js"></script>
+	<script type="text/javascript" src="../../../plugin/layui/layui.js"></script>
 	<script type="text/javascript" src="../../page/admin/personalData.js"></script>
 </body>
 </html>

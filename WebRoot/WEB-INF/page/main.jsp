@@ -11,7 +11,7 @@
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
-	<link rel="stylesheet" href="../../layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="../../plugin/layui/css/layui.css" media="all" />
 	<link rel="stylesheet" href="../../css/font_eolqem241z66flxr.css" media="all" />
 	<link rel="stylesheet" href="../../css/main.css" media="all" />
 	<script type="text/javascript" src="../../js/echarts.js"></script>
@@ -97,7 +97,7 @@
 </div>
 </div>
 
-<script type="text/javascript" src="../../layui/layui.js"></script>
+<script type="text/javascript" src="../../plugin/layui/layui.js"></script>
 <script type="text/javascript" src="../../js/main.js"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
 <head>
     <meta charset="utf-8">
     <title>登录--教务系统</title>
-    <link rel="stylesheet" href="layui/css/layui.css" media="all" />
+    <link rel="stylesheet" href="plugin/layui/css/layui.css" media="all" />
     <link rel="stylesheet" href="css/login.css" media="all" />
     <link rel="icon" href="favicon.ico">
     <script type="text/javascript">
@@ -34,7 +34,7 @@
         <button class="layui-btn login_btn" lay-submit="" lay-filter="login" id="btn">登录</button>
     </form>
 </div>
-<script type="text/javascript" src="layui/layui.js"></script>
+<script type="text/javascript" src="plugin/layui/layui.js"></script>
 <script type="text/javascript" src="js/login.js"></script>
 </body>
 </html>

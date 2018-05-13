@@ -9,7 +9,7 @@
 	<meta http-equiv="expires" content="0">    
 	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 	<meta http-equiv="description" content="信息提示页面">
-	<link rel="stylesheet" href="../layui/css/layui.css" media="all" />
+	<link rel="stylesheet" href="../plugin/layui/css/layui.css" media="all" />
   </head>
   
   <body style="text-align: center;">
