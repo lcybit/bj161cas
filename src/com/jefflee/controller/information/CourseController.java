@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jefflee.entity.information.Course;
-import com.jefflee.entity.relation.GradeCourse;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.service.relation.GradeCourseService;
 
@@ -42,21 +41,6 @@ public class CourseController {
 	public List<Course> listAll() {
 		List<Course> courseList = new ArrayList<Course>();
 		courseList = courseService.selectList();
-		return courseList;
-	}
-
-	// TODO 可以delete
-	@RequestMapping(value = "/check/{gradeId}", method = RequestMethod.GET)
-	public List<Course> checkById(@PathVariable("gradeId") Integer gradeId) {
-		List<GradeCourse> gradeCourseList = gradeCourseService.selectByGradeId(gradeId);
-		List<Course> courseList = new ArrayList<Course>();
-		// 根据gradeid得到 gradecourselist 遍历gradecourselist，根据courseid
-		// 得到courseList
-		for (int i = 0; i < gradeCourseList.size(); i++) {
-			Integer courseId = null;
-			courseId = gradeCourseList.get(i).getCourseId();
-			courseList.add(courseService.selectById(courseId));
-		}
 		return courseList;
 	}
 

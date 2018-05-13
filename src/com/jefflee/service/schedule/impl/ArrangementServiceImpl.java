@@ -1,7 +1,11 @@
 package com.jefflee.service.schedule.impl;
 
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -28,6 +32,7 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import com.jefflee.entity.information.Course;
 import com.jefflee.entity.information.Period;
 import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.information.Teacher;
@@ -150,7 +155,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 	/* Display Block Start */
 
 	@Override
-	public ScheduleView gnrScheduleView(Integer scheduleId) {
+	public ScheduleView gnrScheduleView(Integer scheduleId) throws Exception {
 		Schedule schedule = scheduleService.selectById(scheduleId);
 		ScheduleView scheduleView = new ScheduleView();
 		scheduleView.setSchedule(schedule);
@@ -171,12 +176,15 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 		// 新建WeekView
 		for (Plan plan : schedulePlanList) {
-			Tclass tclass = plan.getTclass();
-			Teacher teacher = plan.getTeacher();
+			Integer courseType = plan.getCourse().getType();
+			Integer tclassId = plan.getTclassId();
+			Integer teacherId = plan.getTeacherId();
+
 			TitleView titleView = null;
 
-			if (tclass != null) {
-				String tclassWeekViewId = "s-" + tclass.getTclassId();
+			if (tclassId != 0 && courseType != 4) {
+				Tclass tclass = plan.getTclass();
+				String tclassWeekViewId = "s-" + tclassId;
 				WeekView tclassWeekView = null;
 				// 若不存在该班级课表，新建之
 				if (!tclassWeekViewMap.containsKey(tclassWeekViewId)) {
@@ -193,18 +201,20 @@ public class ArrangementServiceImpl implements ArrangementService {
 				}
 			}
 
-			if (teacher != null) {
-				Integer courseId = plan.getCourseId();
-				String teacherWeekViewId = "t-" + teacher.getTeacherId() + "-c-" + courseId;
+			if (teacherId != 0 && courseType != 3) {
+				Course course = plan.getCourse();
+				Integer courseId = course.getCourseId();
+				Teacher teacher = plan.getTeacher();
+				String teacherWeekViewId = "t-" + teacherId + "-c-" + courseId;
 				WeekView teacherWeekView = null;
 				// 若不存在该教师课程课表，新建之
 				// TODO type 11 23 24 25
-				if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
+				if (courseType != 1 && courseType != 4) {
 					if (!teacherWeekViewMap.containsKey(teacherWeekViewId)) {
 						teacherWeekView = gnrWeekView(schedule, periodList);
 						teacherWeekViewMap.put(teacherWeekViewId, teacherWeekView);
 						titleView = teacherWeekView.getTitleView();
-						titleView.setCourseName(plan.getCourse().getShortName());
+						titleView.setCourseName(course.getShortName());
 						titleView.setGradeName(schedule.getGrade().getName());
 						titleView.setTeacherName(teacher.getName());
 						// 必要时添加
@@ -220,36 +230,37 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 		for (Plan plan : schedulePlanList) {
 			Integer courseId = plan.getCourseId();
+			Integer courseType = plan.getCourse().getType();
 			Integer tclassId = plan.getTclassId();
 			Integer teacherId = plan.getTeacherId();
 
-			if (tclassId != 0) {
+			if (tclassId != 0 && courseType != 4) {
 				String tclassWeekViewId = "s-" + tclassId;
 				String tclassPlanViewId = "c-" + courseId;
 				WeekView tclassWeekView = null;
 				// TODO type 23 24 25
 				// if (course.getType() == 0) {
-				if (courseId != 23 && courseId != 24 && courseId != 25) {
+				if (courseType != 4) {
 					tclassWeekView = tclassWeekViewMap.get(tclassWeekViewId);
-					if (courseId == 11) {
+					// TODO type 11
+					if (courseType == 1) {
 						tclassWeekView.getTitleView().setTeacherName(plan.getTeacher().getName());
 					}
 					tclassWeekView.getPlanViewMap().put(tclassPlanViewId, gnrPlanView(plan));
 				}
 			}
 
-			if (teacherId != 0) {
+			if (teacherId != 0 && courseType != 3) {
 				String teacherWeekViewId = "t-" + teacherId;
 				String teacherPlanViewId = "";
 				WeekView teacherWeekView = null;
 				// TODO type 11 23 24 25
-				// if (course.getType() == 0) {
-				if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
+				if (courseType != 1 && courseType != 4) {
 					teacherWeekViewId = teacherWeekViewId + "-c-" + courseId;
 					teacherPlanViewId = "s-" + tclassId;
 					teacherWeekView = teacherWeekViewMap.get(teacherWeekViewId);
 					teacherWeekView.getPlanViewMap().put(teacherPlanViewId, gnrPlanView(plan));
-				} else {
+				} else if (courseType == 4) {
 					teacherPlanViewId = "c-" + courseId;
 					Set<String> existTeacherWeekViewIdList = teacherWeekViewMap.keySet();
 					for (String existTeacherWeekViewId : existTeacherWeekViewIdList) {
@@ -265,27 +276,27 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 		for (Arrangement arrangement : scheduleArrangementList) {
 			Integer courseId = arrangement.getCourseId();
+			Integer courseType = arrangement.getCourse().getType();
 			Integer tclassId = arrangement.getTclassId();
 			Integer teacherId = arrangement.getTeacherId();
 
 			if (arrangement.getArranged() == 1) {
 				Period period = arrangement.getPeriod();
 
-				if (tclassId != 0) {
+				if (tclassId != 0 && courseType != 4) {
 					String tclassWeekViewId = "s-" + tclassId;
 					String tclassPlanViewId = "c-" + courseId;
 					WeekView tclassWeekView = null;
 					PeriodView tclassPeriodView = null;
 					PlanView tclassPlanView = null;
 					// TODO type 23 24 25
-					// if (course.getType() == 0) {
-					if (courseId != 23 && courseId != 24 && courseId != 25) {
+					if (courseType != 4) {
 						tclassWeekView = tclassWeekViewMap.get(tclassWeekViewId);
 						tclassPeriodView = tclassWeekView.getDayViewList().get(period.getDayOfWeek() - 1)
 								.getPeriodViewList().get(period.getOrderOfDay() - 1);
 
 						// TODO type 19 20
-						if (tclassPeriodView.getArrangementList().isEmpty() || (courseId != 19 && courseId != 20)) {
+						if (tclassPeriodView.getArrangementList().isEmpty() || (courseType != 2)) {
 							if (!tclassPeriodView.getArrangementList().isEmpty()) {
 								conflictingMap.put(tclassPeriodView.getPeriodViewId(), 0);
 							}
@@ -298,15 +309,14 @@ public class ArrangementServiceImpl implements ArrangementService {
 					}
 				}
 
-				if (teacherId != 0) {
+				if (teacherId != 0 && courseType != 3) {
 					String teacherWeekViewId = "t-" + teacherId;
 					String teacherPlanViewId = "";
 					WeekView teacherWeekView = null;
 					PeriodView teacherPeriodView = null;
 					PlanView teacherPlanView = null;
 					// TODO type 11 23 24 25
-					// if (course.getType() == 0) {
-					if (courseId != 11 && courseId != 23 && courseId != 24 && courseId != 25) {
+					if (courseType != 1 && courseType != 4) {
 						teacherWeekViewId = teacherWeekViewId + "-c-" + courseId;
 						teacherWeekView = teacherWeekViewMap.get(teacherWeekViewId);
 						teacherPeriodView = teacherWeekView.getDayViewList().get(period.getDayOfWeek() - 1)
@@ -321,7 +331,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 						teacherPlanViewId = "s-" + tclassId;
 						teacherPlanView = teacherWeekView.getPlanViewMap().get(teacherPlanViewId);
 						teacherPlanView.setArrangedNum(teacherPlanView.getArrangedNum() + 1);
-					} else {
+					} else if (courseType == 4) {
 						teacherPlanViewId = "c-" + courseId;
 						Set<String> existTeacherWeekViewIdList = teacherWeekViewMap.keySet();
 						for (String existTeacherWeekViewId : existTeacherWeekViewIdList) {
@@ -346,9 +356,9 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return scheduleView;
 	}
 
-	private WeekView gnrWeekView(Schedule schedule, List<Period> periodList) {
+	private WeekView gnrWeekView(Schedule schedule, List<Period> periodList) throws Exception {
 		WeekView weekView = new WeekView();
-		weekView.setTitleView(gnrTitleView(schedule.getGrade()));
+		weekView.setTitleView(gnrTitleView(schedule));
 		weekView.setPeriodNameList(gnrPeriodNameList(schedule));
 		weekView.setPlanViewMap(new LinkedHashMap<String, PlanView>());
 		weekView.setDayViewList(gnrDayViewList(periodList));
@@ -368,9 +378,20 @@ public class ArrangementServiceImpl implements ArrangementService {
 		return periodNameList;
 	}
 
-	private TitleView gnrTitleView(Grade grade) {
+	private TitleView gnrTitleView(Schedule schedule) throws Exception {
 		TitleView titleView = new TitleView();
-		titleView.setStartDate(grade.getStartDate());
+		Grade grade = schedule.getGrade();
+		String startDate = grade.getStartDate();
+		Integer startWeek = schedule.getStartWeek();
+
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = dateFormat.parse(startDate);
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		calendar.add(Calendar.DAY_OF_MONTH, 7 * (startWeek - 1));
+
+		titleView.setStartDate(dateFormat.format(calendar.getTime()));
 		return titleView;
 	}
 
@@ -495,22 +516,18 @@ public class ArrangementServiceImpl implements ArrangementService {
 		Predicate<Arrangement> arrangedPredicate = new ArrangementPredicate(queryArranged);
 		List<Arrangement> arrangedArrangementList = ListUtils.select(scheduleArrangementList, arrangedPredicate);
 
-		Integer courseId;
-		Integer tclassId;
-		Integer arrangedNum;
-		Integer periodNum;
-
 		// TODO 重新调整排课逻辑
 		while (!unselectedArrangementList.isEmpty()) {
 			Arrangement selectedArrangement = ListUtil.randomlyChoose(unselectedArrangementList);
-			courseId = selectedArrangement.getCourseId();
+			Integer courseId = selectedArrangement.getCourseId();
+			Integer courseType = selectedArrangement.getCourse().getType();
 			// TODO type 23 24 25
-			if (courseId == 23 || courseId == 24 || courseId == 25) {
+			if (courseType == 4) {
 				selectedArrangement.setArranged(-1);
 				unselectedArrangementList.remove(selectedArrangement);
 				continue;
 			}
-			tclassId = selectedArrangement.getTclassId();
+			Integer tclassId = selectedArrangement.getTclassId();
 
 			// 若需要添加的课程冲突，不添加
 			ConflictPredicate conflictPredicate = new ConflictPredicate(selectedArrangement);
@@ -525,11 +542,12 @@ public class ArrangementServiceImpl implements ArrangementService {
 			Arrangement queryArrangement = new Arrangement();
 			queryArrangement.setCourseId(courseId);
 			queryArrangement.setTclassId(tclassId);
-			arrangedNum = ListUtils.select(arrangedArrangementList, new ArrangementPredicate(queryArrangement)).size();
+			Integer arrangedNum = ListUtils.select(arrangedArrangementList, new ArrangementPredicate(queryArrangement))
+					.size();
 			Plan queryPlan = new Plan();
 			queryPlan.setCourseId(courseId);
 			queryPlan.setTclassId(tclassId);
-			periodNum = ListUtils.select(schedulePlanList, new PlanPredicate(queryPlan)).iterator().next()
+			Integer periodNum = ListUtils.select(schedulePlanList, new PlanPredicate(queryPlan)).iterator().next()
 					.getPeriodNum();
 			if (periodNum - arrangedNum <= 0) {
 				selectedArrangement.setArranged(-1);
@@ -669,9 +687,9 @@ public class ArrangementServiceImpl implements ArrangementService {
 		arrangedArrangement.setArranged(arranged);
 		List<Arrangement> conditionArrangementList = new ArrayList<Arrangement>();
 
-		Integer courseId = arrangement.getCourseId();
-		// TODO type 23 24
-		if (courseId == 23 || courseId == 24) {
+		Integer courseType = courseService.selectById(arrangement.getCourseId()).getType();
+		// TODO type 23 24 25
+		if (courseType == 4) {
 			conditionArrangementList = getSameGradeArrangementList(arrangementList, planList, arrangement);
 		} else {
 			conditionArrangementList = ListUtils.select(arrangementList, new ArrangementPredicate(arrangement));
@@ -770,9 +788,9 @@ public class ArrangementServiceImpl implements ArrangementService {
 		Arrangement arrangement = getArrangementByIdPair(idPair);
 		List<Arrangement> conditionArrangementList = new ArrayList<Arrangement>();
 
-		Integer courseId = arrangement.getCourseId();
-		// TODO type 23 24
-		if (courseId == 23 || courseId == 24) {
+		Integer courseType = courseService.selectById(arrangement.getCourseId()).getType();
+		// TODO type 23 24 25
+		if (courseType == 4) {
 			conditionArrangementList = getSameGradeArrangementList(arrangementList, planList, arrangement);
 		} else {
 			conditionArrangementList = ListUtils.select(arrangementList, new ArrangementPredicate(arrangement));
@@ -820,15 +838,18 @@ public class ArrangementServiceImpl implements ArrangementService {
 		Plan teacherPlan = new Plan();
 		teacherPlan.setTeacherId(teacherId);
 		List<Plan> teacherPlanList = ListUtils.select(planList, new PlanPredicate(teacherPlan));
+		Integer courseId = null;
 		for (Plan plan : teacherPlanList) {
-			Integer courseId = plan.getCourseId();
-			// TODO type 16 17 18 19 20 23 24
-			if (courseId != 16 && courseId != 17 && courseId != 18 && courseId != 19 && courseId != 20 && courseId != 23
-					&& courseId != 24) {
-				return courseId;
+			Integer courseType = plan.getCourse().getType();
+			// TODO type 16 17 18 19 20 23 24 25
+			if (courseType == 0) {
+				return plan.getCourseId();
+			}
+			if (courseType != 4) {
+				courseId = plan.getCourseId();
 			}
 		}
-		return null;
+		return courseId;
 	}
 
 	private Arrangement getArrangementByIdPair(Map<String, Integer> idPair) {
@@ -930,12 +951,12 @@ public class ArrangementServiceImpl implements ArrangementService {
 		for (Arrangement destArrangement : destArrangementList) {
 			Integer destCourseId = destArrangement.getCourseId();
 			Tclass destTclass = destArrangement.getTclass();
-			String destTclassNo = destTclass == null ? "0" : destTclass.getTclassNo();
+			Integer destTclassNo = destTclass == null ? 0 : destTclass.getTclassNo();
 			Integer destPeriodId = destArrangement.getPeriodId();
 			for (Arrangement srcArrangement : srcArrangementList) {
 				Integer srcCourseId = srcArrangement.getCourseId();
 				Tclass srcTclass = srcArrangement.getTclass();
-				String srcTclassNo = srcTclass == null ? "0" : srcTclass.getTclassNo();
+				Integer srcTclassNo = srcTclass == null ? 0 : srcTclass.getTclassNo();
 				Integer srcPeriodId = srcArrangement.getPeriodId();
 				Integer srcArranged = srcArrangement.getArranged();
 				if (Objects.equals(destCourseId, srcCourseId) && Objects.equals(destTclassNo, srcTclassNo)
@@ -1093,7 +1114,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 					if (colIdx == 1 + forenoon + afternoon) {
 						region = new CellRangeAddress(i, i, j, j + evening - 1);
 						tclassSheet.addMergedRegion(region);
-						tclassCell.setCellValue("晚上");
+						tclassCell.setCellValue("傍晚");
 						continue;
 					}
 				}
@@ -1112,15 +1133,18 @@ public class ArrangementServiceImpl implements ArrangementService {
 					}
 				}
 				if (rowIdx >= 3 && rowIdx <= 2 + daysPerWeek) {
+					DayView dayView = tclassWeekView.getDayViewList().get(rowIdx - 3);
 					if (colIdx == 0) {
-						tclassCell.setCellValue(String.valueOf(rowIdx - 2));
+						tclassCell.setCellValue(dayView.getDayName());
 						continue;
 					}
 					if (colIdx >= 1 && colIdx <= periodsPerDay) {
-						periodArrangementList = tclassWeekView.getDayViewList().get(rowIdx - 3).getPeriodViewList()
-								.get(colIdx - 1).getArrangementList();
+						periodArrangementList = dayView.getPeriodViewList().get(colIdx - 1).getArrangementList();
 						if (!periodArrangementList.isEmpty()) {
-							tclassCell.setCellValue(periodArrangementList.get(0).getCourse().getShortName());
+							for (Arrangement arrangement : periodArrangementList) {
+								tclassCell.setCellValue(
+										tclassCell.getStringCellValue() + arrangement.getCourse().getShortName());
+							}
 						}
 						continue;
 					}
@@ -1205,20 +1229,24 @@ public class ArrangementServiceImpl implements ArrangementService {
 					}
 				}
 				if (rowIdx >= 3 && rowIdx <= 2 + daysPerWeek) {
+					DayView dayView = teacherWeekView.getDayViewList().get(rowIdx - 3);
 					if (colIdx == 0) {
-						teacherCell.setCellValue(String.valueOf(rowIdx - 2));
+						teacherCell.setCellValue(dayView.getDayName());
 						continue;
 					}
 					if (colIdx >= 1 && colIdx <= periodsPerDay) {
-						periodArrangementList = teacherWeekView.getDayViewList().get(rowIdx - 3).getPeriodViewList()
-								.get(colIdx - 1).getArrangementList();
+						periodArrangementList = dayView.getPeriodViewList().get(colIdx - 1).getArrangementList();
 						if (!periodArrangementList.isEmpty()) {
 							// TODO type 11 23 24 25
-							Integer courseId = periodArrangementList.get(0).getCourse().getCourseId();
-							if (courseId == 11 || courseId == 23 || courseId == 24 || courseId == 25) {
-								teacherCell.setCellValue(periodArrangementList.get(0).getCourse().getShortName());
-							} else {
-								teacherCell.setCellValue(periodArrangementList.get(0).getTclass().getShortName());
+							for (Arrangement arrangement : periodArrangementList) {
+								Integer courseType = arrangement.getCourse().getType();
+								if (courseType == 1 || courseType == 4) {
+									teacherCell.setCellValue(
+											teacherCell.getStringCellValue() + arrangement.getCourse().getShortName());
+								} else {
+									teacherCell.setCellValue(
+											teacherCell.getStringCellValue() + arrangement.getTclass().getShortName());
+								}
 							}
 						}
 						continue;
@@ -1228,11 +1256,11 @@ public class ArrangementServiceImpl implements ArrangementService {
 		}
 
 		// 设置打印参数
-		tclassSheet.setMargin(Sheet.TopMargin, 0.83);
-		tclassSheet.setMargin(Sheet.BottomMargin, 0.83);
+		tclassSheet.setMargin(Sheet.TopMargin, 0.85);
+		tclassSheet.setMargin(Sheet.BottomMargin, 0.85);
 		tclassSheet.setHorizontallyCenter(true);
-		teacherSheet.setMargin(Sheet.TopMargin, 0.83);
-		teacherSheet.setMargin(Sheet.BottomMargin, 0.83);
+		teacherSheet.setMargin(Sheet.TopMargin, 0.85);
+		teacherSheet.setMargin(Sheet.BottomMargin, 0.85);
 		teacherSheet.setHorizontallyCenter(true);
 
 		Grade grade = scheduleView.getSchedule().getGrade();

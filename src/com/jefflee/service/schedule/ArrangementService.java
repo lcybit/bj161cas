@@ -28,7 +28,7 @@ public interface ArrangementService {
 
 	void initial(Integer scheduleId);
 
-	ScheduleView gnrScheduleView(Integer scheduleId);
+	ScheduleView gnrScheduleView(Integer scheduleId) throws Exception;
 
 	void doAdjust(Integer adjustmentId);
 

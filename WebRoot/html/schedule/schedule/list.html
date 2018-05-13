@@ -42,8 +42,8 @@
         <div class="layui-btn-group">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
           <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:scheduleId}}')">删除</button>
-          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="choose('{{:scheduleId}}')">查看</button>
-          <button class="layui-btn layui-btn-sm" onclick="selectTeacher('{{:gradeId}}','{{:scheduleId}}')">教学计划</button>
+          <button class="layui-btn layui-btn-sm layui-btn-normal" onclick="goSchedule('{{:scheduleId}}')">查看</button>
+          <button class="layui-btn layui-btn-sm" onclick="goPlan('{{:scheduleId}}')">教学计划</button>
           <button class="layui-btn layui-btn-sm" onclick="generate('{{:scheduleId}}')">生成课表</button>
         </div>
       </td>
@@ -125,7 +125,7 @@
         });
     }
   
-    function choose(scheduleId) {
+    function goSchedule(scheduleId) {
       sessionStorage.setItem('currentScheduleId', scheduleId);
       $.ajax({
         async: false,
@@ -137,15 +137,14 @@
       })
     }
   
-    function selectTeacher(gradeId, scheduleId) {
+    function goPlan(scheduleId) {
       sessionStorage.setItem('currentScheduleId', scheduleId);
-      sessionStorage.setItem('currentGradeId', gradeId);
       layer.open({
         type: 2,
-        id: 'modify',
+        id: 'plan',
         title: '设置教学计划',
         content: '/html/schedule/schedule/plan.html',
-        area: [ '1000px', '600px' ],
+        area: [ '1300px', '650px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,

@@ -120,7 +120,7 @@ public class ArrangementController {
 	}
 
 	@RequestMapping(value = "/display/{scheduleId}", method = RequestMethod.GET)
-	public ScheduleView display(@PathVariable("scheduleId") Integer scheduleId) {
+	public ScheduleView display(@PathVariable("scheduleId") Integer scheduleId) throws Exception {
 		return arrangementService.gnrScheduleView(scheduleId);
 	}
 

@@ -7,7 +7,6 @@
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
-<script src="/plugin/layui/layui.all.js"></script>
 </head>
 
 <body>
@@ -50,39 +49,40 @@
     </tr>
   </script>
   <script>
+    var layer = layui.layer;
     var laypage = layui.laypage;
+    var table = layui.table;
+    var upload = layui.upload;
+    var form = layui.form;
+  
     $(document).ready(function() {
       list();
     })
   
     function goCreate() {
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type: 2,
-          id: 'create',
-          title: '新增教室信息',
-          content: '/html/information/room/create.html',
-          area: [ '700px', '500px' ],
-          shade: 0.5,
-          closeBtn: false
-        });
+      layer.open({
+        type: 2,
+        id: 'create',
+        title: '新增教室信息',
+        content: '/html/information/room/create.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false
       });
     }
   
     function goModify(roomId) {
       sessionStorage.setItem('currentRoomId', roomId);
-      layui.use('layer', function() {
-        var layer = layui.layer;
-        layer.open({
-          type: 2,
-          id: 'modify',
-          title: '修改教室信息',
-          content: '/html/information/room/modify.html',
-          area: [ '700px', '500px' ],
-          shade: 0.5,
-          closeBtn: false,
-        });
+      layer.open({
+        type: 2,
+        id: 'modify',
+        title: '修改教室信息',
+        content: '/html/information/room/modify.html',
+        area: [ '700px', '500px' ],
+        shade: 0.5,
+        shadeClose: true,
+        closeBtn: false,
       });
     }
   
@@ -118,7 +118,6 @@
         type: 'GET',
         url: '/room/list',
         success: function(roomList) {
-          //$('#roomList').html($.templates('#tmpl-roomList').render(roomList));
           loadData(roomList);
         }
       });
@@ -129,22 +128,19 @@
         count: Math.ceil(data.length),
         limit: 10,
         jump: function(obj, first) {
-          //console.log(data.length);
-          console.log(obj.curr); //得到当前页，以便向服务端请求对应页的数据
-          console.log(obj.limit); //得到每页显示的条数 10
           var start = (obj.curr - 1) * obj.limit; //获得数据 的数组起始下标
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
           var arr = []; //存放该页展示的数据 
           for (var i = start; i <= end && i < data.length; i++) {
             arr.push(data[i]);
           }
-          document.getElementById('roomList').innerHTML = $.templates('#tmpl-roomList').render(arr);
+          $('#roomList').html($.templates('#tmpl-roomList').render(arr));
   
         }
       });
     }
     function goBack() {
-      jump('html/information/room/list.html');
+      jump('html/common/home.html');
     }
   </script>
 </body>

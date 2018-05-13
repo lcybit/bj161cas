@@ -138,10 +138,10 @@ public class PlanServiceImpl implements PlanService {
 		}
 
 		List<Tclass> destTclassList = tclassService.selectListByGrade(destGrade);
-		Map<String, Tclass> destTclassMap = new HashMap<String, Tclass>();
+		Map<Integer, Tclass> destTclassMap = new HashMap<Integer, Tclass>();
 		Tclass emptyTclass = new Tclass();
 		emptyTclass.setTclassId(0);
-		destTclassMap.put("0", emptyTclass);
+		destTclassMap.put(0, emptyTclass);
 		for (Tclass tclass : destTclassList) {
 			destTclassMap.put(tclass.getTclassNo(), tclass);
 		}
@@ -150,7 +150,7 @@ public class PlanServiceImpl implements PlanService {
 			Integer srcCourseId = srcPlan.getCourseId();
 			Integer srcTeacherId = srcPlan.getTeacherId();
 			Tclass srcTclass = srcPlan.getTclass();
-			String srcTclassNo = srcTclass == null ? "0" : srcTclass.getTclassNo();
+			Integer srcTclassNo = srcTclass == null ? 0 : srcTclass.getTclassNo();
 			if (destCourseMap.containsKey(srcCourseId) && destTeacherMap.containsKey(srcTeacherId)
 					&& destTclassMap.containsKey(srcTclassNo)) {
 				Plan destPlan = new Plan();
@@ -175,7 +175,8 @@ public class PlanServiceImpl implements PlanService {
 		for (Course course : courseList) {
 			// TODO type 23 24 25
 			Integer courseId = course.getCourseId();
-			if (courseId != 23 && courseId != 24 && courseId != 25) {
+			Integer courseType = course.getType();
+			if (courseType != 4) {
 				for (Tclass tclass : tclassList) {
 					Integer tclassId = tclass.getTclassId();
 					Plan plan = new Plan();
@@ -235,8 +236,9 @@ public class PlanServiceImpl implements PlanService {
 		CoursePlanView coursePlanView = new CoursePlanView();
 		coursePlanView.setCourse(course);
 		Integer courseId = course.getCourseId();
+		Integer courseType = course.getType();
 		// TODO type 23 24 25
-		if (courseId != 23 && courseId != 24 && courseId != 25) {
+		if (courseType != 4) {
 			coursePlanView.setPaneMap(gnrPaneMap(courseId, tclassList));
 		} else {
 			coursePlanView.setPaneMap(gnrPaneMap(courseId, null));

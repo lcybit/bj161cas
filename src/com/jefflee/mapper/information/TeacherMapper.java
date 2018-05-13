@@ -14,7 +14,11 @@ import com.jefflee.util.MyMapper;
 public interface TeacherMapper extends MyMapper<Teacher> {
 
 	@Select("SELECT * FROM info_teacher t, schd_grade g, rlat_grade_teacher r "
-			+ "WHERE g.grade_id = r.grade_id AND t.teacher_id = r.teacher_id AND g.grade_id = #{gradeId}")
+			+ "WHERE g.grade_id = r.grade_id AND t.teacher_id = r.teacher_id AND g.grade_id = #{gradeId} ORDER BY convert(t.name using gbk)")
 	@Results({ @Result(id = true, column = "teacher_id", property = "teacherId") })
 	List<Teacher> selectListByGradeId(Integer gradeId);
+
+	@Select("SELECT * FROM info_teacher t ORDER BY convert(t.name using gbk)")
+	@Results({ @Result(id = true, column = "teacher_id", property = "teacherId") })
+	List<Teacher> selectList();
 }

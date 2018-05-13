@@ -14,19 +14,19 @@
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="tclass" method="post">
       <div class="layui-form-item">
-        <label class="layui-form-label">班级编号:</label>
+        <label class="layui-form-label">班号:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="tclassNo" id="tclassNo" type="text" />
         </div>
       </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">班级名称:</label>
+      <div class="layui-form-item" hidden="hidden">
+        <label class="layui-form-label">名称:</label>
         <div class="layui-input-block">
           <input class="layui-input" name="name" id="name" type="text" />
         </div>
       </div>
-      <div class="layui-form-item" pane="">
-        <label class="layui-form-label">班级类型:</label>
+      <div class="layui-form-item" pane="" hidden="hidden">
+        <label class="layui-form-label">类型:</label>
         <div class="layui-input-block">
           <input type="radio" name="type" id="type" value="0" title="普通班" checked="">
           <input type="radio" name="type" id="type" value="1" title="学困班">
@@ -37,7 +37,7 @@
       <div class="layui-form-item">
         <label class="layui-form-label">入学年份:</label>
         <div class="layui-input-block">
-          <input type="text" class="layui-input" name="year" id="year" placeholder="yyyy">
+          <input type="text" class="layui-input" name="year" id="year" placeholder="选择年份">
         </div>
       </div>
       <div class="layui-form-item" pane="">
@@ -48,9 +48,9 @@
         </div>
       </div>
       <div class="layui-form-item">
-        <div class="layui-input-block">
-          <button class="layui-btn" type="button" onclick="create()">新增</button>
-          <button class="layui-btn" type="button" onclick="cancel()">取消</button>
+        <div class="layui-input-inline layui-btn-group">
+          <button class="layui-btn layui-btn-sm" type="button" onclick="create()">新增</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" type="button" onclick="cancel()">取消</button>
         </div>
       </div>
     </form>
@@ -85,9 +85,7 @@
         contentType : 'application/json',
         data : JSON.stringify($('#tclass').serializeJSON()),
         success : function(tclassId) {
-          var index = parent.layer.getFrameIndex(window.name);
-          parent.layer.close(index);
-          parent.list();
+          cancel();
         }
       });
     }

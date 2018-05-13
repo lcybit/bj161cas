@@ -73,9 +73,7 @@
         contentType : 'application/json',
         data : JSON.stringify($('#period').serializeJSON()),
         success : function(result) {
-          var index = parent.layer.getFrameIndex(window.name);
-          parent.layer.close(index);
-          parent.list();
+          cancel();
         }
       });
     }

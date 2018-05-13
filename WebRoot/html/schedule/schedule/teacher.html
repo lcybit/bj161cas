@@ -46,6 +46,7 @@
     var upload = layui.upload;
     var form = layui.form;
   
+    var gradeId = sessionStorage.getItem('currentGradeId');
     var scheduleId = sessionStorage.getItem('currentScheduleId');
     var courseId = sessionStorage.getItem('currentCourseId');
     var tclassId = sessionStorage.getItem('currentTclassId');
@@ -74,7 +75,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/teacher/list',
+        url: '/teacher/list/' + gradeId,
         success: function(teacherList) {
           $('#teacherList').append($.templates('#tmpl-teacherList').render(teacherList));
         }

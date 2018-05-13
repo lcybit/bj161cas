@@ -11,9 +11,9 @@ public class Course {
 	@Id
 	// TODO 定好顺序
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@OrderBy
 	private Integer courseId;
-	private String courseNo;
+	@OrderBy
+	private Integer courseNo;
 	private String name;
 	private String shortName;
 	private Integer type;
@@ -26,11 +26,11 @@ public class Course {
 		this.courseId = courseId;
 	}
 
-	public String getCourseNo() {
+	public Integer getCourseNo() {
 		return courseNo;
 	}
 
-	public void setCourseNo(String courseNo) {
+	public void setCourseNo(Integer courseNo) {
 		this.courseNo = courseNo;
 	}
 

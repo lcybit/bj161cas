@@ -107,7 +107,7 @@
               <th colspan="{{:~afternoon}}">下午</th>
             {{/if}}
             {{if ~evening > 0}}
-              <th colspan="{{:~evening}}">晚上</th>
+              <th colspan="{{:~evening}}">傍晚</th>
             {{/if}}
           </tr>
           <tr>
@@ -212,8 +212,8 @@
       style="cursor:pointer"
       onclick="clickPeriodView('{{:periodViewId}}', event, [
         {{for arrangementList ~length=arrangementList.length}}
-          {{for #data ~courseId=course.courseId}}
-            {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
+          {{for #data ~courseType=course.type}}
+            {{if ~courseType == 4}}
               'c-{{:course.courseId}}'
             {{else}}
               's-{{:tclass.tclassId}}'
@@ -224,8 +224,8 @@
       ])">
       {{for arrangementList ~jumpList=jumpViewIdList}}
         <span onclick="jumpToView(event, '{{:~jumpList[#index]}}')">
-        {{for #data ~courseId=course.courseId}}
-          {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
+        {{for #data ~courseType=course.type}}
+          {{if ~courseType == 4}}
             {{:course.shortName}}
           {{else}}
             {{:tclass.shortName}}
@@ -245,8 +245,8 @@
   </script>
   <script id="tmpl-teacherPlanView" type="text/x-jsrender">
     <td class="layui-col-md2" name="{{:key}}" style="cursor:pointer" onclick="clickPlanView('{{:key}}', event)">
-    {{for prop ~courseId=prop.plan.course.courseId}}
-      {{if ~courseId == 11 || ~courseId == 23 || ~courseId == 24 || ~courseId == 25}}
+    {{for prop ~courseType=prop.plan.course.type}}
+      {{if ~courseType == 4}}
         {{:plan.course.shortName}}
       {{else}}
         {{:plan.tclass.shortName}}
