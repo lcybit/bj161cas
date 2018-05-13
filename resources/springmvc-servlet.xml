@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-  xmlns:mvc="http://www.springframework.org/schema/mvc"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd
         http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context.xsd
         http://www.springframework.org/schema/mvc
-		http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+		http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
   <!-- scan the package and the sub package -->
+
   <context:component-scan base-package="com.jefflee" />
   <!-- don't handle the static resource -->
   <mvc:default-servlet-handler />
@@ -16,9 +18,8 @@
   <mvc:annotation-driven>
     <!-- 解决中文乱码问题 -->
     <mvc:message-converters register-defaults="true">
-      <bean
-        class="org.springframework.http.converter.StringHttpMessageConverter">
-        <property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+      <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+        <property name="supportedMediaTypes" value="text/html;charset=UTF-8"/>
       </bean>
     </mvc:message-converters>
   </mvc:annotation-driven>
@@ -26,18 +27,9 @@
   <bean id="internalResourceViewResolver"
     class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <!-- 前缀 -->
-    <property name="prefix" value="/WEB-INF/jsp/" />
+    <property name="prefix" value="/WEB-INF/" />
     <!-- 后缀 -->
     <property name="suffix" value=".jsp" />
-  </bean>
-    
-  <!-- 定义文件上传解析器 -->
-  <bean id="multipartResolver"
-	class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
-	<!-- 设定默认编码 -->
-	<property name="defaultEncoding" value="UTF-8"></property>
-	<!-- 设定文件上传的最大值5MB，5*1024*1024 -->
-	<property name="maxUploadSize" value="5242880"></property>
   </bean>
   <!-- 读取参数配置 -->
   <bean id="propertyConfigurer"
@@ -48,29 +40,29 @@
       </list>
     </property>
   </bean>
-  <!-- 配置SqlSessionTemplate -->
-  <!-- <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate"> 
-    <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" /> </bean> -->
-  <!-- SqlSessionFactory -->
+  <!-- 配置SqlSessionTemplate -->  
+  <!-- <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">  
+    <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory" />  
+  </bean> -->
   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-    <!--设置数据源 -->
-    <property name="dataSource" ref="dataSource"></property>
-    <!--设置映射文件 <property name="mapperLocations" value="classpath:mybatis/sqlmap/mapper/*.xml"></property> -->
-    <!--设置pageHelper -->
-    <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"></property>
+    <property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+    <property name="dataSource" ref="dataSource" />
   </bean>
   <!-- 配置mybatis -->
-  <!-- <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer"> <property 
-    name="basePackage" value="com.jefflee.mapper" /> <property name="sqlSessionFactoryBeanName" 
-    value="sqlSessionFactory"/> </bean> -->
+   <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+    <property name="basePackage" value="com.jefflee.mapper" />
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+  </bean>
   <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
     <property name="basePackage" value="com.jefflee.mapper" />
-    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
-    <property name="properties">
-      <value>
-        mappers=com.jefflee.util.MyMapper
-      </value>
-    </property>
+    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    <!-- <property name="properties">
+        <value>
+            mappers=tk.mybatis.mapper.common.Mapper
+            IDENTITY=select uuid()
+            ORDER=BEFORE
+        </value>
+    </property> -->
   </bean>
   <!-- 阿里 druid数据库连接池 -->
   <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
@@ -105,4 +97,41 @@
     <!-- 关闭abanded连接时输出错误日志 -->
     <property name="logAbandoned" value="${logAbandoned}" />
   </bean>
+
+
+  <!-- 资源映射 -->
+  <mvc:resources location="/css/" mapping="/css/**"/>
+  <mvc:resources location="/js/" mapping="/js/**"/>
+  <mvc:resources location="/layui/" mapping="/layui/**"/>
+  <mvc:resources location="/json/" mapping="/json/**"/>
+  <mvc:resources location="/WEB-INF/page/" mapping="/page/**"/>
+
+  <!--启动对@AspectJ注解的支持，以输出日志-->
+  <aop:aspectj-autoproxy/>
+  <mvc:annotation-driven></mvc:annotation-driven>
+  <aop:aspectj-autoproxy proxy-target-class="true" />
+  <aop:config proxy-target-class="true"/>
+  <!-- 开启shiro注解支持 -->
+  <bean
+          class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+    <property name="securityManager" ref="securityManager" />
+  </bean>
+  <bean class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <property name="exceptionMappings">
+      <props>
+        <prop key="org.apache.shiro.authz.AuthorizationException">redirect:/sys/401</prop>
+        <prop key="org.apache.shiro.authz.UnauthorizedException">redirect:/sys/refuse</prop>
+      </props>
+    </property>
+  </bean>
+
+  <!-- 定义文件上传解析器 -->
+  <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!-- 设定默认编码 -->
+    <property name="defaultEncoding" value="UTF-8"></property>
+    <!-- 设定文件上传的最大值5MB，5*1024*1024 -->
+    <property name="maxUploadSize" value="5242880"></property>
+  </bean>
+
 </beans>
