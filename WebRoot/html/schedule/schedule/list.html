@@ -7,8 +7,8 @@
 <script src="/plugin/jquery/jquery.js"></script>
 <script src="/plugin/jquery/jquery.serializejson.js"></script>
 <script src="/plugin/jsrender/jsrender.js"></script>
-
-
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/js/jump.js"></script>
 </head>
 
 <body>
@@ -68,7 +68,7 @@
         id: 'create',
         title: '新增课表信息',
         content: '/html/schedule/schedule/create.html',
-        area: [ '700px', '500px' ],
+        area: [ '600px', '400px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false
@@ -82,7 +82,7 @@
         id: 'modify',
         title: '修改课表信息',
         content: '/html/schedule/schedule/modify.html',
-        area: [ '700px', '500px' ],
+        area: [ '600px', '400px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -124,7 +124,7 @@
           });
         });
     }
-  
+
     function goSchedule(scheduleId) {
       sessionStorage.setItem('currentScheduleId', scheduleId);
       $.ajax({
@@ -132,7 +132,7 @@
         type: 'GET',
         url: '/arrangement/initial/' + scheduleId,
         success: function() {
-          jump('/html/schedule/schedule/display.html');
+          location.href=('/html/schedule/schedule/display.html');
         }
       })
     }
@@ -144,7 +144,7 @@
         id: 'plan',
         title: '设置教学计划',
         content: '/html/schedule/schedule/plan.html',
-        area: [ '1300px', '650px' ],
+        area: [ '1000px', '450px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -181,7 +181,7 @@
     }
   
     function goBack() {
-      jump('html/schedule/grade/list.html');
+      location.href=('../grade/list.html');
     }
   </script>
 </body>

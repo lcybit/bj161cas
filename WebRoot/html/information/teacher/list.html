@@ -3,18 +3,19 @@
 
 <head>
 <title>教师信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+  <link rel="stylesheet" href="../../../plugin/layui/css/layui.css" />
+  <script src="../../../plugin/jquery/jquery.js"></script>
+  <script src="../../../plugin/jquery/jquery.serializejson.js"></script>
+  <script src="../../../plugin/jsrender/jsrender.js"></script>
+  <script src="../../../plugin/layui/layui.all.js"></script>
 </head>
 
 <body>
   <div class="layui-container" style="width:100%;">
     <div class="layui-btn-group">
-      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
-        <i class="layui-icon">&#xe65c;</i>返回
-      </button>
+      <!--<button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">-->
+        <!--<i class="layui-icon">&#xe65c;</i>返回-->
+      <!--</button>-->
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
@@ -75,7 +76,7 @@
         id: 'create',
         title: '新增教师信息',
         content: '/html/information/teacher/create.html',
-        area: [ '700px', '500px' ],
+        area: [ '500px', '300px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -92,7 +93,7 @@
         id: 'modify',
         title: '修改教师信息',
         content: '/html/information/teacher/modify.html',
-        area: [ '700px', '500px' ],
+        area: [ '500px', '300px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,

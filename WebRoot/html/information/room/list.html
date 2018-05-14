@@ -3,27 +3,28 @@
 
 <head>
 <title>教室信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+  <link rel="stylesheet" href="../../../plugin/layui/css/layui.css" />
+  <script src="../../../plugin/jquery/jquery.js"></script>
+  <script src="../../../plugin/jquery/jquery.serializejson.js"></script>
+  <script src="../../../plugin/jsrender/jsrender.js"></script>
+  <script src="../../../plugin/layui/layui.all.js"></script>
 </head>
 
 <body>
   <div class="layui-container" style="width:100%;">
     <div class="layui-btn-group">
-      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
-        <i class="layui-icon">&#xe65c;</i>返回
-      </button>
+      <!--<button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">-->
+        <!--<i class="layui-icon">&#xe65c;</i>返回-->
+      <!--</button>-->
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
-      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goPeriodHtml()">
-        <i class="layui-icon"> &#xe619;</i>上一步
-      </button>
-      <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goTclassHtml()">
-        <i class="layui-icon"> &#xe61a;</i>下一步
-      </button>
+      <!--<button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goPeriodHtml()">-->
+        <!--<i class="layui-icon"> &#xe619;</i>上一步-->
+      <!--</button>-->
+      <!--<button class="layui-btn layui-bg-blue layui-btn-sm" onclick="goTclassHtml()">-->
+        <!--<i class="layui-icon"> &#xe61a;</i>下一步-->
+      <!--</button>-->
     </div>
     <table class="layui-table">
       <thead>
@@ -65,7 +66,7 @@
         id: 'create',
         title: '新增教室信息',
         content: '/html/information/room/create.html',
-        area: [ '700px', '500px' ],
+        area: [ '500px', '300px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false
@@ -79,7 +80,7 @@
         id: 'modify',
         title: '修改教室信息',
         content: '/html/information/room/modify.html',
-        area: [ '700px', '500px' ],
+        area: [ '500px', '300px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,

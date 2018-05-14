@@ -102,7 +102,7 @@
   <!-- 资源映射 -->
   <mvc:resources location="/css/" mapping="/css/**"/>
   <mvc:resources location="/js/" mapping="/js/**"/>
-  <mvc:resources location="/layui/" mapping="/layui/**"/>
+  <mvc:resources location="/plugin/" mapping="/plugin/**"/>
   <mvc:resources location="/json/" mapping="/json/**"/>
   <mvc:resources location="/WEB-INF/page/" mapping="/page/**"/>
 

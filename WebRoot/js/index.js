@@ -189,3 +189,5 @@ layui.config({
 function addTab(_this){
 	tab.tabAdd(_this);
 }
+
+

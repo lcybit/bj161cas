@@ -30,7 +30,7 @@
 			<value>
 				/css/**=anon
 				/js/**=anon
-				/layui/**=anon
+				/plugin/**=anon
 				/sys/vcode=anon
 				/sys/getMenus=anon
 				/sys/login=anon
