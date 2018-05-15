@@ -135,6 +135,7 @@
         elem: 'page',
         count: Math.ceil(data.length),
         limit: 10,
+        layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
         jump: function(obj, first) {
           var start = (obj.curr - 1) * obj.limit; //获得数据 的数组起始下标
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标

@@ -50,7 +50,8 @@ layui.config({
             ,{field:'phone', title: '联系方式'}
             ,{field:'roleName', title: '角色'}
             ,{title: '操作',toolbar: '#barEdit'}
-        ]]
+        ]],
+         layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
         ,page: true //开启分页
     });
     //监听工具条
@@ -92,7 +93,7 @@ layui.config({
             layui.layer.open({
                 type: 2,
                 title:"编辑用户",
-                area: ['410px', '480px'],
+                area: ['450px', '480px'],
                 content:"editAdmin/"+data.id, //这里content是一个普通的String
                 success : function(){
                     layui.layer.tips('点击此处返回管理员列表', '.layui-layer-setwin .layui-layer-close', {

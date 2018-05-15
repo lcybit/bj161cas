@@ -37,12 +37,12 @@
 			<div class="layui-inline">
 				（支持模糊查询）
 			</div>
-	</blockquote>
 	</form>
+	</blockquote>
 	<div class="layui-form">
 	  	<table id="logList" lay-filter="logList"></table>
 	</div>
-	<script type="text/javascript" src="../layui/layui.js"></script>
+	<script type="text/javascript" src="../../../plugin/layui/layui.js"></script>
 	<script type="text/html" id="sexTpl">
  		 {{#  if(d.sex === '0'){ }}
    		 <span style="color: #F581B1;">女</span>

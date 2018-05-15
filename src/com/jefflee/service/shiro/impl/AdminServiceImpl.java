@@ -468,29 +468,31 @@ public class AdminServiceImpl implements AdminService {
 						tbAdmin.setFullname(cellValue.toString());
 						break;
 					case 2:
+						tbAdmin.setPassword(StringUtil.aviodNumericValue(cellValue));
+						break;
+					case 3:
 						if (cellValue.toString().equals("男"))
 							tbAdmin.setSex("1");
 						else if (cellValue.toString().equals("女"))
 							tbAdmin.setSex("0");
 						else tbAdmin.setSex("2");
 						break;
-					case 3:
+					case 4:
 						tbAdmin.setBirthday(cellValue.toString());
 						break;
-					case 4:
+					case 5:
 						tbAdmin.setAddress(cellValue.toString());
 						break;
-					case 5:
+					case 6:
 						tbAdmin.setRoleId(Long.parseLong(StringUtil.aviodNumericValue(cellValue)));
 						break;
-					case 6:
+					case 7:
 						tbAdmin.setPhone(StringUtil.aviodNumericValue(cellValue));
 						break;
 					default:
 						break;
 				}
 			}
-			tbAdmin.setPassword("e10adc3949ba59abbe56e057f20f883e");
 			importedAdminList.add(tbAdmin);
 		}
 

@@ -88,7 +88,7 @@
 			</div>
 		</div>
 		<div class="layui-form-item">
-			<label class="layui-form-label">分配角色</label>
+			<label class="layui-form-label">角色</label>
 			<div class="layui-input-block">
 				<select name="roleId">
 					<!-- <option value="">请选择</option> -->
@@ -96,9 +96,9 @@
 						<c:if test="${ad.roleId==r.roleId }">
 							<option value="${r.roleId }" selected>${r.roleName }</option>
 						</c:if>
-						<c:if test="${ad.roleId!=r.roleId }">
-							<option value="${r.roleId }" disabled="disabled">${r.roleName }</option>
-						</c:if>
+						<%--<c:if test="${ad.roleId!=r.roleId }">--%>
+							<%--<option value="${r.roleId }" disabled="disabled">${r.roleName }</option>--%>
+						<%--</c:if>--%>
 					</c:forEach>
 				</select>
 			</div>
