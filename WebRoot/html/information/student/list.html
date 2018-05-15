@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>教师信息列表</title>
+<title>学生信息列表</title>
   <link rel="stylesheet" href="../../../plugin/layui/css/layui.css" />
   <script src="../../../plugin/jquery/jquery.js"></script>
   <script src="../../../plugin/jquery/jquery.serializejson.js"></script>
@@ -26,24 +26,28 @@
     <table class="layui-table" id="test">
       <thead>
         <tr>
-          <th>工号</th>
+          <th>学号</th>
           <th>姓名</th>
+          <th>入学年份</th>
+          <th>偏移</th>
           <th>操作</th>
         </tr>
       </thead>
-      <tbody id="teacherList">
+      <tbody id="studentList">
       </tbody>
     </table>
     <div id="page"></div>
   </div>
-  <script id="tmpl-teacherList" type="text/x-jsrender">
+  <script id="tmpl-studentList" type="text/x-jsrender">
     <tr>
-      <td>{{:teacherNo}}</td>
+      <td>{{:student_no}}</td>
       <td>{{:name}}</td>
+      <td>{{:begin_year}}</td>
+      <td>{{:offset}}</td>
       <td>
         <div class="layui-btn-group">
-          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:teacherId}}')">修改</button>
-          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:teacherId}}')">删除</button>
+          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
         </div>
       </td>
     </tr>
@@ -60,13 +64,13 @@
       list();
       upload.render({
         elem: '#importExcel',
-        url: '/teacher/import',
+        url: '/student/import',
         accept: 'file',
         acceptMime: '.xls,.xlsx',
         exts: 'xls|xlsx',
         done: function(result) {
           layer.msg('导入完毕！');
-          list();//刷新列表
+          list();
         }
       });
     })
@@ -75,9 +79,9 @@
       layer.open({
         type: 2,
         id: 'create',
-        title: '新增教师信息',
-        content: '/html/information/teacher/create.html',
-        area: [ '500px', '300px' ],
+        title: '新增学生信息',
+        content: '/html/information/student/create.html',
+        area: [ '500px', '350px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -87,14 +91,14 @@
       });
     }
   
-    function goModify(teacherId) {
-      sessionStorage.setItem('currentTeacherId', teacherId);
+    function goModify(id) {
+      sessionStorage.setItem('currentStudentId', id);
       layer.open({
         type: 2,
         id: 'modify',
-        title: '修改教师信息',
-        content: '/html/information/teacher/modify.html',
-        area: [ '500px', '300px' ],
+        title: '修改学生信息',
+        content: '/html/information/student/modify.html',
+        area: [ '500px', '350px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -117,7 +121,7 @@
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/teacher/delete/' + teacherId,
+            url: '/student/delete/' + teacherId,
             success: function() {
               layer.close(index);
               list();
@@ -130,7 +134,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/teacher/list',
+        url: '/student/list',
         dataType: 'json',
         success: function(teacherList) {
           loadData(teacherList);
@@ -150,7 +154,7 @@
           for (var i = start; i <= end && i < data.length; i++) {
             arr.push(data[i]);
           }
-          $('#teacherList').html($.templates('#tmpl-teacherList').render(arr));
+          $('#studentList').html($.templates('#tmpl-studentList').render(arr));
         }
       });
     }

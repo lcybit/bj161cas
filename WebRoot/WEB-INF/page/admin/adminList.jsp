@@ -49,7 +49,7 @@
 </blockquote>
 <!-- 数据表格 -->
 <table id="adminList" lay-filter="test"></table>
-<script type="text/javascript" src="../../../layui/layui.js"></script>
+<script type="text/javascript" src="../../../plugin/layui/layui.js"></script>
 <script type="text/javascript" src="../../page/admin/adminList.js"></script>
 <script type="text/html" id="barEdit">
 	<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>

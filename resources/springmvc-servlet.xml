@@ -49,20 +49,20 @@
     <property name="dataSource" ref="dataSource" />
   </bean>
   <!-- 配置mybatis -->
-   <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-    <property name="basePackage" value="com.jefflee.mapper" />
-    <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-  </bean>
+   <!--<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">-->
+    <!--<property name="basePackage" value="com.jefflee.mapper" />-->
+    <!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>-->
+  <!--</bean>-->
   <bean class="tk.mybatis.spring.mapper.MapperScannerConfigurer">
     <property name="basePackage" value="com.jefflee.mapper" />
     <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
-    <!-- <property name="properties">
+    <property name="properties">
         <value>
             mappers=tk.mybatis.mapper.common.Mapper
-            IDENTITY=select uuid()
-            ORDER=BEFORE
+            <!--IDENTITY=select uuid()-->
+            <!--ORDER=BEFORE-->
         </value>
-    </property> -->
+    </property>
   </bean>
   <!-- 阿里 druid数据库连接池 -->
   <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"

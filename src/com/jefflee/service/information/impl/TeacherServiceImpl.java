@@ -30,8 +30,6 @@ public class TeacherServiceImpl implements TeacherService {
 	@Resource(name = "teacherMapper")
 	private TeacherMapper teacherMapper;
 
-	private String tempPath;
-
 	@Override
 	public Integer insert(Teacher teacher) {
 		if (teacherMapper.insert(teacher) == 1) {
@@ -76,17 +74,19 @@ public class TeacherServiceImpl implements TeacherService {
 
 	@Override
 	public Map<String, Object> importExcel(MultipartFile file) throws Exception {
-		tempPath = "C:\\bj161cas\\";
-		File tempDir = new File(tempPath);
-		// 创建目录
-		if (!tempDir.exists()) {
-			tempDir.mkdirs();
-		}
-		// 新建临时文件
-		File tempFile = null;
-		// 初始化输入流
-		String tempFileName = new Date().getTime() + ".xlsx";
-		tempFile = new File(tempPath + tempFileName);
+		//        tempPath = "C:\\bj161cas\\";
+//        File tempDir = File.createTempFile()
+//        // 创建目录
+//        if (!tempDir.exists()) {
+//            tempDir.mkdirs();
+//        }
+//        // 新建临时文件
+//        File tempFile = null;
+//        // 初始化输入流
+//        String tempFileName = new Date().getTime() + ".xlsx";
+		String name = file.getOriginalFilename();
+		String suffix = name.substring(name.indexOf("."));
+		File tempFile = File.createTempFile(String.valueOf(new Date().getTime()), suffix);
 		// 将上传的文件写入临时文件中
 		file.transferTo(tempFile);
 		// 根据临时文件实例化输入流

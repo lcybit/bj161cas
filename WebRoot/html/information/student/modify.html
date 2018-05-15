@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改教师信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="student" method="post">
+      <!-- 隐藏学生ID -->
+      <input class="layui-input" name="id" id="id" type="hidden" />
+      <div class="layui-form-item">
+        <label class="layui-form-label">学号:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="student_no" id="student_no" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">姓名:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="name" id="name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">入学年份:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="begin_year" id="begin_year" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">偏移:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="offset" id="offset" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-inline layui-btn-group">
+          <button class="layui-btn layui-btn-sm" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var studentId = sessionStorage.getItem('currentStudentId');
+      $('#id').attr('value', studentId);
+      $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/student/find/' + studentId,
+        success: function(student) {
+          $('#student_no').attr('value', student.student_no);
+          $('#name').attr('value', student.name);
+          $('#begin_year').attr('value', student.begin_year);
+          $('#offset').attr('value', student.offset);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+    });
+  
+    function modify() {
+      $.ajax({
+        async: false,
+        url: '/student/modify',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify($('#student').serializeJSON()),
+        success: function(result) {
+          cancel();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>
