@@ -5,6 +5,7 @@ layui.config({
     var layer = parent.layer === undefined ? layui.layer : parent.layer,
         laypage = layui.laypage,
         $ = layui.jquery,
+        upload = layui.upload,
         active = {
             search: function () {
                 // var nickname = $('#nickname'), sex = $('#sex option:selected'), status = $('#status option:selected');
@@ -127,6 +128,19 @@ layui.config({
         })
         layui.layer.full(index);
     })
+
+    //从文件导入用户
+    upload.render({
+        elem: '.adminsAdd_btn',
+        url: '/sys/import',
+        accept: 'file',
+        acceptMime: '.xls,.xlsx',
+        exts: 'xls|xlsx',
+        done: function (result) {
+            layer.msg('导入完毕！');
+            table.reload('adminList', {})
+        }
+    });
 
     //批量删除用户
     $(".batchDel").click(function(){

@@ -3,6 +3,7 @@ package com.jefflee.controller.shiro;
 import com.jefflee.annotation.SysLog;
 import com.jefflee.entity.shiro.*;
 import com.jefflee.service.shiro.AdminService;
+import com.jefflee.util.ExcelUtil;
 import com.jefflee.util.shiro.RRException;
 import com.jefflee.util.shiro.ResultUtil;
 import com.jefflee.util.shiro.ShiroUtils;
@@ -19,11 +20,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("sys")
@@ -443,16 +446,6 @@ public class AdminController {
 		return "page/admin/editAdmin";
 	}
 	
-	@RequestMapping("/checkAdminByEmail/{eMail}")
-	@ResponseBody
-	public ResultUtil checkAdminByEmail(@PathVariable("eMail")String eMail, String username) {
-		TbAdmin admin=adminServiceImpl.selAdminByEmail(eMail,username);
-		if(admin!=null){
-			return new ResultUtil(500,"邮箱已被占用！");
-		}
-		return new ResultUtil(0);
-	}
-	
 	/**
 	 * 更新管理员信息
 	 * @param
@@ -508,5 +501,36 @@ public class AdminController {
 		}
 		return new ResultUtil(500,"请求错误！");
 	}
-	
+
+	@SysLog(value="导入用户")
+	@RequestMapping("/import")
+	@ResponseBody
+	public ResultUtil importExcel(@RequestParam MultipartFile file){
+		ResultUtil result = new ResultUtil();
+		// 判断文件是否为空
+		if (file.isEmpty()) {
+			result.setMsg("文件为空");
+			return result;
+		}
+		// 验证文件名是否合格
+		if (!ExcelUtil.validateExcel(file.getOriginalFilename())) {
+			result.setMsg("必须是excel文件");
+			return result;
+		}
+		// 批量导入
+		Map<String, Object> outcome = null;
+		try {
+			outcome = adminServiceImpl.importExcel(file);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (outcome == null) {
+			result.setMsg("导入失败");
+			return result;
+		} else {
+			result.setMsg("导入成功");
+			return result;
+		}
+
+	}
 }

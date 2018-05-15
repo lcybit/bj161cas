@@ -3,8 +3,10 @@ package com.jefflee.service.shiro;
 
 import com.jefflee.entity.shiro.*;
 import com.jefflee.util.shiro.ResultUtil;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Map;
 
 public interface AdminService {
 	// 登陆
@@ -57,11 +59,10 @@ public interface AdminService {
 	//根据id得到管理员
 	public TbAdmin selAdminById(Long id);
 
-	//根据email得到管理员
-	public TbAdmin selAdminByEmail(String eMail, String username);
-
 	//更新管理员信息
 	public void updAdmin(TbAdmin admin);
 
 	public void updAdmin1(TbAdmin admin);
+
+	Map<String, Object> importExcel(MultipartFile file) throws Exception;
 }

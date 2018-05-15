@@ -11,8 +11,6 @@ public class TbAdmin {
 
     private String fullname;
 
-    private String eMail;
-
     private String sex;
 
     private String birthday;
@@ -63,14 +61,6 @@ public class TbAdmin {
 
     public void setFullname(String fullname) {
         this.fullname = fullname == null ? null : fullname.trim();
-    }
-
-    public String geteMail() {
-        return eMail;
-    }
-
-    public void seteMail(String eMail) {
-        this.eMail = eMail == null ? null : eMail.trim();
     }
 
     public String getSex() {
@@ -124,7 +114,7 @@ public class TbAdmin {
 	@Override
 	public String toString() {
 		return "TbAdmin [id=" + id + ", username=" + username + ", password=" + password + ", salt=" + salt
-				+ ", fullname=" + fullname + ", eMail=" + eMail + ", sex=" + sex + ", birthday=" + birthday
+				+ ", fullname=" + fullname  + ", sex=" + sex + ", birthday=" + birthday
 				+ ", address=" + address + ", phone=" + phone + ", roleId=" + roleId + ", roleName=" + roleName + "]";
 	}
     

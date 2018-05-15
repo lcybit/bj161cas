@@ -23,7 +23,7 @@
 		<a class="layui-btn layui-btn-normal adminAdd_btn" ><i class="layui-icon">&#xe608;</i>   添加用户</a>
 	</div>
 	<div class="layui-inline">
-		<a class="layui-btn layui-btn-normal adminAdd_btn" ><i class="layui-icon">&#xe608;</i>   批量添加</a>
+		<a class="layui-btn layui-btn-normal adminsAdd_btn" ><i class="layui-icon">&#xe67c;</i>   批量添加</a>
 	</div>
 	<div class="layui-inline">
 		<a class="layui-btn layui-btn-danger batchDel"><i class="layui-icon">&#xe640;</i>批量删除</a>
@@ -49,7 +49,7 @@
 </blockquote>
 <!-- 数据表格 -->
 <table id="adminList" lay-filter="test"></table>
-<script type="text/javascript" src="../../../plugin/layui/layui.js"></script>
+<script type="text/javascript" src="../../../plugin/layui/layui.all.js"></script>
 <script type="text/javascript" src="../../page/admin/adminList.js"></script>
 <script type="text/html" id="barEdit">
 	<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>

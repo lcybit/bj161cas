@@ -37604,7 +37604,6 @@ CREATE TABLE `tb_admin` (
   `password` varchar(50) NOT NULL COMMENT '密码',
   `salt` varchar(5) DEFAULT '',
   `fullname` varchar(50) NOT NULL COMMENT '全名',
-  `e_mail` varchar(100) DEFAULT NULL,
   `sex` varchar(1) NOT NULL COMMENT '性别：0女，1男,2保密',
   `birthday` date NOT NULL,
   `address` varchar(100) NOT NULL COMMENT '地址',
@@ -37618,9 +37617,9 @@ CREATE TABLE `tb_admin` (
 -- ----------------------------
 -- Records of tb_admin
 -- ----------------------------
-INSERT INTO `tb_admin` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', null, 'arthur', 'isduxd@163.com', '1', '1994-11-08', '北京市通州区科创十四街', '17693109997', '1');
-INSERT INTO `tb_admin` VALUES ('28', '1120141805', 'e10adc3949ba59abbe56e057f20f883e', null, '陶国梁', 'taogl3@163.com', '1', '2018-04-19', '北京市', '15624951805', '3');
-INSERT INTO `tb_admin` VALUES ('32', '1120141806', 'e10adc3949ba59abbe56e057f20f883e', null, '王刚', '110@163.com', '1', '2018-04-19', '北京市', '15624951806', '2');
+INSERT INTO `tb_admin` VALUES ('1', 'admin', 'e10adc3949ba59abbe56e057f20f883e', null, 'arthur', '1', '1994-11-08', '北京市通州区科创十四街', '17693109997', '1');
+INSERT INTO `tb_admin` VALUES ('28', '1120141805', 'e10adc3949ba59abbe56e057f20f883e', null, '陶国梁',  '1', '2018-04-19', '北京市', '15624951805', '3');
+INSERT INTO `tb_admin` VALUES ('32', '1120141806', 'e10adc3949ba59abbe56e057f20f883e', null, '王刚', '1', '2018-04-19', '北京市', '15624951806', '2');
 
 -- ----------------------------
 -- Table structure for tb_log

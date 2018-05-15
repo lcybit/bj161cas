@@ -5,13 +5,18 @@ import com.github.pagehelper.PageInfo;
 import com.jefflee.entity.shiro.*;
 import com.jefflee.mapper.shiro.*;
 import com.jefflee.service.shiro.AdminService;
+import com.jefflee.util.ExcelUtil;
+import com.jefflee.util.StringUtil;
 import com.jefflee.util.shiro.ResultUtil;
+import org.apache.poi.ss.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.*;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -403,21 +408,6 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	@Override
-	public TbAdmin selAdminByEmail(String eMail, String username) {
-		TbAdminExample example = new TbAdminExample();
-		TbAdminExample.Criteria criteria = example.createCriteria();
-		criteria.andEMailEqualTo(eMail);
-		if(username!=null&&!"".equals(username)){
-			criteria.andUsernameNotEqualTo(username);
-		}
-		List<TbAdmin> admins = tbAdminMapper.selectByExample(example);
-		if (admins != null && admins.size() > 0) {
-			return admins.get(0);
-		}
-		return null;
-	}
-
-	@Override
 	public void updAdmin(TbAdmin admin) {
 		TbAdmin a = tbAdminMapper.selectByPrimaryKey(admin.getId());
 		admin.setPassword(a.getPassword());
@@ -429,4 +419,94 @@ public class AdminServiceImpl implements AdminService {
 		admin.setPassword(DigestUtils.md5DigestAsHex(admin.getPassword().getBytes()));
 		tbAdminMapper.updateByPrimaryKey(admin);
 	}
+
+	@Override
+	public Map<String, Object> importExcel(MultipartFile file) throws Exception{
+		String name = file.getOriginalFilename();
+		String suffix = name.substring(name.lastIndexOf("."));
+		File tempFile = File.createTempFile(String.valueOf(new Date().getTime()), suffix);
+		// 将上传的文件写入临时文件中
+		file.transferTo(tempFile);
+		// 根据临时文件实例化输入流
+		FileInputStream fileInputStream = new FileInputStream(tempFile);
+		Workbook workbook = WorkbookFactory.create(fileInputStream);
+		try {
+			// 根据excel里面的内容读取知识库信息
+			return readExcel(workbook);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			fileInputStream.close();
+			// 删除临时文件
+			if (tempFile.exists()) {
+				tempFile.delete();
+			}
+		}
+
+	}
+
+	private Map<String, Object> readExcel(Workbook workbook) {
+		Map<String, Object> result = new HashMap<String, Object>();
+		// 得到第一个sheet
+		Sheet sheet = workbook.getSheetAt(0);
+		List<TbAdmin> importedAdminList = new ArrayList<>();
+
+		// 循环Excel行
+		for (Row row : sheet) {
+			if (row.getRowNum() == 0) {
+				continue;
+			}
+			TbAdmin tbAdmin = new TbAdmin();
+			for (Cell cell : row) {
+				Object cellValue = ExcelUtil.getValue(cell);
+				switch (cell.getColumnIndex()) {
+					case 0:
+						tbAdmin.setUsername(StringUtil.aviodNumericValue(cellValue));
+						break;
+					case 1:
+						tbAdmin.setFullname(cellValue.toString());
+						break;
+					case 2:
+						if (cellValue.toString().equals("男"))
+							tbAdmin.setSex("1");
+						else if (cellValue.toString().equals("女"))
+							tbAdmin.setSex("0");
+						else tbAdmin.setSex("2");
+						break;
+					case 3:
+						tbAdmin.setBirthday(cellValue.toString());
+						break;
+					case 4:
+						tbAdmin.setAddress(cellValue.toString());
+						break;
+					case 5:
+						tbAdmin.setRoleId(Long.parseLong(StringUtil.aviodNumericValue(cellValue)));
+						break;
+					case 6:
+						tbAdmin.setPhone(StringUtil.aviodNumericValue(cellValue));
+						break;
+					default:
+						break;
+				}
+			}
+			tbAdmin.setPassword("e10adc3949ba59abbe56e057f20f883e");
+			importedAdminList.add(tbAdmin);
+		}
+
+		// 写入数据库
+		int successNum = -1;
+		if (!importedAdminList.isEmpty()) {
+			for (TbAdmin tbAdmin : importedAdminList) {
+				insAdmin(tbAdmin);
+				successNum++;
+			}
+		} else {
+			successNum = 0;
+		}
+		result.put("successNum", successNum);
+		return result;
+	}
+
 }
+
