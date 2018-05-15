@@ -85,7 +85,7 @@ public class TeacherServiceImpl implements TeacherService {
 //        // 初始化输入流
 //        String tempFileName = new Date().getTime() + ".xlsx";
 		String name = file.getOriginalFilename();
-		String suffix = name.substring(name.indexOf("."));
+		String suffix = name.substring(name.lastIndexOf("."));
 		File tempFile = File.createTempFile(String.valueOf(new Date().getTime()), suffix);
 		// 将上传的文件写入临时文件中
 		file.transferTo(tempFile);

@@ -28,6 +28,7 @@
         <tr>
           <th>学号</th>
           <th>姓名</th>
+          <th>性别</th>
           <th>入学年份</th>
           <th>偏移</th>
           <th>操作</th>
@@ -42,6 +43,7 @@
     <tr>
       <td>{{:student_no}}</td>
       <td>{{:name}}</td>
+      <td>{{:sexName}}</td>
       <td>{{:begin_year}}</td>
       <td>{{:offset}}</td>
       <td>
@@ -81,7 +83,7 @@
         id: 'create',
         title: '新增学生信息',
         content: '/html/information/student/create.html',
-        area: [ '500px', '350px' ],
+        area: [ '500px', '400px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -98,7 +100,7 @@
         id: 'modify',
         title: '修改学生信息',
         content: '/html/information/student/modify.html',
-        area: [ '500px', '350px' ],
+        area: [ '500px', '400px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -115,7 +117,7 @@
     function remove(teacherId) {
       layer.confirm('确认要删除吗？',
         {
-          title: '删除教师信息'
+          title: '删除学生信息'
         },
         function(index) {
           $.ajax({
@@ -136,8 +138,8 @@
         type: 'GET',
         url: '/student/list',
         dataType: 'json',
-        success: function(teacherList) {
-          loadData(teacherList);
+        success: function(studentList) {
+          loadData(studentList);
         }
       });
     }

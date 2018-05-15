@@ -3,9 +3,11 @@ package com.jefflee.mapper.shiro;
 import com.jefflee.entity.shiro.TbRoles;
 import com.jefflee.entity.shiro.TbRolesExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TbRolesMapper {
     int countByExample(TbRolesExample example);
 

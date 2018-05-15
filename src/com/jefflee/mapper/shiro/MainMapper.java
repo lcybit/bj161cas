@@ -1,15 +1,13 @@
 package com.jefflee.mapper.shiro;
 
-import com.jefflee.entity.shiro.TbAdmin;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-
+@Repository
 public interface MainMapper {
-	@Select("select * from tb_admin where role_id=5;")
-	List<TbAdmin> selStudentTotal();
+	@Select("select count(*) from info_student")
+	Integer selStudentTotal();
 
-	@Select("SELECT * FROM tb_admin WHERE role_id=3;")
-	List<TbAdmin> selTeacherTotal();
+	@Select("SELECT count(*) FROM info_teacher")
+	Integer selTeacherTotal();
 }

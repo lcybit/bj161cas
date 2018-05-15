@@ -3,9 +3,11 @@ package com.jefflee.mapper.shiro;
 import com.jefflee.entity.shiro.TbMenus;
 import com.jefflee.entity.shiro.TbMenusExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TbMenusMapper {
     int countByExample(TbMenusExample example);
 

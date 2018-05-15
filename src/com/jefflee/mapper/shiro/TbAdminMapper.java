@@ -3,9 +3,11 @@ package com.jefflee.mapper.shiro;
 import com.jefflee.entity.shiro.TbAdmin;
 import com.jefflee.entity.shiro.TbAdminExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TbAdminMapper {
     int countByExample(TbAdminExample example);
 

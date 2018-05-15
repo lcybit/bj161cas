@@ -25,10 +25,17 @@
           <input class="layui-input" name="name" id="name" type="text" />
         </div>
       </div>
+      <div class="layui-form-item" pane="">
+        <label class="layui-form-label">性别:</label>
+        <div class="layui-input-block">
+          <input type="radio" name="sex" id="man" value="0" title="男" checked="">
+          <input type="radio" name="sex" id="woman" value="1" title="女">
+        </div>
+      </div>
       <div class="layui-form-item">
         <label class="layui-form-label">入学年份:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="begin_year" id="begin_year" type="text" />
+          <input type="text" class="layui-input" name="begin_year" id="begin_year" placeholder="选择年份">
         </div>
       </div>
       <div class="layui-form-item">
@@ -50,6 +57,20 @@
       layui.use('form', function() {
         layui.form.render();
       });
+        layui.use('laydate', function(){
+            layui.laydate.render({
+                elem: '#begin_year'
+                ,type: 'year'
+                ,change: function(value){
+                    $('.layui-laydate-content').click(function(){
+                        if($(this).attr('class') == 'layui-laydate-content'){
+                            $('#year').attr('value',value);
+                            $('.layui-laydate').remove(0);
+                        }
+                    })
+                }
+            });
+        });
     });
   
     function create() {

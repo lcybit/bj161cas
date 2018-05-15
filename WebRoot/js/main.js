@@ -63,21 +63,21 @@ layui.config({
     //用户数
     $.get("../main/getAdminTotal",
         function(data){
-            $(".userTotal").text(data.length);
+            $(".userTotal").text(data);
         }
     )
 
     //学生数
     $.get("../main/getStudentTotal",
         function(data){
-            $(".studentTotal").text(data.length);
+            $(".studentTotal").text(data);
         }
     )
 
     //老师数
     $.get("../main/getTeacherTotal",
         function(data){
-            $(".teacherTotal").text(data.length);
+            $(".teacherTotal").text(data);
         }
     );
 

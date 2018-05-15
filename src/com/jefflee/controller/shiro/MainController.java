@@ -21,20 +21,20 @@ public class MainController {
 	
 	@RequestMapping("getAdminTotal")
 	@ResponseBody
-	public List<TbAdmin> getAdminTotal(){
+	public Integer getAdminTotal(){
 		return mainServiceImpl.selAdminList();
 	}
 
 
 	@RequestMapping("getStudentTotal")
 	@ResponseBody
-	public List<TbAdmin> getStudentTotal(){
+	public Integer getStudentTotal(){
 		return mainServiceImpl.selStudentTotal();
 	}
 
 	@RequestMapping("getTeacherTotal")
 	@ResponseBody
-	public List<TbAdmin> getTeacherTotal(){
+	public Integer getTeacherTotal(){
 		return mainServiceImpl.selTeacherTotal();
 	}
 	

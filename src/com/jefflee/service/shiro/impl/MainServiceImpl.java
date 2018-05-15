@@ -20,18 +20,18 @@ public class MainServiceImpl implements MainService {
 	private MainMapper mainMapper;
 
 	@Override
-	public List<TbAdmin> selAdminList() {
+	public Integer selAdminList() {
 		TbAdminExample example=new TbAdminExample();
-		return tbAdminMapper.selectByExample(example);
+		return tbAdminMapper.selectByExample(example).size();
 	}
 	
 	@Override
-	public List<TbAdmin> selStudentTotal() {
+	public Integer selStudentTotal() {
 		return mainMapper.selStudentTotal();
 	}
 
 	@Override
-	public List<TbAdmin> selTeacherTotal() {
+	public Integer selTeacherTotal() {
 		return mainMapper.selTeacherTotal();
 	}
 

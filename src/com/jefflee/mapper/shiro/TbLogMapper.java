@@ -3,9 +3,11 @@ package com.jefflee.mapper.shiro;
 import com.jefflee.entity.shiro.TbLog;
 import com.jefflee.entity.shiro.TbLogExample;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@Repository
 public interface TbLogMapper {
     int countByExample(TbLogExample example);
 

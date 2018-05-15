@@ -78,7 +78,7 @@ public class StudentServiceImpl implements StudentService{
 //        // 初始化输入流
 //        String tempFileName = new Date().getTime() + ".xlsx";
         String name = file.getOriginalFilename();
-        String suffix = name.substring(name.indexOf("."));
+        String suffix = name.substring(name.lastIndexOf("."));
         File tempFile = File.createTempFile(String.valueOf(new Date().getTime()), suffix);
         // 将上传的文件写入临时文件中
         file.transferTo(tempFile);
@@ -129,9 +129,16 @@ public class StudentServiceImpl implements StudentService{
                         student.setName(cellValue.toString());
                         break;
                     case 2:
-                        student.setBegin_year(Integer.valueOf(StringUtil.aviodNumericValue(cellValue)));
+                        if (cellValue.toString().equals("男"))
+                            student.setSex(0);
+                        else if (cellValue.toString().equals("女"))
+                            student.setSex(1);
+                        else student.setSex(2);
                         break;
                     case 3:
+                        student.setBegin_year(Integer.valueOf(StringUtil.aviodNumericValue(cellValue)));
+                        break;
+                    case 4:
                         student.setOffset(Integer.valueOf(StringUtil.aviodNumericValue(cellValue)));
                         break;
                     default:

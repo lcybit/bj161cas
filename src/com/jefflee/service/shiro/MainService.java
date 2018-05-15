@@ -7,11 +7,11 @@ import java.util.List;
 
 public interface MainService {
 
-	public List<TbAdmin> selAdminList();
+	public Integer selAdminList();
 
-	public List<TbAdmin> selStudentTotal();
+	public Integer selStudentTotal();
 
-	public List<TbAdmin> selTeacherTotal();
+	public Integer selTeacherTotal();
 
 	public int selStudentCountByGender(int i);
 }
