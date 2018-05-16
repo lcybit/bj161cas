@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>新增子课程信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="course" method="post">
+      <input class="layui-input" name="course_id" id="course_id" type="hidden" />
+      <div class="layui-form-item">
+        <label class="layui-form-label">编号:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="sr_course_no" id="sr_course_no" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">名称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="sr_course_name" id="sr_course_name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">父课程名称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="course_name" id="course_name" type="text" readonly/>
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-inline layui-btn-group">
+          <button class="layui-btn layui-btn-sm" type="button" onclick="create()">新增</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      layui.use('form', function() {
+        layui.form.render();
+      });
+      var courseId = sessionStorage.getItem('currentCourseId');
+      var course_name = sessionStorage.getItem('currentCourseName');
+      $('#course_id').attr('value', courseId);
+      $('#course_name').attr('value', course_name);
+    });
+    function create() {
+      $.ajax({
+        async : false,
+        url : '/sr_course/create',
+        type : 'POST',
+        dataType : 'json',
+        contentType : 'application/json',
+        data : JSON.stringify($('#course').serializeJSON()),
+        success : function(courseId) {
+          cancel();
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+  </script>
+</body>
+
+</html>

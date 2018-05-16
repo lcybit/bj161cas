@@ -1,6 +1,5 @@
 package com.jefflee.controller.shiro;
 
-import com.jefflee.entity.shiro.TbAdmin;
 import com.jefflee.service.shiro.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -42,7 +41,7 @@ public class MainController {
 	@ResponseBody
 	public Map<String, Object> dataAccessGender() {
 	    Map<String, Object> j=new HashMap<>();
-	    String[] categories = {"女", "男", "保密"};
+	    String[] categories = {"男", "女"};
 	    j.put("categories", categories);
 	    Map<String, Object> json=null;
 	    List<Map<String, Object>> list=new ArrayList<>();

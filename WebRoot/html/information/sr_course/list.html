@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>课程信息列表</title>
+<title>子课程信息列表</title>
   <link rel="stylesheet" href="../../../plugin/layui/css/layui.css" />
   <script src="../../../plugin/jquery/jquery.js"></script>
   <script src="../../../plugin/jquery/jquery.serializejson.js"></script>
@@ -13,9 +13,9 @@
 <body>
   <div class="layui-container" style="width:100%;">
     <div class="layui-btn-group">
-      <!--<button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">-->
-        <!--<i class="layui-icon">&#xe65c;</i>返回-->
-      <!--</button>-->
+      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
+        <i class="layui-icon">&#xe65c;</i>返回
+      </button>
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
@@ -25,8 +25,7 @@
         <tr>
           <th>编号</th>
           <th>名称</th>
-          <th>简称</th>
-          <th>类型</th>
+          <th>父课程名称</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -37,15 +36,13 @@
   </div>
   <script id="tmpl-courseList" type="text/x-jsrender">
     <tr>
-      <td>{{:courseNo}}</td>
-      <td>{{:name}}</td>
-      <td>{{:shortName}}</td>
-      <td>{{:type}}</td>
+      <td>{{:sr_course_no}}</td>
+      <td>{{:sr_course_name}}</td>
+      <td>{{:course_name}}</td>
       <td>
         <div class="layui-btn-group">
-          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:courseId}}')">修改</button>
-          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:courseId}}')">删除</button>
-          <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="enter('{{:courseId}}','{{:name}}')">查看子课程</button>
+          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
         </div>
       </td>
     </tr>
@@ -56,18 +53,21 @@
     var table = layui.table;
     var upload = layui.upload;
     var form = layui.form;
-  
+    var courseId = sessionStorage.getItem('currentCourseId');
+    var course_name = sessionStorage.getItem('currentCourseName');
     $(document).ready(function() {
       list();
     })
   
     function goCreate() {
+      sessionStorage.setItem('currentCourseId', courseId);
+      sessionStorage.setItem('currentCourseName', course_name);
       layer.open({
         type: 2,
         id: 'create',
-        title: '新增课程信息',
-        content: '/html/information/course/create.html',
-        area: [ '500px', '400px' ],
+        title: '新增子课程信息',
+        content: '/html/information/sr_course/create.html',
+        area: [ '500px', '300px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -77,14 +77,16 @@
       });
     }
   
-    function goModify(courseId) {
+    function goModify(id) {
       sessionStorage.setItem('currentCourseId', courseId);
+      sessionStorage.setItem('currentCourseName', course_name);
+      sessionStorage.setItem('currentSrCourseId', id);
       layer.open({
         type: 2,
         id: 'modify',
-        title: '修改课程信息',
-        content: '/html/information/course/modify.html',
-        area: [ '500px', '400px' ],
+        title: '修改子课程信息',
+        content: '/html/information/sr_course/modify.html',
+        area: [ '500px', '300px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -94,31 +96,16 @@
       });
     }
 
-    function enter(courseId, courseName) {
-        sessionStorage.setItem('currentCourseId', courseId);
-        sessionStorage.setItem('currentCourseName', courseName);
-        location.href=('../sr_course/list.html');
-    }
-
-    function goTeacherHtml() {
-      jump('html/information/teacher/list.html');
-    }
-    function goPeriodHtml() {
-      jump('html/information/period/list.html');
-    }
-    function goTclassHtml() {
-      jump('html/information/tclass/list.html');
-    }
-    function remove(courseId) {
+    function remove(id) {
       layer.confirm('确认要删除吗？',
         {
-          title: '删除课程信息'
+          title: '删除子课程信息'
         },
         function(index) {
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/course/delete/' + courseId,
+            url: '/sr_course/delete/' + id,
             success: function() {
               layer.close(index);
               list();
@@ -131,7 +118,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/course/list',
+        url: '/sr_course/listByCourseId/'+courseId,
         success: function(courseList) {
           loadData(courseList);
         }
@@ -149,6 +136,7 @@
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
           var arr = []; //存放该页展示的数据 
           for (var i = start; i <= end && i < data.length; i++) {
+            data[i].course_name = course_name;
             arr.push(data[i]);
           }
           $('#courseList').html($.templates('#tmpl-courseList').render(arr));
@@ -157,7 +145,7 @@
     }
   
     function goBack() {
-      location.href=('../../common/home.html');
+      location.href=('../course/list.html');
 //      jump("../../common/home.html")
     }
   </script>

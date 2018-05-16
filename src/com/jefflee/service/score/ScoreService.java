@@ -1,7 +1,6 @@
 package com.jefflee.service.score;
 
 import com.jefflee.entity.score.Score;
-import com.jefflee.util.shiro.ResultUtil;
 
 import java.util.List;
 
@@ -10,13 +9,13 @@ import java.util.List;
  */
 public interface ScoreService {
 
-    public ResultUtil insert(Score score);
+    Integer insert(Score score);
 
-    public List<Score> queryList();
+    List<Score> selectList();
 
-    public Score load(Integer id);
+    Score selectById(Integer id);
 
-    public ResultUtil update(Integer id);
+    Integer updateById(Score score);
 
-    public ResultUtil delete(Integer id);
+    Integer deleteById(Integer id);
 }

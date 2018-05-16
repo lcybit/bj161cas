@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>修改考试信息</title>
+<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
+<script src="/plugin/layui/layui.all.js"></script>
+<script src="/plugin/jquery/jquery.js"></script>
+<script src="/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/plugin/jsrender/jsrender.js"></script>
+</head>
+
+<body>
+  <div class="layui-container" style="margin:30px;">
+    <form class="layui-form layui-form-pane" id="exam" method="post">
+      <!-- 隐藏考试ID -->
+      <input class="layui-input" name="id" id="id" type="hidden" />
+      <div class="layui-form-item">
+        <label class="layui-form-label">考试场次:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="exam_no" id="exam_no" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">考试名称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="exam_name" id="exam_name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">考试时间:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="exam_time" id="exam_time" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <label class="layui-form-label">课程名称:</label>
+        <div class="layui-input-block">
+          <input class="layui-input" name="course_name" id="course_name" type="text" />
+        </div>
+      </div>
+      <div class="layui-form-item">
+        <div class="layui-input-inline layui-btn-group">
+          <button class="layui-btn layui-btn-sm" type="button" onclick="modify()">保存</button>
+          <button class="layui-btn layui-bg-red layui-btn-sm" type="button" onclick="cancel()">取消</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script>
+    $(document).ready(function() {
+      var examId = sessionStorage.getItem('currentExamId');
+      $('#id').attr('value', examId);
+      $.ajax({
+        async: false,
+        type: 'GET',
+        url: '/exam/find/' + examId,
+        success: function(exam) {
+          $('#exam_no').attr('value', exam.exam_no);
+          $('#exam_name').attr('value', exam.exam_name);
+          $('#exam_time').attr('value', formatTime(exam.exam_time, "yyyy-MM-dd hh:mm:ss"));
+          $('#course_name').attr('value', exam.course_name);
+        }
+      });
+      layui.use('form', function() {
+        layui.form.render();
+      });
+        layui.use('laydate', function(){
+            layui.laydate.render({
+                elem: '#exam_time'
+                ,type: 'datetime'
+                ,change: function(value){
+                    $('.layui-laydate-content').click(function(){
+                        if($(this).attr('class') == 'layui-laydate-content'){
+                            $('#exam_time').attr('value',value);
+                            $('.layui-laydate').remove(0);
+                        }
+                    })
+                }
+            });
+        });
+    });
+  
+    function modify() {
+      $.ajax({
+        async: false,
+        url: '/exam/modify',
+        type: 'POST',
+        dataType: 'json',
+        contentType: 'application/json',
+        data: JSON.stringify($('#exam').serializeJSON()),
+        success: function(result) {
+            if (result.code === 200){
+                top.layer.msg(result.msg);
+                cancel();
+            }
+            else {
+                layer.alert(result.msg, {icon:2});
+            }
+        }
+      });
+    }
+  
+    function cancel() {
+      var index = parent.layer.getFrameIndex(window.name);
+      parent.layer.close(index);
+    }
+
+    //格式化时间
+    function formatTime(datetime,fmt){
+        if (parseInt(datetime)==datetime) {
+            if (datetime.length==10) {
+                datetime=parseInt(datetime)*1000;
+            } else if(datetime.length==13) {
+                datetime=parseInt(datetime);
+            }
+        }
+        datetime=new Date(datetime);
+        var o = {
+            "M+" : datetime.getMonth()+1,                 //月份
+            "d+" : datetime.getDate(),                    //日
+            "h+" : datetime.getHours(),                   //小时
+            "m+" : datetime.getMinutes(),                 //分
+            "s+" : datetime.getSeconds(),                 //秒
+            "q+" : Math.floor((datetime.getMonth()+3)/3), //季度
+            "S"  : datetime.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (datetime.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
+  </script>
+</body>
+
+</html>

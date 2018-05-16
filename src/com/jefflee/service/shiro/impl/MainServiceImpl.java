@@ -1,13 +1,16 @@
 package com.jefflee.service.shiro.impl;
 
-import com.jefflee.entity.shiro.TbAdmin;
+import com.jefflee.entity.information.Student;
 import com.jefflee.entity.shiro.TbAdminExample;
+import com.jefflee.mapper.information.StudentMapper;
 import com.jefflee.mapper.shiro.MainMapper;
 import com.jefflee.mapper.shiro.TbAdminMapper;
 import com.jefflee.service.shiro.MainService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 @Service
@@ -18,6 +21,9 @@ public class MainServiceImpl implements MainService {
 	
 	@Autowired
 	private MainMapper mainMapper;
+
+	@Resource(name = "studentMapper")
+	StudentMapper studentMapper;
 
 	@Override
 	public Integer selAdminList() {
@@ -37,11 +43,9 @@ public class MainServiceImpl implements MainService {
 
 	@Override
 	public int selStudentCountByGender(int i) {
-		TbAdminExample example=new TbAdminExample();
-		TbAdminExample.Criteria criteria = example.createCriteria();
-		criteria.andSexEqualTo(i+"");
-		criteria.andRoleIdEqualTo((long) 5);
-		List<TbAdmin> list = tbAdminMapper.selectByExample(example);
+		Example example = new Example(Student.class);
+		example.createCriteria().andEqualTo("sex", i);
+		List<Student> list = studentMapper.selectByExample(example);
 		return list.size();
 	}
 

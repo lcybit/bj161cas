@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface TbAdminMapper {
+public interface TbAdminMapper{
     int countByExample(TbAdminExample example);
 
     int deleteByExample(TbAdminExample example);
