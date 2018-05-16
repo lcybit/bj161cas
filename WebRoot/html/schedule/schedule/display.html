@@ -309,7 +309,6 @@
   
     function resetArrangement() {
       layer.confirm('重置将清空所有已排课数据！', function(index) {
-        saveAdjustment();
         var loading = layer.load(1);
         $.ajax({
           async: true,

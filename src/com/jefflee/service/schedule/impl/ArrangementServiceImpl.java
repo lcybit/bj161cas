@@ -503,6 +503,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public void gnrArrangementList(Integer scheduleId) {
+		saveAdjustment(scheduleId);
 		List<Arrangement> scheduleArrangementList = cache.getScheduleArrangementList();
 		List<Plan> schedulePlanList = cache.getSchedulePlanList();
 
@@ -592,6 +593,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 
 	@Override
 	public void resetList(Integer scheduleId) {
+		saveAdjustment(scheduleId);
 		clearList(scheduleId);
 		cache.initial(scheduleId);
 	}
@@ -624,6 +626,7 @@ public class ArrangementServiceImpl implements ArrangementService {
 			adjustInDatabase(adjustment);
 			adjustmentService.deleteById(adjustment.getAdjustmentId());
 		}
+		cache.initial(scheduleId);
 	}
 
 	private void adjustInDatabase(Adjustment adjustment) {
