@@ -2,10 +2,7 @@ package com.jefflee.entity.score;
 
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by TGL on 2018/5/15.
@@ -21,4 +18,8 @@ public class Score {
     private Integer sr_course_id;
 
     private Float score;
+
+    //总分
+    @Transient
+    private Float totalScore;
 }

@@ -15,11 +15,11 @@ public class FatherExam {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OrderBy("desc")
     private Integer no;
 
     private String name;
 
+    @OrderBy("desc")
     private String begin_time;
 
     private String end_time;

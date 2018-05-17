@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>考试信息列表</title>
+<title>成绩信息列表</title>
   <link rel="stylesheet" href="../../../plugin/layui/css/layui.css" />
   <script src="../../../plugin/jquery/jquery.js"></script>
   <script src="../../../plugin/jquery/jquery.serializejson.js"></script>
@@ -16,56 +16,47 @@
       <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
         <i class="layui-icon">&#xe65c;</i>返回
       </button>
-      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
-        <i class="layui-icon">&#xe654;</i>新增
-      </button>
       <!--<button class="layui-btn layui-bg-blue layui-btn-sm" id="importExcel">-->
         <!--<i class="layui-icon">&#xe67c;</i>导入-->
       <!--</button>-->
     </div>
     <table class="layui-table" id="test">
-      <thead>
-        <tr>
-          <th>考试场次</th>
-          <th>考试名称</th>
-          <th>考试时间</th>
-          <th>考试科目</th>
-          <th>操作</th>
-        </tr>
+      <thead id="courseList">
       </thead>
-      <tbody id="examList">
+      <tbody id="scoreList">
       </tbody>
     </table>
     <div id="page"></div>
   </div>
-  <script id="tmpl-examList" type="text/x-jsrender">
-    <tr>
-      <td>{{:exam_no}}</td>
-      <td>{{:exam_name}}</td>
-      <td>{{:exam_time}}</td>
-      <td>{{:course_name}}</td>
-      <td>
-        <div class="layui-btn-group">
-          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
-          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
-          <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="enter('{{:id}}', '{{:course_id}}')">查看成绩</button>
-          <button class="layui-btn layui-bg-yellow layui-btn-sm" onclick="inputs('{{:id}}')">批量录入成绩</button>
-        </div>
-      </td>
-    </tr>
-  </script>
   <script>
     var layer = layui.layer;
     var laypage = layui.laypage;
     var table = layui.table;
     var upload = layui.upload;
     var form = layui.form;
-    var examId = sessionStorage.getItem('currentFatherExamId');
-    var examName = sessionStorage.getItem('currentFatherExamName');
-    var examNo = sessionStorage.getItem('currentFatherExamNo');
+    var courseId = sessionStorage.getItem('currentCourseId');
+    var examId = sessionStorage.getItem('currentExamId');
+    var html='<th>学号</th><th>姓名</th>';
+    var courseArr = [];
+    var scoreMap = new Map();
+    var studentMap = new Map();
+    var scoreHtml = '';
 
     $(document).ready(function() {
-
+        $.ajax({
+            async: false,
+            type: 'GET',
+            url: '/sr_course/listByCourseId/'+courseId,
+            dataType: 'json',
+            success: function(courseList) {
+                for (var i = 0; i < courseList.length; i++){
+                    html+='<th>'+courseList[i].sr_course_name+'</th>'
+                    courseArr.push(courseList[i].id);
+                }
+                html+='<th>总分</th><th>操作</th></tr>';
+            }
+        });
+        $('#courseList').html(html)
       list();
 //      upload.render({
 //        elem: '#importExcel',
@@ -79,23 +70,6 @@
 //        }
 //      });
     })
-  
-    function goCreate() {
-      sessionStorage.setItem('currentFatherExamId', examId);
-      layer.open({
-        type: 2,
-        id: 'create',
-        title: '新增考试信息',
-        content: '/html/information/exam/create.html',
-        area: [ '500px', '380px' ],
-        shade: 0.5,
-        shadeClose: true,
-        closeBtn: false,
-        end: function() {
-          list();
-        }
-      });
-    }
   
     function goModify(id) {
       sessionStorage.setItem('currentExamId', id);
@@ -138,50 +112,73 @@
         });
     }
 
-    //查看成绩
-    function enter(id, course_id) {
-        sessionStorage.setItem('currentExamId', id);
-        sessionStorage.setItem('currentCourseId', course_id);
-        location.href="../../score/score/list.html"
-    }
-
-    //批量录入成绩
-    function inputs(id) {
-
-    }
-
     function goBack() {
-        location.href="../father_exam/list.html"
+        location.href="../../information/exam/list.html"
     }
     function list() {
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/exam/list/'+examId,
-        dataType: 'json',
-        success: function(examList) {
-          loadData(examList);
+        url: '/score/listByExamId/'+examId,
+        success: function(scoreList) {
+            for(var i = 0; i < scoreList.length; i++){
+                studentMap.put(scoreList[i].student_id, scoreList);
+            }
+            loadData(studentMap);
         }
       });
     }
-  
+
+    function getStudentInfo(id) {
+        $.ajax({
+            async:false,
+            type:'GET',
+            url: '/student/find/'+id,
+            success:function (student) {
+                scoreHtml = '<tr>';
+                scoreHtml += '<td>'+student.student_no+'</td>';
+                scoreHtml += '<td>'+student.name+'</td>';
+            }
+        })
+    }
+
     function loadData(data) {
       laypage.render({
         elem: 'page',
-        count: Math.ceil(data.length),
+        count: Math.ceil(data.size()),
         limit: 10,
         layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
         jump: function(obj, first) {
           var start = (obj.curr - 1) * obj.limit; //获得数据 的数组起始下标
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
-          var arr = []; //存放该页展示的数据 
-          for (var i = start; i <= end && i < data.length; i++) {
-            data[i].exam_time = formatTime(data[i].exam_time, "yyyy-MM-dd hh:mm:ss");
-            data[i].exam_name = examName;
-            data[i].exam_no = examNo;
-            arr.push(data[i]);
+          var key = data.keySet();
+          var html='';
+          for (var i = 0; i < key.length; i++) {
+              getStudentInfo(key[i]);
+              var length = data.get(key[i]).length;
+              var list = data.get(key[i]);
+              for (var j = start; j <= end && j < length; j++) {
+                  scoreMap.put(list[j].sr_course_id+"-"+list[j].student_id, list[j].score);
+              }
+              var totalScore = 0;
+              for(var j = 0; j < courseArr.length; j++){
+                  var score = scoreMap.get(courseArr[j]+"-"+key[i]);
+                  if (typeof (score) === "undefined")
+                      score = 0;
+                  scoreHtml+='<td>'+score+'</td>';
+                  totalScore += score;
+              }
+              scoreHtml+='<td>'+totalScore+'</td>';
+              scoreHtml+='<td><div class="layui-btn-group">'+
+                  '<button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify()">修改</button>'
+                  +
+                  '<button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove()">删除</button>'
+                  +  '</div>'
+                  + '</td>';
+              scoreHtml+='</tr>';
+              html+=scoreHtml;
           }
-          $('#examList').html($.templates('#tmpl-examList').render(arr));
+            $('#scoreList').html(html);
         }
       });
     }
@@ -212,6 +209,62 @@
         return fmt;
     }
 
+    //创建map
+    function Map(){
+        this.container = new Object();
+    }
+
+
+    Map.prototype.put = function(key, value){
+        this.container[key] = value;
+    }
+
+
+    Map.prototype.get = function(key){
+        return this.container[key];
+    }
+
+
+    Map.prototype.keySet = function() {
+        var keyset = new Array();
+        var count = 0;
+        for (var key in this.container) {
+        // 跳过object的extend函数
+            if (key == 'extend') {
+                continue;
+            }
+            keyset[count] = key;
+            count++;
+        }
+        return keyset;
+    }
+
+
+    Map.prototype.size = function() {
+        var count = 0;
+        for (var key in this.container) {
+        // 跳过object的extend函数
+            if (key == 'extend'){
+                continue;
+            }
+            count++;
+        }
+        return count;
+    }
+
+
+    Map.prototype.remove = function(key) {
+        delete this.container[key];
+    }
+
+
+    Map.prototype.toString = function(){
+        var str = "";
+        for (var i = 0, keys = this.keySet(), len = keys.length; i < len; i++) {
+            str = str + keys[i] + "=" + this.container[keys[i]] + ";\n";
+        }
+        return str;
+    }
   </script>
 </body>
 

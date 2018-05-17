@@ -20,9 +20,9 @@ public class Exam {
     @Transient
     private String exam_name;
     //考试时间
-    @OrderBy("DESC")
     private String exam_time;
     //考试科目id
+    @OrderBy
     private Integer course_id;
     //考试科目名称
     @Transient

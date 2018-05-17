@@ -3,16 +3,15 @@ package com.jefflee.controller.score;
 import com.jefflee.entity.score.Score;
 import com.jefflee.service.score.ScoreService;
 import com.jefflee.util.shiro.ResultUtil;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by TGL on 2018/5/15.
  */
-@Controller
+@RestController
 @RequestMapping("/score")
 public class ScoreController {
 
@@ -27,5 +26,11 @@ public class ScoreController {
             result.setMsg("新增失败");
         }
         return result;
+    }
+
+    @RequestMapping(value = "/listByExamId/{examId}", method = RequestMethod.GET)
+    public List<Score> listByExamId(@PathVariable("examId") Integer examId) {
+        List<Score> scoreList = scoreService.selectList(examId);
+        return scoreList;
     }
 }

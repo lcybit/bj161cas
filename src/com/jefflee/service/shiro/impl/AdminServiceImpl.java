@@ -451,7 +451,11 @@ public class AdminServiceImpl implements AdminService {
 		// 得到第一个sheet
 		Sheet sheet = workbook.getSheetAt(0);
 		List<TbAdmin> importedAdminList = new ArrayList<>();
-
+		Map<String, TbAdmin> allAdminMap = new HashMap<>();
+		List<TbAdmin> allTbAdminList = selectList();
+		for (TbAdmin tbAdmin : allTbAdminList) {
+			allAdminMap.put(tbAdmin.getUsername(), tbAdmin);
+		}
 		// 循环Excel行
 		for (Row row : sheet) {
 			if (row.getRowNum() == 0) {
@@ -493,7 +497,11 @@ public class AdminServiceImpl implements AdminService {
 						break;
 				}
 			}
-			importedAdminList.add(tbAdmin);
+			String userName = tbAdmin.getUsername();
+			if (!allAdminMap.containsKey(userName)) {
+				importedAdminList.add(tbAdmin);
+				allAdminMap.put(userName, tbAdmin);
+			}
 		}
 
 		// 写入数据库
@@ -508,6 +516,11 @@ public class AdminServiceImpl implements AdminService {
 		}
 		result.put("successNum", successNum);
 		return result;
+	}
+
+	private List<TbAdmin> selectList(){
+		TbAdminExample example = new TbAdminExample();
+		return tbAdminMapper.selectByExample(example);
 	}
 
 }
