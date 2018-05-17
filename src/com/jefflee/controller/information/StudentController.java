@@ -3,6 +3,7 @@ package com.jefflee.controller.information;
 import com.jefflee.entity.information.Student;
 import com.jefflee.service.information.StudentService;
 import com.jefflee.util.ExcelUtil;
+import com.jefflee.util.shiro.ResultUtil;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -22,11 +23,12 @@ public class StudentController {
     StudentService studentService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Map<String, String> create(@RequestBody Student student) {
-        Map<String, String> result = new HashMap<>();
+    public ResultUtil create(@RequestBody Student student) {
+        ResultUtil result = new ResultUtil(200, "添加成功");
         Integer studentId = studentService.insert(student);
-        if (studentId != null) {
-            result.put("studentId", studentId.toString());
+        if (studentId == null) {
+            result.setCode(100);
+            result.setMsg("添加失败");
         }
         return result;
     }
@@ -47,21 +49,23 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public Map<String, String> modify(@RequestBody Student student) {
-        Map<String, String> result = new HashMap<>();
+    public ResultUtil modify(@RequestBody Student student) {
+        ResultUtil result = new ResultUtil(200, "修改成功");
         Integer studentId = studentService.updateById(student);
-        if (studentId != null) {
-            result.put("studentId", studentId.toString());
+        if (studentId == null) {
+            result.setCode(100);
+            result.setMsg("修改失败");
         }
         return result;
     }
 
     @RequestMapping(value = "/delete/{studentId}", method = RequestMethod.DELETE)
-    public Map<String, String> delete(@PathVariable("studentId") Integer studentId) {
-        Map<String, String> result = new HashMap<>();
+    public ResultUtil delete(@PathVariable("studentId") Integer studentId) {
+        ResultUtil result = new ResultUtil(200, "删除成功");
         studentId = studentService.deleteById(studentId);
-        if (studentId != null) {
-            result.put("studentId", studentId.toString());
+        if (studentId == null) {
+            result.setCode(100);
+            result.setMsg("删除失败");
         }
         return result;
     }

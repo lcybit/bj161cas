@@ -72,7 +72,13 @@
         contentType : 'application/json',
         data : JSON.stringify($('#course').serializeJSON()),
         success : function(result) {
-          cancel();
+            if (result.code === 200){
+                top.layer.msg(result.msg);
+                cancel();
+            }
+            else {
+                layer.alert(result.msg, {icon:2});
+            }
         }
       });
     }

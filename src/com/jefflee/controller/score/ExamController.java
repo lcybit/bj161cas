@@ -46,16 +46,16 @@ public class ExamController {
         Integer examId = examService.insert(exam);
         if (examId != null) {
             result.setCode(200);
-            result.setMsg("添加成功");
+            result.setMsg("新增成功");
         }
         return result;
     }
 
-    @RequestMapping(value = "/list", method = RequestMethod.GET)
-    public List<Exam> listAll() {
+    @RequestMapping(value = "/list/{examId}", method = RequestMethod.GET)
+    public List<Exam> listAll(@PathVariable("examId") Integer examId) {
         List<Course> courseList = courseService.selectList();
         Map<Integer, String> map = new HashMap<>();
-        List<Exam> examList = examService.selectList();
+        List<Exam> examList = examService.selectList(examId);
         for (Course course : courseList){
           map.put(course.getCourseId(), course.getName());
         }
@@ -110,11 +110,12 @@ public class ExamController {
     }
 
     @RequestMapping(value = "/delete/{examId}", method = RequestMethod.DELETE)
-    public Map<String, String> delete(@PathVariable("examId") Integer examId) {
-        Map<String, String> result = new HashMap<>();
+    public ResultUtil delete(@PathVariable("examId") Integer examId) {
+        ResultUtil result = new ResultUtil(200, "删除成功");
         examId = examService.deleteById(examId);
-        if (examId != null) {
-            result.put("examId", examId.toString());
+        if (examId == null) {
+            result.setMsg("删除失败");
+            result.setCode(100);
         }
         return result;
     }

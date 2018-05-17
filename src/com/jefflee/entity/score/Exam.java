@@ -17,6 +17,7 @@ public class Exam {
     //考试场次
     private Integer exam_no;
     //考试名称
+    @Transient
     private String exam_name;
     //考试时间
     @OrderBy("DESC")

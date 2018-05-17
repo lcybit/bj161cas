@@ -90,6 +90,11 @@
     });
   
     function modify() {
+        if ($('#student_no').val()==="" || $('#name').val()===""
+            || $('#begin_year').val()==="" || $('#offset').val()==="" ){
+            layer.alert("信息请填写完整", {icon:2});
+            return;
+        }
       $.ajax({
         async: false,
         url: '/student/modify',
@@ -98,7 +103,13 @@
         contentType: 'application/json',
         data: JSON.stringify($('#student').serializeJSON()),
         success: function(result) {
-          cancel();
+            if (result.code === 200){
+                top.layer.msg(result.msg);
+                cancel();
+            }
+            else {
+                layer.alert(result.msg, {icon:2});
+            }
         }
       });
     }

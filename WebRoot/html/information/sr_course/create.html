@@ -58,8 +58,14 @@
         dataType : 'json',
         contentType : 'application/json',
         data : JSON.stringify($('#course').serializeJSON()),
-        success : function(courseId) {
-          cancel();
+        success : function(result) {
+            if (result.code === 200){
+                top.layer.msg(result.msg);
+                cancel();
+            }
+            else {
+                layer.alert(result.msg, {icon:2});
+            }
         }
       });
     }

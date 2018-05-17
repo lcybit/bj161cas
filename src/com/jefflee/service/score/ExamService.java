@@ -10,7 +10,7 @@ import java.util.List;
 public interface ExamService {
     Integer insert(Exam exam);
 
-    List<Exam> selectList();
+    List<Exam> selectList(Integer examId);
 
     Exam selectById(Integer id);
 

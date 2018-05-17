@@ -13,9 +13,9 @@
 <body>
   <div class="layui-container" style="width:100%;">
     <div class="layui-btn-group">
-      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
-        <i class="layui-icon">&#xe65c;</i>返回
-      </button>
+      <!--<button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">-->
+        <!--<i class="layui-icon">&#xe65c;</i>返回-->
+      <!--</button>-->
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
@@ -28,26 +28,27 @@
         <tr>
           <th>考试场次</th>
           <th>考试名称</th>
-          <th>考试时间</th>
-          <th>考试科目</th>
+          <th>考试开始时间</th>
+          <th>考试结束时间</th>
           <th>操作</th>
         </tr>
       </thead>
-      <tbody id="examList">
+      <tbody id="father_examList">
       </tbody>
     </table>
     <div id="page"></div>
   </div>
-  <script id="tmpl-examList" type="text/x-jsrender">
+  <script id="tmpl-father_examList" type="text/x-jsrender">
     <tr>
-      <td>{{:exam_no}}</td>
-      <td>{{:exam_name}}</td>
-      <td>{{:exam_time}}</td>
-      <td>{{:course_name}}</td>
+      <td>{{:no}}</td>
+      <td>{{:name}}</td>
+      <td>{{:begin_time}}</td>
+      <td>{{:end_time}}</td>
       <td>
         <div class="layui-btn-group">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
           <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
+          <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="enter('{{:id}}','{{:name}}', '{{:no}}')">查看各科目考试</button>
         </div>
       </td>
     </tr>
@@ -58,16 +59,12 @@
     var table = layui.table;
     var upload = layui.upload;
     var form = layui.form;
-    var examId = sessionStorage.getItem('currentFatherExamId');
-    var examName = sessionStorage.getItem('currentFatherExamName');
-    var examNo = sessionStorage.getItem('currentFatherExamNo');
-
+  
     $(document).ready(function() {
-
       list();
 //      upload.render({
 //        elem: '#importExcel',
-//        url: '/exam/import',
+//        url: '/father_exam/import',
 //        accept: 'file',
 //        acceptMime: '.xls,.xlsx',
 //        exts: 'xls|xlsx',
@@ -77,15 +74,21 @@
 //        }
 //      });
     })
-  
+
+    function enter(id, name, no) {
+        sessionStorage.setItem('currentFatherExamId', id);
+        sessionStorage.setItem('currentFatherExamName', name);
+        sessionStorage.setItem('currentFatherExamNo', no);
+        location.href=('../exam/list.html');
+    }
+
     function goCreate() {
-      sessionStorage.setItem('currentFatherExamId', examId);
       layer.open({
         type: 2,
         id: 'create',
         title: '新增考试信息',
-        content: '/html/information/exam/create.html',
-        area: [ '500px', '300px' ],
+        content: '/html/information/father_exam/create.html',
+        area: [ '500px', '400px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -96,13 +99,13 @@
     }
   
     function goModify(id) {
-      sessionStorage.setItem('currentExamId', id);
+      sessionStorage.setItem('currentFatherExamId', id);
       layer.open({
         type: 2,
         id: 'modify',
         title: '修改考试信息',
-        content: '/html/information/exam/modify.html',
-        area: [ '500px', '300px' ],
+        content: '/html/information/father_exam/modify.html',
+        area: [ '500px', '400px' ],
         shade: 0.5,
         shadeClose: true,
         closeBtn: false,
@@ -121,7 +124,7 @@
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/exam/delete/' + id,
+            url: '/father_exam/delete/' + id,
             success: function(result) {
                 if (result.code === 200){
                     top.layer.msg(result.msg);
@@ -135,18 +138,15 @@
           });
         });
     }
-
-    function goBack() {
-        location.href="../father_exam/list.html"
-    }
+  
     function list() {
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/exam/list/'+examId,
+        url: '/father_exam/list',
         dataType: 'json',
-        success: function(examList) {
-          loadData(examList);
+        success: function(father_examList) {
+          loadData(father_examList);
         }
       });
     }
@@ -162,12 +162,11 @@
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
           var arr = []; //存放该页展示的数据 
           for (var i = start; i <= end && i < data.length; i++) {
-            data[i].exam_time = formatTime(data[i].exam_time, "yyyy-MM-dd hh:mm:ss");
-            data[i].exam_name = examName;
-            data[i].exam_no = examNo;
+            data[i].begin_time=formatTime(data[i].begin_time, "yyyy-MM-dd")
+            data[i].end_time=formatTime(data[i].end_time, "yyyy-MM-dd")
             arr.push(data[i]);
           }
-          $('#examList').html($.templates('#tmpl-examList').render(arr));
+          $('#father_examList').html($.templates('#tmpl-father_examList').render(arr));
         }
       });
     }

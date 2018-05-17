@@ -2,6 +2,7 @@ package com.jefflee.controller.score;
 
 import com.jefflee.entity.score.SrCourse;
 import com.jefflee.service.score.SrCourseService;
+import com.jefflee.util.shiro.ResultUtil;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -21,11 +22,12 @@ public class SrCourseController {
     SrCourseService courseService;
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public Map<String, String> create(@RequestBody SrCourse course) {
-        Map<String, String> result = new HashMap<String, String>();
+    public ResultUtil create(@RequestBody SrCourse course) {
+        ResultUtil result = new ResultUtil(200, "新增成功");
         Integer courseId = courseService.insert(course);
-        if (courseId != null) {
-            result.put("courseId", courseId.toString());
+        if (courseId == null) {
+            result.setCode(100);
+            result.setMsg("新增失败");
         }
         return result;
     }
@@ -49,21 +51,23 @@ public class SrCourseController {
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
-    public Map<String, String> modify(@RequestBody SrCourse course) {
-        Map<String, String> result = new HashMap<String, String>();
+    public ResultUtil modify(@RequestBody SrCourse course) {
+        ResultUtil result = new ResultUtil(200, "修改成功");
         Integer courseId = courseService.updateById(course);
-        if (courseId != null) {
-            result.put("courseId", courseId.toString());
+        if (courseId == null) {
+            result.setCode(100);
+            result.setMsg("修改失败");
         }
         return result;
     }
 
     @RequestMapping(value = "/delete/{courseId}", method = RequestMethod.DELETE)
-    public Map<String, String> delete(@PathVariable("courseId") Integer courseId) {
-        Map<String, String> result = new HashMap<String, String>();
+    public ResultUtil delete(@PathVariable("courseId") Integer courseId) {
+        ResultUtil result = new ResultUtil(200, "删除成功");
         courseId = courseService.deleteById(courseId);
-        if (courseId != null) {
-            result.put("courseId", courseId.toString());
+        if (courseId == null) {
+            result.setMsg("删除失败");
+            result.setCode(100);
         }
         return result;
     }

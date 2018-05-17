@@ -4,6 +4,7 @@ import com.jefflee.entity.score.Exam;
 import com.jefflee.mapper.score.ExamMapper;
 import com.jefflee.service.score.ExamService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -25,8 +26,10 @@ public class ExamServiceImpl implements ExamService{
     }
 
     @Override
-    public List<Exam> selectList() {
-        return examMapper.selectAll();
+    public List<Exam> selectList(Integer examId) {
+        Example example = new Example(Exam.class);
+        example.createCriteria().andEqualTo("exam_no", examId);
+        return examMapper.selectByExample(example);
     }
 
     @Override

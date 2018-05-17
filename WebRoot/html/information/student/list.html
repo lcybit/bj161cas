@@ -124,9 +124,15 @@
             async: false,
             type: 'DELETE',
             url: '/student/delete/' + teacherId,
-            success: function() {
-              layer.close(index);
-              list();
+            success: function(result) {
+                if (result.code === 200){
+                    top.layer.msg(result.msg);
+                    layer.close(index);
+                    list();
+                }
+                else {
+                    layer.alert(result.msg, {icon:2});
+                }
             }
           });
         });
