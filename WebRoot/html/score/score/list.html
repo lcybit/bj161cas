@@ -16,9 +16,9 @@
       <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
         <i class="layui-icon">&#xe65c;</i>返回
       </button>
-      <!--<button class="layui-btn layui-bg-blue layui-btn-sm" id="importExcel">-->
-        <!--<i class="layui-icon">&#xe67c;</i>导入-->
-      <!--</button>-->
+      <button class="layui-btn layui-bg-blue layui-btn-sm" id="importExcel">
+        <i class="layui-icon">&#xe67c;</i>导入成绩
+      </button>
     </div>
     <table class="layui-table" id="test">
       <thead id="courseList">
@@ -36,7 +36,7 @@
     var form = layui.form;
     var courseId = sessionStorage.getItem('currentCourseId');
     var examId = sessionStorage.getItem('currentExamId');
-    var html='<th>学号</th><th>姓名</th>';
+    var html='<tr><th lay-data="{sort: true}">学号</th><th>姓名</th>';
     var courseArr = [];
     var scoreMap = new Map();
     var studentMap = new Map();
@@ -50,25 +50,30 @@
             dataType: 'json',
             success: function(courseList) {
                 for (var i = 0; i < courseList.length; i++){
-                    html+='<th>'+courseList[i].sr_course_name+'</th>'
+                    html+="<th>"+courseList[i].sr_course_name+'</th>'
                     courseArr.push(courseList[i].id);
                 }
-                html+='<th>总分</th><th>操作</th></tr>';
+                html+='<th>总分</th></tr>';
             }
         });
         $('#courseList').html(html)
-      list();
-//      upload.render({
-//        elem: '#importExcel',
-//        url: '/exam/import',
-//        accept: 'file',
-//        acceptMime: '.xls,.xlsx',
-//        exts: 'xls|xlsx',
-//        done: function(result) {
-//          layer.msg('导入完毕！');
-//          list();
-//        }
-//      });
+        list();
+        upload.render({
+            elem: '#importExcel',
+            url: '/score/import/'+examId+','+courseId,
+            accept: 'file',
+            acceptMime: '.xls,.xlsx',
+            exts: 'xls|xlsx',
+            done: function(result) {
+                if (result.code === 200){
+                    layer.msg(result.msg);
+                    list();
+                }
+                else {
+                    layer.alert(result.msg, {icon:2});
+                }
+            }
+        });
     })
   
     function goModify(id) {
@@ -113,7 +118,7 @@
     }
 
     function goBack() {
-        location.href="../../information/exam/list.html"
+        location.href="../exam/list.html"
     }
     function list() {
       $.ajax({
@@ -153,11 +158,11 @@
           var end = obj.curr * obj.limit - 1; //获得数据 的数组终点下标
           var key = data.keySet();
           var html='';
-          for (var i = 0; i < key.length; i++) {
+          for (var i = start; i < end && i < key.length; i++) {
               getStudentInfo(key[i]);
               var length = data.get(key[i]).length;
               var list = data.get(key[i]);
-              for (var j = start; j <= end && j < length; j++) {
+              for (var j = start; j <= end*list.length && j < length; j++) {
                   scoreMap.put(list[j].sr_course_id+"-"+list[j].student_id, list[j].score);
               }
               var totalScore = 0;
@@ -169,12 +174,6 @@
                   totalScore += score;
               }
               scoreHtml+='<td>'+totalScore+'</td>';
-              scoreHtml+='<td><div class="layui-btn-group">'+
-                  '<button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify()">修改</button>'
-                  +
-                  '<button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove()">删除</button>'
-                  +  '</div>'
-                  + '</td>';
               scoreHtml+='</tr>';
               html+=scoreHtml;
           }

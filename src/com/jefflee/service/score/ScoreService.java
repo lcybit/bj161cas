@@ -1,6 +1,7 @@
 package com.jefflee.service.score;
 
 import com.jefflee.entity.score.Score;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -19,4 +20,6 @@ public interface ScoreService {
     Integer updateById(Score score);
 
     Integer deleteById(Integer id);
+
+    Integer importExcel(MultipartFile file, String info) throws Exception;
 }

@@ -2,8 +2,10 @@ package com.jefflee.controller.score;
 
 import com.jefflee.entity.score.Score;
 import com.jefflee.service.score.ScoreService;
+import com.jefflee.util.ExcelUtil;
 import com.jefflee.util.shiro.ResultUtil;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -32,5 +34,38 @@ public class ScoreController {
     public List<Score> listByExamId(@PathVariable("examId") Integer examId) {
         List<Score> scoreList = scoreService.selectList(examId);
         return scoreList;
+    }
+
+    @RequestMapping(value = "/import/{info}", method = RequestMethod.POST)
+    public ResultUtil importExcel(@RequestParam MultipartFile file, @PathVariable("info") String info) {
+        ResultUtil result = new ResultUtil();
+        // 判断文件是否为空
+        if (file.isEmpty()) {
+            result.setCode(100);
+            result.setMsg("文件为空");
+            return result;
+        }
+        // 验证文件名是否合格
+        if (!ExcelUtil.validateExcel(file.getOriginalFilename())) {
+            result.setCode(100);
+            result.setMsg("必须是Excel文件！");
+            return result;
+        }
+        // 批量导入
+        Integer outcome = null;
+        try {
+            outcome = scoreService.importExcel(file, info);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (outcome == null) {
+            result.setCode(100);
+            result.setMsg("导入失败！");
+            return result;
+        } else {
+            result.setCode(200);
+            result.setMsg("导入成功！");
+            return result;
+        }
     }
 }

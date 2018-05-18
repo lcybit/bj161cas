@@ -13,13 +13,10 @@ public class Score {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+    @OrderBy
     private Integer student_id;
     private Integer exam_id;
     private Integer sr_course_id;
 
     private Float score;
-
-    //总分
-    @Transient
-    private Float totalScore;
 }
