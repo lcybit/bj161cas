@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 
 <head>
@@ -16,9 +18,11 @@
       <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
         <i class="layui-icon">&#xe65c;</i>返回
       </button>
+      <shiro:hasPermission name="grade:save">
       <button class="layui-btn layui-bg-blue layui-btn-sm" id="importExcel">
         <i class="layui-icon">&#xe67c;</i>导入成绩
       </button>
+      </shiro:hasPermission>
     </div>
     <table class="layui-table" id="test">
       <thead id="courseList">
@@ -118,7 +122,7 @@
     }
 
     function goBack() {
-        location.href="../exam/list.html"
+        location.href="../exam/list.jsp"
     }
     function list() {
       $.ajax({

@@ -37698,7 +37698,7 @@ CREATE TABLE `tb_roles` (
 -- ----------------------------
 -- Records of tb_roles
 -- ----------------------------
-INSERT INTO `tb_roles` VALUES ('1', '超级管理员', '超级管理员');
+INSERT INTO `tb_roles` VALUES ('1', 'admin', '超级管理员');
 INSERT INTO `tb_roles` VALUES ('2', '123', '33333dewew');
 INSERT INTO `tb_roles` VALUES ('3', '老师', '任课老师，只能查询成绩。');
 INSERT INTO `tb_roles` VALUES ('4', '班主任', '班主任老师');

@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 
 <head>
@@ -16,9 +18,11 @@
       <!--<button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">-->
         <!--<i class="layui-icon">&#xe65c;</i>返回-->
       <!--</button>-->
+      <shiro:hasPermission name="father:exam:save">
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
+      </shiro:hasPermission>
       <!--<button class="layui-btn layui-bg-blue layui-btn-sm" id="importExcel">-->
         <!--<i class="layui-icon">&#xe67c;</i>导入-->
       <!--</button>-->
@@ -46,9 +50,13 @@
       <td>{{:end_time}}</td>
       <td>
         <div class="layui-btn-group">
+          <shiro:hasPermission name="father:exam:update">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
+          </shiro:hasPermission>
+          <shiro:hasPermission name="father:exam:delete">
           <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
-          <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="enter('{{:id}}','{{:name}}', '{{:no}}')">查看各科目考试</button>
+          </shiro:hasPermission>
+            <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="enter('{{:id}}','{{:name}}', '{{:no}}')">查看各科目考试</button>
         </div>
       </td>
     </tr>
@@ -79,7 +87,7 @@
         sessionStorage.setItem('currentFatherExamId', id);
         sessionStorage.setItem('currentFatherExamName', name);
         sessionStorage.setItem('currentFatherExamNo', no);
-        location.href=('../exam/list.html');
+        location.href=('../exam/list.jsp');
     }
 
     function goCreate() {

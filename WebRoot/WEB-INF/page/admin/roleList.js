@@ -44,7 +44,7 @@ layui.config({
 		  table.on('tool(roleList)', function(obj){
 		    var data = obj.data;
 		    if(obj.event === 'del'){
-		    	if(data.roleName=='超级管理员'){
+		    	if(data.roleName=='admin'){
 		    		layer.msg("不允许操作此角色！",{icon: 5});
 		    		return;
 		    	}
@@ -64,10 +64,10 @@ layui.config({
 		        layer.close(index);
 		      });
 		    } else if(obj.event === 'edit'){
-		    	if(data.roleName=='超级管理员'){
-		    		layer.msg("不允许操作此角色！",{icon: 5});
-		    		return;
-		    	}
+		    	// if(data.roleName=='admin'){
+		    	// 	layer.msg("不允许操作此角色！",{icon: 5});
+		    	// 	return;
+		    	// }
 		       layui.layer.open({
 		    	  type: 2,
 		    	  title:"编辑角色",
@@ -110,7 +110,7 @@ layui.config({
 		if(data.length>0){
 			$.each(data, function (n, value) {
 				  //避免选择不允许操作角色
-	              if(value.roleName=='超级管理员'){
+	              if(value.roleName=='admin'){
 	            	  flag=true;
 	            	  layer.msg('"超级管理员"不允许删除！',{icon: 5});
 	            	  return;

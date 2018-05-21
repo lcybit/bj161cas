@@ -5,6 +5,7 @@ import com.jefflee.entity.score.Exam;
 import com.jefflee.service.information.CourseService;
 import com.jefflee.service.score.ExamService;
 import com.jefflee.util.shiro.ResultUtil;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -84,6 +85,7 @@ public class ExamController {
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    @RequiresPermissions("exam:info:update")
     public ResultUtil modify(@RequestBody Exam exam) {
         ResultUtil result = new ResultUtil();
         List<Course> courseList = courseService.selectList();

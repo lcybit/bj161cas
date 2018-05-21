@@ -1,13 +1,18 @@
 package com.jefflee.controller.score;
 
 import com.jefflee.entity.score.Score;
+import com.jefflee.entity.shiro.TbAdmin;
 import com.jefflee.service.score.ScoreService;
 import com.jefflee.util.ExcelUtil;
 import com.jefflee.util.shiro.ResultUtil;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,5 +72,12 @@ public class ScoreController {
             result.setMsg("导入成功！");
             return result;
         }
+    }
+
+    @RequestMapping(value = "/queryAuth")
+    public String queryAuth() {
+        Subject subject= SecurityUtils.getSubject();
+        TbAdmin admin = (TbAdmin) subject.getPrincipal();
+        return admin.getRoleId().toString();
     }
 }

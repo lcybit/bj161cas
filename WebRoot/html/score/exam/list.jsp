@@ -1,7 +1,10 @@
-<!DOCTYPE html>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+         pageEncoding="UTF-8"%>
+<%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
 <html>
 
 <head>
+<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
 <title>考试信息列表</title>
   <link rel="stylesheet" href="../../../plugin/layui/css/layui.css" />
   <script src="../../../plugin/jquery/jquery.js"></script>
@@ -16,9 +19,11 @@
       <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
         <i class="layui-icon">&#xe65c;</i>返回
       </button>
+      <shiro:hasPermission name="exam:info:save">
       <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
         <i class="layui-icon">&#xe654;</i>新增
       </button>
+      </shiro:hasPermission>
       <!--<button class="layui-btn layui-bg-blue layui-btn-sm" id="importExcel">-->
         <!--<i class="layui-icon">&#xe67c;</i>导入-->
       <!--</button>-->
@@ -46,8 +51,12 @@
       <td>{{:course_name}}</td>
       <td>
         <div class="layui-btn-group">
-          <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
-          <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
+          <shiro:hasPermission name="exam:info:update">
+            <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
+          </shiro:hasPermission>
+          <shiro:hasPermission name="exam:info:delete">
+            <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
+          </shiro:hasPermission>
           <button class="layui-btn layui-bg-blue layui-btn-sm" onclick="enter('{{:id}}', '{{:course_id}}')">查看成绩</button>
         </div>
       </td>
@@ -129,11 +138,11 @@
     function enter(id, course_id) {
         sessionStorage.setItem('currentExamId', id);
         sessionStorage.setItem('currentCourseId', course_id);
-        location.href="../score/list.html"
+        location.href="../score/list.jsp"
     }
 
     function goBack() {
-        location.href="../father_exam/list.html"
+        location.href="../father_exam/list.jsp"
     }
     function list() {
       $.ajax({

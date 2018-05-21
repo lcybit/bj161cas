@@ -3,6 +3,7 @@ package com.jefflee.service.score.impl;
 import com.jefflee.entity.information.Student;
 import com.jefflee.entity.score.Score;
 import com.jefflee.entity.score.SrCourse;
+import com.jefflee.entity.shiro.TbAdmin;
 import com.jefflee.mapper.information.StudentMapper;
 import com.jefflee.mapper.score.ScoreMapper;
 import com.jefflee.mapper.score.SrCourseMapper;
@@ -12,6 +13,8 @@ import com.jefflee.util.ExcelUtil;
 import com.jefflee.util.StringUtil;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import tk.mybatis.mapper.entity.Example;
@@ -46,7 +49,16 @@ public class ScoreServiceImpl implements ScoreService{
     @Override
     public List<Score> selectList(Integer examId) {
         Example example = new Example(Score.class);
-        example.createCriteria().andEqualTo("exam_id", examId);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("exam_id", examId);
+        Subject subject= SecurityUtils.getSubject();
+        TbAdmin tbAdmin = (TbAdmin) subject.getPrincipal();
+        if (tbAdmin.getRoleId() == 5){
+            Example e = new Example(Student.class);
+            e.createCriteria().andEqualTo("student_no",  tbAdmin.getUsername());
+            Student student = studentMapper.selectOneByExample(e);
+            criteria.andEqualTo("student_id", student.getId());
+        }
         List<Score> scoreList = scoreMapper.selectByExample(example);
         return scoreList;
     }
