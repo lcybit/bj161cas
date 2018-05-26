@@ -259,6 +259,17 @@ public class AdminServiceImpl implements AdminService {
 						xd.setChecked(true);
 					}
 				}
+			} else {
+				List<XtreeData> xtreeDataList = xd.getData();
+				for (XtreeData xtreeData : xtreeDataList) {
+					if (xtreeData.getData() == null || xtreeData.getData().size() == 0) {
+						for (TbMenus tbMenus : menus) {
+							if (tbMenus.getMenuId() == Long.parseLong(xtreeData.getValue())) {
+								xtreeData.setChecked(true);
+							}
+						}
+					}
+				}
 			}
 		}
 		//默认拥有首页菜单权限

@@ -23,6 +23,21 @@ public class Student {
     @Transient
     private String sexName;
 
+    //班级名字
+    @Transient
+    private String tClassName;
+
+    //班级id
+    @Transient
+    private Integer tClassId;
+
+    //班级no
+    @Transient
+    private Integer tClassNo;
+
+    @Transient
+    private String cardNo;
+
     public String getSexName() {
         if (sex == 0)
             return "男";

@@ -71,7 +71,7 @@ layui.config({
 		       layui.layer.open({
 		    	  type: 2,
 		    	  title:"编辑角色",
-				  area: ['420px', '500px'],
+				  area: ['500px', '420px'],
 		    	  content:"editRole?roleId="+data.roleId+"&roleName="+data.roleName+"&roleRemark="+data.roleRemark, //这里content是一个普通的String
                   success : function(layero, index){
                       layui.layer.tips('点击此处返回角色列表', '.layui-layer-setwin .layui-layer-close', {

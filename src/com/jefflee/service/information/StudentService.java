@@ -23,5 +23,7 @@ public interface StudentService {
 
     List<Student> selectListByGradeId(Integer gradeId);
 
+    List<Student> selectListByTClassId(Integer tClassId);
+
     Map<String, Object> importExcel(MultipartFile file) throws Exception;
 }

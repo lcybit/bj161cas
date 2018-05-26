@@ -16,9 +16,9 @@
       <!-- 隐藏学生ID -->
       <input class="layui-input" name="id" id="id" type="hidden" />
       <div class="layui-form-item">
-        <label class="layui-form-label">学号:</label>
+        <label class="layui-form-label">机读卡号:</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="student_no" id="student_no" type="text" />
+          <input class="layui-input" name="cardNo" id="cardNo" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
@@ -32,12 +32,6 @@
         <div class="layui-input-block">
           <input type="radio" name="sex" id="man" value="0" title="男" checked="">
           <input type="radio" name="sex" id="woman" value="1" title="女">
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">入学年份:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="begin_year" id="begin_year" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
@@ -63,9 +57,8 @@
         type: 'GET',
         url: '/student/find/' + studentId,
         success: function(student) {
-          $('#student_no').attr('value', student.student_no);
+          $('#cardNo').attr('value', PrefixInteger(student.begin_year, 4)+PrefixInteger(student.tclassNo, 2)+PrefixInteger(student.student_no, 2));
           $('#name').attr('value', student.name);
-          $('#begin_year').attr('value', student.begin_year);
           $('#offset').attr('value', student.offset);
           $(":radio[name='sex'][value='" + student.sex + "']").prop("checked", "checked");
         }
@@ -73,25 +66,29 @@
       layui.use('form', function() {
         layui.form.render();
       });
-        layui.use('laydate', function(){
-            layui.laydate.render({
-                elem: '#begin_year'
-                ,type: 'year'
-                ,change: function(value){
-                    $('.layui-laydate-content').click(function(){
-                        if($(this).attr('class') == 'layui-laydate-content'){
-                            $('#year').attr('value',value);
-                            $('.layui-laydate').remove(0);
-                        }
-                    })
-                }
-            });
-        });
+//        layui.use('laydate', function(){
+//            layui.laydate.render({
+//                elem: '#begin_year'
+//                ,type: 'year'
+//                ,change: function(value){
+//                    $('.layui-laydate-content').click(function(){
+//                        if($(this).attr('class') == 'layui-laydate-content'){
+//                            $('#year').attr('value',value);
+//                            $('.layui-laydate').remove(0);
+//                        }
+//                    })
+//                }
+//            });
+//        });
     });
-  
+
+    function PrefixInteger(num, n) {
+        return (Array(n).join(0) + num).slice(-n);
+    }
+
     function modify() {
         if ($('#student_no').val()==="" || $('#name').val()===""
-            || $('#begin_year').val()==="" || $('#offset').val()==="" ){
+            || $('#offset').val()==="" ){
             layer.alert("信息请填写完整", {icon:2});
             return;
         }

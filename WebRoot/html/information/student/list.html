@@ -30,7 +30,7 @@
           <th>姓名</th>
           <th>性别</th>
           <th>入学年份</th>
-          <th>偏移</th>
+          <th>班级</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -45,7 +45,7 @@
       <td>{{:name}}</td>
       <td>{{:sexName}}</td>
       <td>{{:begin_year}}</td>
-      <td>{{:offset}}</td>
+      <td>{{:tclassName}}</td>
       <td>
         <div class="layui-btn-group">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:id}}')">修改</button>
@@ -61,7 +61,8 @@
     var table = layui.table;
     var upload = layui.upload;
     var form = layui.form;
-  
+    var tClassId = sessionStorage.getItem("currentTclassId");
+    sessionStorage.removeItem("currentTclassId");
     $(document).ready(function() {
       list();
       upload.render({
@@ -71,8 +72,9 @@
         acceptMime: '.xls,.xlsx',
         exts: 'xls|xlsx',
         done: function(result) {
-          layer.msg('导入完毕！');
-          list();
+          layer.msg(result.result);
+            if(result.code === "200")
+                list();
         }
       });
     })
@@ -139,15 +141,25 @@
     }
   
     function list() {
-      $.ajax({
-        async: false,
-        type: 'GET',
-        url: '/student/list',
-        dataType: 'json',
-        success: function(studentList) {
-          loadData(studentList);
-        }
-      });
+      if (tClassId === null){
+          $.ajax({
+              async: false,
+              type: 'GET',
+              url: '/student/list',
+              success: function(studentList) {
+                  loadData(studentList);
+              }
+          });
+      } else {
+          $.ajax({
+              async: false,
+              type: 'GET',
+              url: '/student/listByTClassId/'+tClassId,
+              success: function(studentList) {
+                  loadData(studentList);
+              }
+          });
+      }
     }
   
     function loadData(data) {

@@ -35,10 +35,15 @@ public class StudentController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET)
     public List<Student> listAll() {
-        return studentService.selectList();
+            return studentService.selectList();
     }
 
-    @RequestMapping(value = "/list/{gradeId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/listByTClassId/{tClassId}", method = RequestMethod.GET)
+    public List<Student> listByTClassId(@PathVariable("tClassId") Integer tClassId) {
+        return studentService.selectListByTClassId(tClassId);
+    }
+
+    @RequestMapping(value = "/listByGradeId/{gradeId}", method = RequestMethod.GET)
     public List<Student> listByGradeId(@PathVariable("gradeId") Integer gradeId) {
         return studentService.selectListByGradeId(gradeId);
     }
@@ -76,11 +81,13 @@ public class StudentController {
         Map<String, String> result = new HashMap<String, String>();
         // 判断文件是否为空
         if (file.isEmpty()) {
+            result.put("code", "100");
             result.put("result", "文件为空");
             return result;
         }
         // 验证文件名是否合格
         if (!ExcelUtil.validateExcel(file.getOriginalFilename())) {
+            result.put("code", "100");
             result.put("result", "必须是Excel文件！");
             return result;
         }
@@ -88,9 +95,11 @@ public class StudentController {
         Map<String, Object> outcome = studentService.importExcel(file);
         if (outcome == null) {
             result.put("result", "导入失败！");
+            result.put("code", "100");
             return result;
         } else {
             result.put("result", "导入成功！");
+            result.put("code", "200");
             return result;
         }
 
