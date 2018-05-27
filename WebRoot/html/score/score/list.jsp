@@ -45,8 +45,7 @@
     var scoreMap = new Map();
     var studentMap = new Map();
     var scoreHtml = '';
-
-    $(document).ready(function() {
+        $(document).ready(function() {
         $.ajax({
             async: false,
             type: 'GET',
@@ -57,7 +56,7 @@
                     html+="<th>"+courseList[i].sr_course_name+'</th>'
                     courseArr.push(courseList[i].id);
                 }
-                html+='<th>总分</th></tr>';
+                html+='<th>总分</th><shiro:hasPermission name="grade:update"><th>操作</th></shiro:hasPermission></tr>';
             }
         });
         $('#courseList').html(html)
@@ -80,13 +79,15 @@
         });
     })
   
-    function goModify(id) {
-      sessionStorage.setItem('currentExamId', id);
+    function goModify(d) {
+      sessionStorage.setItem('currentExamId', examId);
+      sessionStorage.setItem('currentCourseId', courseId);
+      sessionStorage.setItem('currentStudentId', d);
       layer.open({
         type: 2,
         id: 'modify',
-        title: '修改考试信息',
-        content: '/html/information/exam/modify.html',
+        title: '修改成绩',
+        content: '/html/score/score/modify.html',
         area: [ '500px', '380px' ],
         shade: 0.5,
         shadeClose: true,
@@ -143,11 +144,20 @@
             async:false,
             type:'GET',
             url: '/student/find/'+id,
-            success:function (student) {
-                scoreHtml = '<tr>';
-                scoreHtml += '<td>'+student.student_no+'</td>';
-                scoreHtml += '<td>'+student.name+'</td>';
-            }
+            success:function (result) {
+                if(result.code === 200){
+                    scoreHtml = '<tr>';
+                    scoreHtml += '<td>'+result.data.student_no+'</td>';
+                    scoreHtml += '<td>'+result.data.name+'</td>';
+                }else {
+                    scoreHtml = '<tr>';
+                    scoreHtml += '<td>null</td>';
+                    scoreHtml += '<td>null</td>';
+                    layer.msg(result.msg);
+                }
+
+            },
+
         })
     }
 
@@ -174,42 +184,17 @@
                   var score = scoreMap.get(courseArr[j]+"-"+key[i]);
                   if (typeof (score) === "undefined")
                       score = 0;
-                  scoreHtml+='<td>'+score+'</td>';
+                  scoreHtml+='<td lay-data="sort:true">'+score+'</td>';
                   totalScore += score;
               }
               scoreHtml+='<td>'+totalScore+'</td>';
+              scoreHtml+='<shiro:hasPermission name="grade:update"><td><button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('+key[i]+')">修改</button></td></shiro:hasPermission>';
               scoreHtml+='</tr>';
               html+=scoreHtml;
           }
             $('#scoreList').html(html);
         }
       });
-    }
-    //格式化时间
-    function formatTime(datetime,fmt){
-        if (parseInt(datetime)==datetime) {
-            if (datetime.length==10) {
-                datetime=parseInt(datetime)*1000;
-            } else if(datetime.length==13) {
-                datetime=parseInt(datetime);
-            }
-        }
-        datetime=new Date(datetime);
-        var o = {
-            "M+" : datetime.getMonth()+1,                 //月份
-            "d+" : datetime.getDate(),                    //日
-            "h+" : datetime.getHours(),                   //小时
-            "m+" : datetime.getMinutes(),                 //分
-            "s+" : datetime.getSeconds(),                 //秒
-            "q+" : Math.floor((datetime.getMonth()+3)/3), //季度
-            "S"  : datetime.getMilliseconds()             //毫秒
-        };
-        if(/(y+)/.test(fmt))
-            fmt=fmt.replace(RegExp.$1, (datetime.getFullYear()+"").substr(4 - RegExp.$1.length));
-        for(var k in o)
-            if(new RegExp("("+ k +")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-        return fmt;
     }
 
     //创建map

@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -79,5 +77,18 @@ public class ScoreController {
         Subject subject= SecurityUtils.getSubject();
         TbAdmin admin = (TbAdmin) subject.getPrincipal();
         return admin.getRoleId().toString();
+    }
+
+    @RequestMapping(value = "/modify", method = RequestMethod.POST)
+    public ResultUtil modify(@RequestBody Score score) {
+        ResultUtil result = new ResultUtil();
+        if (scoreService.updateById(score) != null){
+            result.setCode(200);
+            result.setMsg("修改成功！");
+        } else {
+            result.setCode(100);
+            result.setMsg("修改失败！");
+        }
+        return result;
     }
 }

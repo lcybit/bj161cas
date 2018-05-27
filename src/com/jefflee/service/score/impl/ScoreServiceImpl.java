@@ -1,10 +1,17 @@
 package com.jefflee.service.score.impl;
 
 import com.jefflee.entity.information.Student;
+import com.jefflee.entity.information.Teacher;
+import com.jefflee.entity.relation.StudentTClass;
+import com.jefflee.entity.schedule.Plan;
+import com.jefflee.entity.score.Exam;
 import com.jefflee.entity.score.Score;
 import com.jefflee.entity.score.SrCourse;
 import com.jefflee.entity.shiro.TbAdmin;
 import com.jefflee.mapper.information.StudentMapper;
+import com.jefflee.mapper.information.TeacherMapper;
+import com.jefflee.mapper.relation.StudentTClassMapper;
+import com.jefflee.mapper.schedule.PlanMapper;
 import com.jefflee.mapper.score.ScoreMapper;
 import com.jefflee.mapper.score.SrCourseMapper;
 import com.jefflee.service.score.ScoreService;
@@ -39,6 +46,16 @@ public class ScoreServiceImpl implements ScoreService{
     @Resource(name = "srCourseService")
     SrCourseService srCourseService;
 
+    @Resource(name = "planMapper")
+    PlanMapper planMapper;
+
+    @Resource(name = "teacherMapper")
+    TeacherMapper teacherMapper;
+
+    @Resource(name = "studentTClassMapper")
+    StudentTClassMapper studentTClassMapper;
+
+
     @Override
     public Integer insert(Score score) {
         if (scoreMapper.insert(score) == 1)
@@ -58,6 +75,23 @@ public class ScoreServiceImpl implements ScoreService{
             e.createCriteria().andEqualTo("student_no",  tbAdmin.getUsername());
             Student student = studentMapper.selectOneByExample(e);
             criteria.andEqualTo("student_id", student.getId());
+        } else if (tbAdmin.getRoleId() == 4){
+            Example e = new Example(Teacher.class);
+            e.createCriteria().andEqualTo("teacherNo",  tbAdmin.getUsername());
+            Teacher teacher = teacherMapper.selectOneByExample(e);
+            Example e1 = new Example(Plan.class);
+            e1.createCriteria().andEqualTo("teacherId", teacher.getTeacherId());
+            List<Plan> plans = planMapper.selectByExample(e1);
+            List<Integer> students = new ArrayList<>();
+            for (Plan plan : plans){
+                Example e2 = new Example(StudentTClass.class);
+                e2.createCriteria().andEqualTo("tclassId", plan.getTclassId());
+                List<StudentTClass> studentTClassList = studentTClassMapper.selectByExample(e2);
+                for (StudentTClass studentTClass : studentTClassList){
+                    students.add(studentTClass.getStudentId());
+                }
+            }
+            criteria.andIn("student_id", students);
         }
         List<Score> scoreList = scoreMapper.selectByExample(example);
         return scoreList;
@@ -70,8 +104,17 @@ public class ScoreServiceImpl implements ScoreService{
 
     @Override
     public Integer updateById(Score score) {
-        if (scoreMapper.updateByPrimaryKey(score) == 1)
-            return score.getId();
+        Example example = new Example(Score.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("exam_id", score.getExam_id());
+        criteria.andEqualTo("sr_course_id", score.getSr_course_id());
+        criteria.andEqualTo("student_id", score.getStudent_id());
+
+        Score oldScore = scoreMapper.selectOneByExample(example);
+        oldScore.setScore(score.getScore());
+
+        if (scoreMapper.updateByPrimaryKey(oldScore) == 1)
+            return oldScore.getId();
         else return null;
     }
 

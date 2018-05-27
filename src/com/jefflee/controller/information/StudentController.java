@@ -49,8 +49,18 @@ public class StudentController {
     }
 
     @RequestMapping(value = "/find/{studentId}", method = RequestMethod.GET)
-    public Student findById(@PathVariable("studentId") Integer studentId) {
-        return studentService.selectById(studentId);
+    public ResultUtil findById(@PathVariable("studentId") Integer studentId){
+        ResultUtil result = new ResultUtil();
+        try {
+            result.setCode(200);
+            result.setData(studentService.selectById(studentId));
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            result.setCode(100);
+            result.setMsg("学生信息不存在");
+            return result;
+        }
     }
 
     @RequestMapping(value = "/modify", method = RequestMethod.POST)

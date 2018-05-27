@@ -10,7 +10,11 @@ import org.apache.ibatis.annotations.Select;
 
 import com.jefflee.entity.schedule.Plan;
 import com.jefflee.util.MyMapper;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.Resource;
+
+@Repository("planMapper")
 public interface PlanMapper extends MyMapper<Plan> {
 
 	@Select("select * from schd_plan where plan_id = #{planId}")

@@ -15,7 +15,7 @@ public interface StudentService {
 
     List<Student> selectList();
 
-    Student selectById(Integer id);
+    Student selectById(Integer id) throws Exception;
 
     Integer updateById(Student student);
 

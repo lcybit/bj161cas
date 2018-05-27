@@ -2,9 +2,9 @@ package com.jefflee.service.shiro.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.jefflee.entity.shiro.AdminSearch;
 import com.jefflee.entity.shiro.TbLog;
 import com.jefflee.entity.shiro.TbLogExample;
-import com.jefflee.entity.shiro.UserSearch;
 import com.jefflee.mapper.shiro.TbLogMapper;
 import com.jefflee.service.shiro.LogService;
 import com.jefflee.util.shiro.MyUtil;
@@ -27,7 +27,7 @@ public class LogServiceImpl implements LogService {
 	}
 
 	@Override
-	public ResultUtil selLogList(Integer page, Integer limit, UserSearch search) {
+	public ResultUtil selLogList(Integer page, Integer limit, AdminSearch search) {
 		PageHelper.startPage(page, limit);
 		TbLogExample example=new TbLogExample();
 		//设置按创建时间降序排序

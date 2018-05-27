@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:c="http://www.w3.org/1999/XSL/Transform">
 
 <head>
-<title>修改考试信息</title>
+<title>修改成绩信息</title>
 <link rel="stylesheet" href="/plugin/layui/css/layui.css" />
 <script src="/plugin/layui/layui.all.js"></script>
 <script src="/plugin/jquery/jquery.js"></script>
@@ -14,23 +14,21 @@
   <div class="layui-container" style="margin:30px;">
     <form class="layui-form layui-form-pane" id="exam" method="post">
       <!-- 隐藏考试ID -->
-      <input class="layui-input" name="id" id="id" type="hidden" />
-      <input class="layui-input" name="exam_no" id="exam_no" type="hidden" />
+      <input class="layui-input" name="exam_id" id="exam_id" type="hidden" />
+      <input class="layui-input" name="student_id" id="student_id" type="hidden" />
       <div class="layui-form-item">
+        <label class="layui-form-label">子课程：</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="exam_time" id="blank" type="hidden" />
+          <select name="sr_course_id" id="srCourse">
+            <option value="">请选择子课程</option>
+
+          </select>
         </div>
       </div>
       <div class="layui-form-item">
-        <label class="layui-form-label">考试时间:</label>
+        <label class="layui-form-label">分数：</label>
         <div class="layui-input-block">
-          <input class="layui-input" name="exam_time" id="exam_time" type="text" />
-        </div>
-      </div>
-      <div class="layui-form-item">
-        <label class="layui-form-label">课程名称:</label>
-        <div class="layui-input-block">
-          <input class="layui-input" name="course_name" id="course_name" type="text" />
+          <input class="layui-input" name="score" id="score" type="text" />
         </div>
       </div>
       <div class="layui-form-item">
@@ -42,46 +40,28 @@
     </form>
   </div>
   <script>
+      var courseId = sessionStorage.getItem('currentCourseId');
     $(document).ready(function() {
       var examId = sessionStorage.getItem('currentExamId');
-      $('#id').attr('value', examId);
-      $.ajax({
-        async: false,
-        type: 'GET',
-        url: '/exam/find/' + examId,
-        success: function(exam) {
-          $('#exam_no').attr('value', exam.exam_no);
-          $('#exam_time').attr('value', formatTime(exam.exam_time, "yyyy-MM-dd hh:mm:ss"));
-          $('#course_name').attr('value', exam.course_name);
-        }
-      });
+      var student_id = sessionStorage.getItem('currentStudentId');
+      $('#exam_id').attr('value', examId);
+      $('#student_id').attr('value', student_id);
+
       layui.use('form', function() {
         layui.form.render();
       });
-        layui.use('laydate', function(){
-            layui.laydate.render({
-                elem: '#exam_time'
-                ,type: 'datetime'
-                ,change: function(value){
-                    $('.layui-laydate-content').click(function(){
-                        if($(this).attr('class') == 'layui-laydate-content'){
-                            $('#exam_time').attr('value',value);
-                            $('.layui-laydate').remove(0);
-                        }
-                    })
-                }
-            });
-        });
+
+        querySrCourse()
     });
   
     function modify() {
-        if ($('#exam_time').val()==="" || $('#course_name').val()===""){
+        if ($('#srCourse').val()==="" || $('#score').val()===""){
             layer.alert("信息请填写完整", {icon:2});
             return;
         }
       $.ajax({
         async: false,
-        url: '/exam/modify',
+        url: '/score/modify',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json',
@@ -103,31 +83,25 @@
       parent.layer.close(index);
     }
 
-    //格式化时间
-    function formatTime(datetime,fmt){
-        if (parseInt(datetime)==datetime) {
-            if (datetime.length==10) {
-                datetime=parseInt(datetime)*1000;
-            } else if(datetime.length==13) {
-                datetime=parseInt(datetime);
+    //加载子课程
+    function querySrCourse() {
+        var $ = layui.jquery;
+        var form = layui.form;
+        $.ajax({
+            type:'get',
+            url:'/sr_course/listByCourseId/'+courseId,
+            dataType:'json',
+            success : function (data) {
+                var root = document.getElementById("srCourse");
+                for (var  i = 0; i < data.length; i++){
+                    var option = document.createElement("option");
+                    option.setAttribute("value", data[i].id);
+                    option.innerText = data[i].sr_course_name;
+                    root.appendChild(option);
+                    form.render('select');
+                }
             }
-        }
-        datetime=new Date(datetime);
-        var o = {
-            "M+" : datetime.getMonth()+1,                 //月份
-            "d+" : datetime.getDate(),                    //日
-            "h+" : datetime.getHours(),                   //小时
-            "m+" : datetime.getMinutes(),                 //分
-            "s+" : datetime.getSeconds(),                 //秒
-            "q+" : Math.floor((datetime.getMonth()+3)/3), //季度
-            "S"  : datetime.getMilliseconds()             //毫秒
-        };
-        if(/(y+)/.test(fmt))
-            fmt=fmt.replace(RegExp.$1, (datetime.getFullYear()+"").substr(4 - RegExp.$1.length));
-        for(var k in o)
-            if(new RegExp("("+ k +")").test(fmt))
-                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
-        return fmt;
+        });
     }
   </script>
 </body>

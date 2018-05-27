@@ -1,6 +1,6 @@
 package com.jefflee.controller.shiro;
 
-import com.jefflee.entity.shiro.UserSearch;
+import com.jefflee.entity.shiro.AdminSearch;
 import com.jefflee.service.shiro.LogService;
 import com.jefflee.util.shiro.ResultUtil;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -25,7 +25,7 @@ public class LogController {
 	@RequestMapping("getLogList")
 	@RequiresPermissions("log:log:list")
 	@ResponseBody
-	public ResultUtil getLogList(Integer page, Integer limit, UserSearch search){
+	public ResultUtil getLogList(Integer page, Integer limit, AdminSearch search){
 		return logServiceImpl.selLogList(page,limit,search);
 	}
 }

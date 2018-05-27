@@ -73,8 +73,10 @@ public class StudentServiceImpl implements StudentService{
     }
 
     @Override
-    public Student selectById(Integer id) {
+    public Student selectById(Integer id) throws Exception{
         Student student =  studentMapper.selectByPrimaryKey(id);
+        if(student == null)
+            throw new Exception("没有该学生");
         StudentTClass studentTClass = new StudentTClass();
         studentTClass.setStudentId(student.getId());
         studentTClass = studentTClassMapper.selectOne(studentTClass);

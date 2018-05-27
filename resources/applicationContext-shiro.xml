@@ -61,8 +61,7 @@
         <property name="deleteInvalidSessions" value="true"/>
 		<property name="sessionIdCookie" ref="simpleCookie"/>
     </bean>
-	
-	
+
 		<!-- 自定义Realm -->
 	<bean id="customRealm" class="com.jefflee.controller.shiro.CustomRealm">
 		<!-- 将凭证匹配器设置到realm中，realm按照凭证匹配器的要求进行散列 -->
@@ -91,7 +90,7 @@
 	</bean>
 
 	<bean id="simpleCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-		<constructor-arg name="name" value="shiro.sesssion"/>
+		<constructor-arg name="name" value="shiro.session"/>
 		<property name="path" value="/"/>
 	</bean>
 </beans>
