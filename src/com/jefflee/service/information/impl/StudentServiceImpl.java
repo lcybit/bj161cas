@@ -41,7 +41,7 @@ public class StudentServiceImpl implements StudentService{
         Integer tclassNo = Integer.valueOf(cardNo.substring(4,6));
         Integer year = Integer.valueOf(cardNo.substring(0, 4));
         student.setBegin_year(year);
-        student.setStudent_no(Integer.valueOf(cardNo.substring(6)));
+        student.setStudent_no(Integer.valueOf(cardNo));
         Example example = new Example(Tclass.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("year", year);
@@ -82,6 +82,7 @@ public class StudentServiceImpl implements StudentService{
         studentTClass = studentTClassMapper.selectOne(studentTClass);
         Tclass tclass = tclassMapper.selectByPrimaryKey(studentTClass.getTclassId());
         student.setTClassNo(tclass.getTclassNo());
+        student.setTClassName(tclass.getName());
         return student;
     }
 
@@ -92,7 +93,7 @@ public class StudentServiceImpl implements StudentService{
         Integer tclassNo = Integer.valueOf(cardNo.substring(4,6));
         Integer year = Integer.valueOf(cardNo.substring(0, 4));
         student.setBegin_year(year);
-        student.setStudent_no(Integer.valueOf(cardNo.substring(6)));
+        student.setStudent_no(Integer.valueOf(cardNo));
         Example example = new Example(Tclass.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("year", year);
@@ -202,7 +203,7 @@ public class StudentServiceImpl implements StudentService{
                         int year = Integer.valueOf(cardNo.substring(0, 4));
                         int tclassNo = Integer.valueOf(cardNo.substring(4, 6));
                         student.setBegin_year(year);
-                        student.setStudent_no(Integer.valueOf(cardNo.substring(6)));
+                        student.setStudent_no(Integer.valueOf(cardNo));
                         Example example = new Example(Tclass.class);
                         Example.Criteria criteria = example.createCriteria();
                         criteria.andEqualTo("year", year);

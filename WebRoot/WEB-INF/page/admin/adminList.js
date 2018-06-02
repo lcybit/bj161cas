@@ -37,7 +37,7 @@ layui.config({
         ,url: 'getAdminList' //数据接口
         ,cellMinWidth: 80
         ,limit:10//每页默认数
-        ,limits:[10,20,30,40]
+        ,limits:[5,10,20,30,40]
         ,cols: [[ //表头
             {type:'checkbox'}
             ,{field:'id', title: 'ID', sort: true}
@@ -96,7 +96,7 @@ layui.config({
                 area: ['450px', '480px'],
                 content:"editAdmin/"+data.id, //这里content是一个普通的String
                 success : function(){
-                    layui.layer.tips('点击此处返回管理员列表', '.layui-layer-setwin .layui-layer-close', {
+                    layui.layer.tips('点击此处返回用户列表', '.layui-layer-setwin .layui-layer-close', {
                         tips: 3
                     });
                 }

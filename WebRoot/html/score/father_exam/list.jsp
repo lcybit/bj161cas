@@ -57,6 +57,7 @@
           <button class="layui-btn layui-bg-red layui-btn-sm" onclick="remove('{{:id}}')">删除</button>
           </shiro:hasPermission>
             <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="enter('{{:id}}','{{:name}}', '{{:no}}')">查看各科目考试</button>
+            <button class="layui-btn layui-btn-sm layui-bg-blue" onclick="gradeEnter('{{:id}}','{{:name}}', '{{:no}}')">成绩统计</button>
         </div>
       </td>
     </tr>
@@ -88,6 +89,12 @@
         sessionStorage.setItem('currentFatherExamName', name);
         sessionStorage.setItem('currentFatherExamNo', no);
         location.href=('../exam/list.jsp');
+    }
+
+    function gradeEnter(id, name) {
+        sessionStorage.setItem('currentFatherExamId', id);
+        sessionStorage.setItem('currentFatherExamName', name);
+        location.href='../gradeStatistics/list.jsp'
     }
 
     function goCreate() {

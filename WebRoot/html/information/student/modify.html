@@ -57,10 +57,10 @@
         type: 'GET',
         url: '/student/find/' + studentId,
         success: function(student) {
-          $('#cardNo').attr('value', PrefixInteger(student.begin_year, 4)+PrefixInteger(student.tclassNo, 2)+PrefixInteger(student.student_no, 2));
-          $('#name').attr('value', student.name);
-          $('#offset').attr('value', student.offset);
-          $(":radio[name='sex'][value='" + student.sex + "']").prop("checked", "checked");
+          $('#cardNo').attr('value', PrefixInteger(student.data.begin_year, 4)+PrefixInteger(student.data.tclassNo, 2)+PrefixInteger(student.data.student_no, 2));
+          $('#name').attr('value', student.data.name);
+          $('#offset').attr('value', student.data.offset);
+          $(":radio[name='sex'][value='" + student.data.sex + "']").prop("checked", "checked");
         }
       });
       layui.use('form', function() {

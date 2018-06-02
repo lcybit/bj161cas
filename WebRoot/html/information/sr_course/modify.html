@@ -52,7 +52,7 @@
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/sr_course/find/' + courseId,
+        url : '/sr_course/find/' + sr_courseId,
         success : function(course) {
           $('#sr_course_no').attr('value', course.sr_course_no);
           $('#sr_course_name').attr('value', course.sr_course_name);

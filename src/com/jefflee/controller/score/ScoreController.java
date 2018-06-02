@@ -1,5 +1,7 @@
 package com.jefflee.controller.score;
 
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jefflee.entity.score.Score;
 import com.jefflee.entity.shiro.TbAdmin;
 import com.jefflee.service.score.ScoreService;
@@ -37,6 +39,19 @@ public class ScoreController {
     public List<Score> listByExamId(@PathVariable("examId") Integer examId) {
         List<Score> scoreList = scoreService.selectList(examId);
         return scoreList;
+    }
+
+    @RequestMapping(value = "/listByFatherExamId/{examIdstudentId}", method = RequestMethod.GET)
+    public ResultUtil listByFatherExamId(@PathVariable("examIdstudentId") String examIdstudentId, Integer limit, Integer page) {
+        String ids[] = examIdstudentId.split(",");
+        Integer examId = Integer.valueOf(ids[0]);
+        Integer studentId;
+        if (ids.length < 2){
+            studentId = null;
+        } else
+            studentId = Integer.valueOf(ids[1]);
+        ResultUtil result = scoreService.selectScoreList(examId, studentId, limit, page);
+        return result;
     }
 
     @RequestMapping(value = "/import/{info}", method = RequestMethod.POST)

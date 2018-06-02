@@ -1,6 +1,10 @@
 package com.jefflee.service.score.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import com.jefflee.entity.information.Student;
+import com.jefflee.entity.information.Tclass;
 import com.jefflee.entity.information.Teacher;
 import com.jefflee.entity.relation.StudentTClass;
 import com.jefflee.entity.schedule.Plan;
@@ -8,18 +12,20 @@ import com.jefflee.entity.score.Exam;
 import com.jefflee.entity.score.Score;
 import com.jefflee.entity.score.SrCourse;
 import com.jefflee.entity.shiro.TbAdmin;
+import com.jefflee.mapper.information.CourseMapper;
 import com.jefflee.mapper.information.StudentMapper;
+import com.jefflee.mapper.information.TclassMapper;
 import com.jefflee.mapper.information.TeacherMapper;
 import com.jefflee.mapper.relation.StudentTClassMapper;
 import com.jefflee.mapper.schedule.PlanMapper;
+import com.jefflee.mapper.score.ExamMapper;
 import com.jefflee.mapper.score.ScoreMapper;
-import com.jefflee.mapper.score.SrCourseMapper;
 import com.jefflee.service.score.ScoreService;
 import com.jefflee.service.score.SrCourseService;
 import com.jefflee.util.ExcelUtil;
 import com.jefflee.util.StringUtil;
+import com.jefflee.util.shiro.ResultUtil;
 import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.stereotype.Service;
@@ -46,6 +52,9 @@ public class ScoreServiceImpl implements ScoreService{
     @Resource(name = "srCourseService")
     SrCourseService srCourseService;
 
+    @Resource(name = "courseMapper")
+    CourseMapper courseMapper;
+
     @Resource(name = "planMapper")
     PlanMapper planMapper;
 
@@ -55,6 +64,11 @@ public class ScoreServiceImpl implements ScoreService{
     @Resource(name = "studentTClassMapper")
     StudentTClassMapper studentTClassMapper;
 
+    @Resource(name = "tclassMapper")
+    TclassMapper tclassMapper;
+
+    @Resource(name = "examMapper")
+    ExamMapper examMapper;
 
     @Override
     public Integer insert(Score score) {
@@ -94,6 +108,16 @@ public class ScoreServiceImpl implements ScoreService{
             criteria.andIn("student_id", students);
         }
         List<Score> scoreList = scoreMapper.selectByExample(example);
+        for (Score score : scoreList){
+            Integer studentId = score.getStudent_id();
+            Student student = studentMapper.selectByPrimaryKey(studentId);
+            Example e3 = new Example(StudentTClass.class);
+            e3.createCriteria().andEqualTo("studentId", studentId);
+            StudentTClass studentTClass = studentTClassMapper.selectOneByExample(e3);
+            Tclass tclass = tclassMapper.selectByPrimaryKey(studentTClass.getTclassId());
+            score.setStudentName(student.getName());
+            score.setClassName(tclass.getName());
+        }
         return scoreList;
     }
 
@@ -149,6 +173,97 @@ public class ScoreServiceImpl implements ScoreService{
             }
         }
 
+    }
+
+    @Override
+    public ResultUtil selectScoreList(Integer examId, Integer studentId, Integer limit, Integer page) {
+        Example example = new Example(Exam.class);
+        example.createCriteria().andEqualTo("exam_no", examId);
+        List<Exam> examList = examMapper.selectByExample(example);
+        List<Score> list = new ArrayList<>();
+        Map<Integer, Float> allScoremap = new HashMap<>();
+        for (Exam exam : examList){
+            exam.setCourse_name(courseMapper.selectByPrimaryKey(exam.getCourse_id()).getName());
+            List<Score> scoreList = selectList(exam.getId());
+            Map<Integer, Float> map = new HashMap<>();
+            for (Score score : scoreList){
+                if (map.containsKey(score.getStudent_id())){
+                    Float nowScore = map.get(score.getStudent_id());
+                    map.put(score.getStudent_id(), nowScore+score.getScore());
+                    score.setTotalScore(nowScore+score.getScore());
+                    continue;
+                }
+                map.put(score.getStudent_id(), score.getScore());
+            }
+            for (Score score : scoreList){
+                if (allScoremap.containsKey(score.getStudent_id())){
+                    Float nowScore = allScoremap.get(score.getStudent_id());
+                    allScoremap.put(score.getStudent_id(), nowScore+score.getScore());
+                    score.setTotalScore(nowScore+score.getScore());
+                    continue;
+                }
+                allScoremap.put(score.getStudent_id(), score.getScore());
+            }
+
+            Map newMap = sortByComparator(map);
+            Set<Integer> newKeys= newMap.keySet();
+            Set<Integer> keys= map.keySet();
+            for (Integer integer : keys){
+                Score score = new Score();
+                score.setStudent_id(integer);
+                score.setExam_id(exam.getId());
+                score.setTotalScore(map.get(integer));
+                Student student = studentMapper.selectByPrimaryKey(integer);
+                Example e3 = new Example(StudentTClass.class);
+                e3.createCriteria().andEqualTo("studentId", integer);
+                StudentTClass studentTClass = studentTClassMapper.selectOneByExample(e3);
+                Tclass tclass = tclassMapper.selectByPrimaryKey(studentTClass.getTclassId());
+                score.setStudentName(student.getName());
+                score.setStudent_id(student.getId());
+                score.setStudentNo(student.getStudent_no());
+                score.setClassName(tclass.getName());
+                int i = 1;
+                for (Integer integer1 : newKeys){
+                    if (integer1 == integer){
+                        break;
+                    }
+                    i++;
+                }
+                score.setRank(i);
+                list.add(score);
+            }
+
+        }
+
+        for (Score score : list){
+            score.setAllScore(allScoremap.get(score.getStudent_id()));
+            Map newMap = sortByComparator(allScoremap);
+            Set<Integer> allNewKeys= newMap.keySet();
+            int j = 1;
+            for (Integer integer1 : allNewKeys){
+                if (integer1 == score.getStudent_id()){
+                    break;
+                }
+                j++;
+            }
+            score.setAllRank(j);
+
+        }
+
+        ResultUtil result = new ResultUtil();
+        if (studentId != null){
+            Iterator<Score> scoreIterator = list.iterator();
+            while (scoreIterator.hasNext()){
+                Score score = scoreIterator.next();
+                if (score.getStudent_id() != studentId){
+                    scoreIterator.remove();
+                }
+            }
+        }
+
+        result.setData(list);
+        result.setCode(0);
+        return result;
     }
 
     private Integer readExcel(Workbook workbook, String info) {
@@ -209,5 +324,26 @@ public class ScoreServiceImpl implements ScoreService{
             successNum = 0;
         }
         return successNum;
+    }
+
+    public Map sortByComparator(Map unsortMap){
+        List list = new LinkedList(unsortMap.entrySet());
+// System.out.println("list:"+list);
+        Collections.sort(list, new Comparator()
+        {
+            public int compare(Object o1, Object o2)
+            {
+                return ((Comparable) ((Map.Entry) (o2)).getValue())
+                        .compareTo(((Map.Entry) (o1)).getValue());
+            }
+        });
+        Map sortedMap = new LinkedHashMap();
+
+        for (Iterator it = list.iterator(); it.hasNext();) {
+            Map.Entry entry = (Map.Entry)it.next();
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
+        return sortedMap;
+
     }
 }
