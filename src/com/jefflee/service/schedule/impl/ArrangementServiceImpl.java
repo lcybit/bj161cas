@@ -657,11 +657,11 @@ public class ArrangementServiceImpl implements ArrangementService {
 				List<Map<String, Integer>> idPairList = parseIdPairList(positions[i], infos[j]);
 				if (i == j) {
 					for (Map<String, Integer> idPair : idPairList) {
-						setArrangedInDatabase(idPair, 1);
+						setArrangedInDatabase(idPair, -1);
 					}
 				} else {
 					for (Map<String, Integer> idPair : idPairList) {
-						setArrangedInDatabase(idPair, -1);
+						setArrangedInDatabase(idPair, 1);
 					}
 				}
 			}
@@ -722,10 +722,10 @@ public class ArrangementServiceImpl implements ArrangementService {
 			swapInCache(positions, infos, -1);
 			break;
 		case 1:
-			removeFromCache(position, info);
+			addToCache(position, info);
 			break;
 		case 2:
-			addToCache(position, info);
+			removeFromCache(position, info);
 			break;
 		default:
 			break;
@@ -744,10 +744,10 @@ public class ArrangementServiceImpl implements ArrangementService {
 			swapInCache(positions, infos, 1);
 			break;
 		case 1:
-			addToCache(position, info);
+			removeFromCache(position, info);
 			break;
 		case 2:
-			removeFromCache(position, info);
+			addToCache(position, info);
 			break;
 		default:
 			break;
@@ -774,14 +774,14 @@ public class ArrangementServiceImpl implements ArrangementService {
 	private void addToCache(String position, String info) {
 		List<Map<String, Integer>> idPairList = parseIdPairList(position, info);
 		for (Map<String, Integer> idPair : idPairList) {
-			setArrangedInCache(idPair, -1);
+			setArrangedInCache(idPair, 1);
 		}
 	}
 
 	private void removeFromCache(String position, String info) {
 		List<Map<String, Integer>> idPairList = parseIdPairList(position, info);
 		for (Map<String, Integer> idPair : idPairList) {
-			setArrangedInCache(idPair, 1);
+			setArrangedInCache(idPair, -1);
 		}
 	}
 
