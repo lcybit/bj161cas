@@ -3,11 +3,11 @@
 
 <head>
 <title>课表信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/layui/layui.all.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/layui/layui.all.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 
 
 </head>
@@ -29,7 +29,7 @@
   <script id="tmpl-scheduleList" type="text/x-jsrender">
     <tr>
       <td>{{:#index + 1}}</td>
-      <td>{{:grade.name}}{{if grade.semester == 0}}上学期{{else grade.semester == 1}}下学期{{/if}}{{:name}}</td>
+      <td>{{:grade.name}}{{:name}}</td>
       <td>
         <div class="layui-btn-group">
           <button class="layui-btn layui-btn-sm" onclick="copy('{{:scheduleId}}')">选择</button>
@@ -59,7 +59,7 @@
           $.ajax({
             async: false,
             type: 'POST',
-            url: '/' + copyingObject + '/copy/' + srcScheduleId + '/' + destScheduleId,
+            url: '/bj161cas/' + copyingObject + '/copy/' + srcScheduleId + '/' + destScheduleId,
             success: function() {
               layer.close(index);
               parent.layer.msg('复制成功！');
@@ -75,7 +75,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/schedule/list',
+        url: '/bj161cas/schedule/list',
         success: function(scheduleList) {
           $('#scheduleList').html($.templates('#tmpl-scheduleList').render(scheduleList));
         }

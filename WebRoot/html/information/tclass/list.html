@@ -3,10 +3,10 @@
 
 <head>
 <title>班级信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -23,7 +23,8 @@
       <thead>
         <tr>
           <th>入学年份</th>
-          <th>名称</th>
+          <th>初/高中</th>
+          <th>班号</th>
           <th>操作</th>
         </tr>
       </thead>
@@ -35,7 +36,8 @@
   <script id="tmpl-tclassList" type="text/x-jsrender">
     <tr>
       <td>{{:year}}</td>
-      <td>{{:name}}</td>
+      <td>{{if level == 0}}初中{{else level == 1}}高中{{/if}}</td>
+      <td>{{:tclassNo}}</td>
       <td>
         <div class="layui-btn-group">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:tclassId}}')">修改</button>
@@ -60,7 +62,7 @@
         type: 2,
         id: 'create',
         title: '新增班级信息',
-        content: '/html/information/tclass/create.html',
+        content: '/bj161cas/html/information/tclass/create.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -77,7 +79,7 @@
         type: 2,
         id: 'modify',
         title: '修改班级信息',
-        content: '/html/information/tclass/modify.html',
+        content: '/bj161cas/html/information/tclass/modify.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -89,7 +91,7 @@
     }
   
     function goRoomHtml() {
-      jump('html/information/room/list.html');
+      jump('/bj161cas/html/information/room/list.html');
     }
   
     function remove(tclassId) {
@@ -101,7 +103,7 @@
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/tclass/delete/' + tclassId,
+            url: '/bj161cas/tclass/delete/' + tclassId,
             success: function() {
               layer.close(index);
               list();
@@ -114,7 +116,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/tclass/list',
+        url: '/bj161cas/tclass/list',
         success: function(tclassList) {
           loadData(tclassList);
         }
@@ -138,7 +140,7 @@
     }
   
     function goBack() {
-      jump('html/common/home.html');
+      jump('/bj161cas/html/common/home.html');
     }
   </script>
 </body>

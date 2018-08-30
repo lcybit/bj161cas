@@ -14,16 +14,17 @@ public interface ScheduleMapper extends MyMapper<Schedule> {
 
 	@Select("SELECT * FROM schd_schedule WHERE schedule_id = #{scheduleId}")
 	@Results({ @Result(id = true, column = "schedule_id", property = "scheduleId"),
+			@Result(column = "grade_id", property = "gradeId"),
 			@Result(column = "grade_id", property = "grade", one = @One(select = "com.jefflee.mapper.schedule.GradeMapper.selectByPrimaryKey") ) })
 	public Schedule selectDetailById(Integer scheduleId);
 
-	@Select("SELECT * FROM schd_schedule")
+	@Select("SELECT * FROM schd_schedule ORDER BY start_week")
 	@Results({ @Result(id = true, column = "schedule_id", property = "scheduleId"),
 			@Result(column = "grade_id", property = "gradeId"),
 			@Result(column = "grade_id", property = "grade", one = @One(select = "com.jefflee.mapper.schedule.GradeMapper.selectByPrimaryKey") ) })
 	public List<Schedule> selectDetailList();
 
-	@Select("SELECT * FROM schd_schedule WHERE grade_id = #{gradeId}")
+	@Select("SELECT * FROM schd_schedule WHERE grade_id = #{gradeId} ORDER BY start_week")
 	@Results({ @Result(id = true, column = "schedule_id", property = "scheduleId"),
 			@Result(column = "grade_id", property = "gradeId"),
 			@Result(column = "grade_id", property = "grade", one = @One(select = "com.jefflee.mapper.schedule.GradeMapper.selectByPrimaryKey") ) })

@@ -3,10 +3,10 @@
 
 <head>
 <title>排课信息展示</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -276,7 +276,7 @@
       sessionStorage.setItem('teacherScrollTop', $('#teacherSchedule').scrollTop());
       $.ajax({
         async: false,
-        url: '/arrangement/display/' + scheduleId,
+        url: '/bj161cas/arrangement/display/' + scheduleId,
         type: 'GET',
         success: function(scheduleView) {
           $('#scheduleView').html($.templates('#tmpl-scheduleView').render(scheduleView));
@@ -298,7 +298,7 @@
       $.ajax({
         async: true,
         type: 'GET',
-        url: '/arrangement/arrange/' + scheduleId,
+        url: '/bj161cas/arrangement/arrange/' + scheduleId,
         success: function() {
           layer.close(loading);
           layer.msg('排课完毕！');
@@ -312,7 +312,7 @@
         var loading = layer.load(1);
         $.ajax({
           async: true,
-          url: '/arrangement/resetArrangement/' + scheduleId,
+          url: '/bj161cas/arrangement/resetArrangement/' + scheduleId,
           type: 'POST',
           success: function(response) {
             layer.close(loading);
@@ -479,7 +479,7 @@
       var adjustmentId = '';
       $.ajax({
         async: false,
-        url: '/adjustments',
+        url: '/bj161cas/adjustments',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json',
@@ -495,7 +495,7 @@
     function doAdjust(adjustmentId) {
       $.ajax({
         async: false,
-        url: '/arrangement/doAdjust/' + adjustmentId,
+        url: '/bj161cas/arrangement/doAdjust/' + adjustmentId,
         type: 'POST',
         success: function(response) {
           display();
@@ -506,18 +506,18 @@
     function undoAdjust() {
       $.ajax({
         async: false,
-        url: '/adjustments/latest?scheduleId=' + scheduleId,
+        url: '/bj161cas/adjustments/latest?scheduleId=' + scheduleId,
         type: 'GET',
         success: function(response) {
           var adjustmentId = response.data.adjustmentId;
           $.ajax({
             async: false,
-            url: '/arrangement/undoAdjust/' + adjustmentId,
+            url: '/bj161cas/arrangement/undoAdjust/' + adjustmentId,
             type: 'POST',
             success: function(response) {
               $.ajax({
                 async: false,
-                url: '/adjustments/' + adjustmentId,
+                url: '/bj161cas/adjustments/' + adjustmentId,
                 type: 'DELETE',
                 success: function(response) {
                   display();
@@ -535,7 +535,7 @@
     }
   
     function exportExcel() {
-      document.location.href = '/arrangement/export/' + scheduleId;
+      document.location.href = '/bj161cas/arrangement/export/' + scheduleId;
     }
   
     function listAdjustment() {
@@ -543,7 +543,7 @@
         type: 2,
         id: 'list',
         title: '调整信息',
-        content: '/html/schedule/adjustment/display.html',
+        content: '/bj161cas/html/schedule/adjustment/display.html',
         area: [ '300px', '500px' ],
         offset: 'r',
         shade: 0,
@@ -554,7 +554,7 @@
     function saveAdjustment() {
       $.ajax({
         async: false,
-        url: '/arrangement/saveAdjustment/' + scheduleId,
+        url: '/bj161cas/arrangement/saveAdjustment/' + scheduleId,
         type: 'POST',
         success: function(response) {
           display();
@@ -567,7 +567,7 @@
       clearAllColor();
       $.ajax({
         async: false,
-        url: '/arrangement/getBackground/' + scheduleId,
+        url: '/bj161cas/arrangement/getBackground/' + scheduleId,
         type: 'GET',
         success: function(backgroundMap) {
           $.each(backgroundMap.conflicting, function(key, value) {
@@ -622,7 +622,7 @@
         type: 2,
         id: 'copy',
         title: '选择课表',
-        content: '/html/schedule/schedule/copy.html',
+        content: '/bj161cas/html/schedule/schedule/copy.html',
         area: [ '800px', '400px' ],
         shade: 0.5,
         shadeClose: true,
@@ -631,7 +631,7 @@
     }
     
     function goBack() {
-      jump('html/schedule/schedule/list.html');
+      jump('/bj161cas/html/schedule/schedule/list.html');
     }
   </script>
 </body>

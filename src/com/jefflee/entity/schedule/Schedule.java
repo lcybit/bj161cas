@@ -12,12 +12,12 @@ public class Schedule {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer scheduleId;
-	@OrderBy
 	private Integer gradeId;
 	private Integer forenoon;
 	private Integer afternoon;
 	private Integer evening;
 	private Integer days;
+	@OrderBy
 	private Integer startWeek;
 
 	@Transient

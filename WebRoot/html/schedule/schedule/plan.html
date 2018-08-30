@@ -3,11 +3,11 @@
 
 <head>
 <title>设置教学计划</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/layui/layui.all.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/layui/layui.all.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -76,7 +76,7 @@
     function display() {
       $.ajax({
         async: false,
-        url: '/plan/display/' + scheduleId,
+        url: '/bj161cas/plan/display/' + scheduleId,
         type: 'GET',
         success: function(schedulePlanView) {
           $('#schedulePlanView').html($.templates('#tmpl-schedulePlanView').render(schedulePlanView));
@@ -92,7 +92,7 @@
         type: 2,
         id: 'periodNum',
         title: '选择课时数',
-        content: '/html/schedule/schedule/periodNum.html',
+        content: '/bj161cas/html/schedule/schedule/periodNum.html',
         area: [ '800px', '400px' ],
         shade: 0.5,
         shadeClose: true,
@@ -111,7 +111,7 @@
         type: 2,
         id: 'teacher',
         title: '选择教师',
-        content: '/html/schedule/schedule/teacher.html',
+        content: '/bj161cas/html/schedule/schedule/teacher.html',
         area: [ '1000px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -128,7 +128,7 @@
         type: 2,
         id: 'copy',
         title: '选择课表',
-        content: '/html/schedule/schedule/copy.html',
+        content: '/bj161cas/html/schedule/schedule/copy.html',
         area: [ '800px', '400px' ],
         shade: 0.5,
         shadeClose: true,

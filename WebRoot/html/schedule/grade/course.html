@@ -3,11 +3,11 @@
 
 <head>
 <title>选择课程</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/layui/layui.all.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/layui/layui.all.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -61,7 +61,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/course/list',
+        url: '/bj161cas/course/list',
         success: function(courseList) {
           $('#courseList').html($.templates('#tmpl-courseList').render(courseList));
         }
@@ -71,7 +71,7 @@
     function fill() {
       $.ajax({
         async: false,
-        url: '/grade_course/find/' + gradeId,
+        url: '/bj161cas/grade_course/find/' + gradeId,
         type: 'GET',
         dataType: 'json',
         success: function(gradeCourseList) {
@@ -85,7 +85,7 @@
     function create() {
       $.ajax({
         async: false,
-        url: '/grade_course/create',
+        url: '/bj161cas/grade_course/create',
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify($('#gradeCourse').serializeJSON()),
@@ -98,7 +98,7 @@
     function remove() {
       $.ajax({
         async: false,
-        url: '/grade_course/remove',
+        url: '/bj161cas/grade_course/remove',
         type: 'DELETE',
         dataType: 'json',
         data: JSON.stringify($('#gradeCourse').serializeJSON()),

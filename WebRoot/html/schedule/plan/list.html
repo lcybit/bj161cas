@@ -3,10 +3,10 @@
 
 <head>
 <title>计划课时信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -59,7 +59,7 @@
           type : 2,
           id : 'create',
           title : '新增计划课时信息',
-          content : '/html/schedule/plan/create.html',
+          content : '/bj161cas/html/schedule/plan/create.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false
@@ -75,7 +75,7 @@
           type : 2,
           id : 'modify',
           title : '修改计划课时信息',
-          content : '/html/schedule/plan/modify.html',
+          content : '/bj161cas/html/schedule/plan/modify.html',
           area : [ '700px', '500px' ],
           shade : 0.5,
           closeBtn : false,
@@ -90,7 +90,7 @@
           $.ajax({
             async : false,
             type : 'DELETE',
-            url : '/plan/delete/' + planId,
+            url : '/bj161cas/plan/delete/' + planId,
             success : function() {
               layer.close(index);
               list();
@@ -107,7 +107,7 @@
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/plan/list',
+        url : '/bj161cas/plan/list',
         success : function(planList) {
           $('#planList').html($.templates('#tmpl-planList').render(planList));
         }
@@ -115,7 +115,7 @@
     }
   
     function goBack() {
-      jump('html/schedule/plan/list.html');
+      jump('/bj161cas/html/schedule/plan/list.html');
     }
   </script>
 </body>

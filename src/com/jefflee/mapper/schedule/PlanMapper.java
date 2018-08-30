@@ -26,7 +26,7 @@ public interface PlanMapper extends MyMapper<Plan> {
 			@Result(column = "period_num", property = "periodNum") })
 	public Plan selectDetailById(Integer planId);
 
-	@Select("select * from schd_plan where schedule_id = #{scheduleId} order by teacher_id, course_id")
+	@Select("select * from schd_plan where schedule_id = #{scheduleId}")
 	@Results({ @Result(id = true, column = "plan_id", property = "planId"),
 			@Result(column = "schedule_id", property = "scheduleId"),
 			@Result(column = "course_id", property = "courseId"), @Result(column = "room_id", property = "roomId"),

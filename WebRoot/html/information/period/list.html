@@ -3,10 +3,10 @@
 
 <head>
 <title>课时信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -66,7 +66,7 @@
         type: 2,
         id: 'create',
         title: '新增课时信息',
-        content: '/html/information/period/create.html',
+        content: '/bj161cas/html/information/period/create.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -83,7 +83,7 @@
         type: 2,
         id: 'modify',
         title: '修改课时信息',
-        content: '/html/information/period/modify.html',
+        content: '/bj161cas/html/information/period/modify.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -95,10 +95,10 @@
     }
   
     function goCourseHtml() {
-      jump('html/information/course/list.html');
+      jump('/bj161cas/html/information/course/list.html');
     }
     function goRoomHtml() {
-      jump('html/information/room/list.html');
+      jump('/bj161cas/html/information/room/list.html');
     }
   
     function remove(periodId) {
@@ -110,7 +110,7 @@
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/period/delete/' + periodId,
+            url: '/bj161cas/period/delete/' + periodId,
             success: function() {
               layer.close(index);
               list();
@@ -123,7 +123,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/period/list',
+        url: '/bj161cas/period/list',
         success: function(periodList) {
           loadData(periodList);
         }
@@ -147,7 +147,7 @@
       });
     }
     function goBack() {
-      jump('html/common/home.html');
+      jump('/bj161cas/html/common/home.html');
     }
   </script>
 </body>

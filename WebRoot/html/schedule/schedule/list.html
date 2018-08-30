@@ -2,42 +2,43 @@
 <html>
 
 <head>
-<title>课表信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
-
-
+  <title>课表信息列表</title>
+  <link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css"/>
+  <script src="/bj161cas/plugin/jquery/jquery.js"></script>
+  <script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+  <script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
-  <div class="layui-container" style="width:100%;">
-    <div class="layui-btn-group">
-      <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
-        <i class="layui-icon">&#xe65c;</i>返回
-      </button>
-      <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
-        <i class="layui-icon">&#xe654;</i>新增
-      </button>
-    </div>
-    <blockquote class="layui-elem-quote">课表列表</blockquote>
-    <table class="layui-table">
-      <thead>
-        <tr>
-          <th>编号</th>
-          <th>名称</th>
-          <th>操作</th>
-        </tr>
-      </thead>
-      <tbody id="scheduleList">
-      </tbody>
-    </table>
+<div class="layui-container" style="width:100%;">
+  <div class="layui-btn-group">
+    <button class="layui-btn layui-bg-black layui-btn-sm" onclick="goBack()">
+      <i class="layui-icon">&#xe65c;</i>返回
+    </button>
+    <button class="layui-btn layui-bg-green layui-btn-sm" onclick="goCreate()">
+      <i class="layui-icon">&#xe654;</i>新增
+    </button>
   </div>
-  <script id="tmpl-scheduleList" type="text/x-jsrender">
+  <blockquote id="title" class="layui-elem-quote">课表列表</blockquote>
+  <table class="layui-table">
+    <thead>
+    <tr>
+      <th>编号</th>
+      <th>周数</th>
+      <th>操作</th>
+    </tr>
+    </thead>
+    <tbody id="scheduleList">
+    </tbody>
+  </table>
+</div>
+<script id="tmpl-title" type="text/jsrender">
+  {{:grade.name}}
+</script>
+<script id="tmpl-scheduleList" type="text/x-jsrender">
     <tr>
       <td>{{:#index + 1}}</td>
-      <td>{{:grade.name}}{{if grade.semester == 0}}上学期{{else grade.semester == 1}}下学期{{/if}}{{:name}}</td>
+      <td>{{:name}}</td>
       <td>
         <div class="layui-btn-group">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:scheduleId}}')">修改</button>
@@ -48,142 +49,143 @@
         </div>
       </td>
     </tr>
-  </script>
-  <script>
-    var layer = layui.layer;
-    var laypage = layui.laypage;
-    var table = layui.table;
-    var upload = layui.upload;
-    var form = layui.form;
-    var gradeId = sessionStorage.getItem('currentGradeId');
+</script>
+<script>
+  var layer = layui.layer;
+  var laypage = layui.laypage;
+  var table = layui.table;
+  var upload = layui.upload;
+  var form = layui.form;
+  var gradeId = sessionStorage.getItem('currentGradeId');
   
-    $(document).ready(function() {
-      list();
+  $(document).ready(function () {
+    list();
+  })
+  
+  function goCreate() {
+    sessionStorage.setItem('currentGradeId', gradeId);
+    layer.open({
+      type: 2,
+      id: 'create',
+      title: '新增课表信息',
+      content: '/bj161cas/html/schedule/schedule/create.html',
+      area: ['700px', '500px'],
+      shade: 0.5,
+      shadeClose: true,
+      closeBtn: false
+    });
+  }
+  
+  function goModify(scheduleId) {
+    sessionStorage.setItem('currentScheduleId', scheduleId);
+    layer.open({
+      type: 2,
+      id: 'modify',
+      title: '修改课表信息',
+      content: '/bj161cas/html/schedule/schedule/modify.html',
+      area: ['700px', '500px'],
+      shade: 0.5,
+      shadeClose: true,
+      closeBtn: false,
+    });
+  }
+  
+  function remove(scheduleId) {
+    layer.confirm('将删除该课表所有相关信息！',
+      {
+        title: '删除课表信息'
+      },
+      function (index) {
+        //删除相关Arrangement
+        $.ajax({
+          async: false,
+          type: 'DELETE',
+          url: '/bj161cas/arrangement/deleteAll/' + scheduleId,
+          success: function () {
+            //删除相关Plan
+            $.ajax({
+              async: false,
+              type: 'DELETE',
+              url: '/bj161cas/plan/deleteAll/' + scheduleId,
+              success: function () {
+                //删除Schedule
+                $.ajax({
+                  async: false,
+                  type: 'DELETE',
+                  url: '/bj161cas/schedule/delete/' + scheduleId,
+                  success: function () {
+                    layer.close(index);
+                    layer.msg('删除完毕！')
+                    list();
+                  }
+                });
+              }
+            });
+          }
+        });
+      });
+  }
+  
+  function goSchedule(scheduleId) {
+    sessionStorage.setItem('currentScheduleId', scheduleId);
+    $.ajax({
+      async: false,
+      type: 'GET',
+      url: '/bj161cas/arrangement/initial/' + scheduleId,
+      success: function () {
+        jump('/bj161cas/html/schedule/schedule/display.html');
+      }
     })
+  }
   
-    function goCreate() {
-      sessionStorage.setItem('currentGradeId', gradeId);
-      layer.open({
-        type: 2,
-        id: 'create',
-        title: '新增课表信息',
-        content: '/html/schedule/schedule/create.html',
-        area: [ '700px', '500px' ],
-        shade: 0.5,
-        shadeClose: true,
-        closeBtn: false
-      });
-    }
+  function goPlan(scheduleId) {
+    sessionStorage.setItem('currentScheduleId', scheduleId);
+    layer.open({
+      type: 2,
+      id: 'plan',
+      title: '设置教学计划',
+      content: '/bj161cas/html/schedule/schedule/plan.html',
+      area: ['1300px', '650px'],
+      shade: 0.5,
+      shadeClose: true,
+      closeBtn: false,
+    });
+  }
   
-    function goModify(scheduleId) {
-      sessionStorage.setItem('currentScheduleId', scheduleId);
-      layer.open({
-        type: 2,
-        id: 'modify',
-        title: '修改课表信息',
-        content: '/html/schedule/schedule/modify.html',
-        area: [ '700px', '500px' ],
-        shade: 0.5,
-        shadeClose: true,
-        closeBtn: false,
-      });
-    }
+  function list() {
+    $.ajax({
+      async: false,
+      type: 'GET',
+      url: '/bj161cas/schedule/list/' + gradeId,
+      success: function (scheduleList) {
+        $('#scheduleList').html($.templates('#tmpl-scheduleList').render(scheduleList));
+        $('#title').html($.templates('#tmpl-title').render(scheduleList[0]));
+      }
+    });
+  }
   
-    function remove(scheduleId) {
-      layer.confirm('将删除该课表所有相关信息！',
-        {
-          title: '删除课表信息'
-        },
-        function(index) {
-          //删除相关Arrangement
-          $.ajax({
-            async: false,
-            type: 'DELETE',
-            url: '/arrangement/deleteAll/' + scheduleId,
-            success: function() {
-              //删除相关Plan
-              $.ajax({
-                async: false,
-                type: 'DELETE',
-                url: '/plan/deleteAll/' + scheduleId,
-                success: function() {
-                  //删除Schedule
-                  $.ajax({
-                    async: false,
-                    type: 'DELETE',
-                    url: '/schedule/delete/' + scheduleId,
-                    success: function() {
-                      layer.close(index);
-                      layer.msg('删除完毕！')
-                      list();
-                    }
-                  });
-                }
-              });
-            }
-          });
+  function generate(scheduleId) {
+    layer.confirm('该操作会删除已排课表！',
+      {
+        title: '生成空课表'
+      },
+      function (index) {
+        $.ajax({
+          async: false,
+          type: 'GET',
+          url: '/bj161cas/arrangement/generate/' + scheduleId,
+          success: function () {
+            layer.close(index);
+            layer.msg('生成成功！');
+          }
         });
-    }
-  
-    function goSchedule(scheduleId) {
-      sessionStorage.setItem('currentScheduleId', scheduleId);
-      $.ajax({
-        async: false,
-        type: 'GET',
-        url: '/arrangement/initial/' + scheduleId,
-        success: function() {
-          jump('/html/schedule/schedule/display.html');
-        }
-      })
-    }
-  
-    function goPlan(scheduleId) {
-      sessionStorage.setItem('currentScheduleId', scheduleId);
-      layer.open({
-        type: 2,
-        id: 'plan',
-        title: '设置教学计划',
-        content: '/html/schedule/schedule/plan.html',
-        area: [ '1300px', '650px' ],
-        shade: 0.5,
-        shadeClose: true,
-        closeBtn: false,
       });
-    }
+  }
   
-    function list() {
-      $.ajax({
-        async: false,
-        type: 'GET',
-        url: '/schedule/list/' + gradeId,
-        success: function(scheduleList) {
-          $('#scheduleList').html($.templates('#tmpl-scheduleList').render(scheduleList));
-        }
-      });
-    }
-  
-    function generate(scheduleId) {
-      layer.confirm('该操作会删除已排课表！',
-        {
-          title: '生成空课表'
-        },
-        function(index) {
-          $.ajax({
-            async: false,
-            type: 'GET',
-            url: '/arrangement/generate/' + scheduleId,
-            success: function() {
-              layer.close(index);
-              layer.msg('生成成功！');
-            }
-          });
-        });
-    }
-  
-    function goBack() {
-      jump('html/schedule/grade/list.html');
-    }
-  </script>
+  function goBack() {
+    jump('/bj161cas/html/schedule/grade/list.html');
+  }
+</script>
 </body>
 
 </html>

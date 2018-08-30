@@ -3,10 +3,10 @@
 
 <head>
 <title>课程信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -39,7 +39,7 @@
       <td>{{:courseNo}}</td>
       <td>{{:name}}</td>
       <td>{{:shortName}}</td>
-      <td>{{:type}}</td>
+      <td>{{if type == 0}}普通{{else type == 1}}班会{{else type == 2}}单双周{{else type == 3}}无教师{{else type == 4}}无班级{{/if}}</td>
       <td>
         <div class="layui-btn-group">
           <button class="layui-btn layui-bg-orange layui-btn-sm" onclick="goModify('{{:courseId}}')">修改</button>
@@ -64,7 +64,7 @@
         type: 2,
         id: 'create',
         title: '新增课程信息',
-        content: '/html/information/course/create.html',
+        content: '/bj161cas/html/information/course/create.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -81,7 +81,7 @@
         type: 2,
         id: 'modify',
         title: '修改课程信息',
-        content: '/html/information/course/modify.html',
+        content: '/bj161cas/html/information/course/modify.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -93,13 +93,13 @@
     }
   
     function goTeacherHtml() {
-      jump('html/information/teacher/list.html');
+      jump('/bj161cas/html/information/teacher/list.html');
     }
     function goPeriodHtml() {
-      jump('html/information/period/list.html');
+      jump('/bj161cas/html/information/period/list.html');
     }
     function goTclassHtml() {
-      jump('html/information/tclass/list.html');
+      jump('/bj161cas/html/information/tclass/list.html');
     }
     function remove(courseId) {
       layer.confirm('确认要删除吗？',
@@ -110,7 +110,7 @@
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/course/delete/' + courseId,
+            url: '/bj161cas/course/delete/' + courseId,
             success: function() {
               layer.close(index);
               list();
@@ -123,7 +123,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/course/list',
+        url: '/bj161cas/course/list',
         success: function(courseList) {
           loadData(courseList);
         }
@@ -148,7 +148,7 @@
     }
   
     function goBack() {
-      jump('html/common/home.html');
+      jump('/bj161cas/html/common/home.html');
     }
   </script>
 </body>

@@ -3,11 +3,11 @@
 
 <head>
 <title>选择教师</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/layui/layui.all.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/layui/layui.all.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -75,7 +75,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/teacher/list/' + gradeId,
+        url: '/bj161cas/teacher/list/' + gradeId,
         success: function(teacherList) {
           $('#teacherList').append($.templates('#tmpl-teacherList').render(teacherList));
         }
@@ -90,7 +90,7 @@
         };
       $.ajax({
         async: false,
-        url: '/plan/find',
+        url: '/bj161cas/plan/find',
         type: 'POST',
         dataType: 'json',
         contentType: 'application/json',
@@ -106,7 +106,7 @@
     function create() {
       $.ajax({
         async: false,
-        url: '/plan/create',
+        url: '/bj161cas/plan/create',
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify($('#plan').serializeJSON()),
@@ -120,7 +120,7 @@
     function remove() {
       $.ajax({
         async: false,
-        url: '/plan/remove',
+        url: '/bj161cas/plan/remove',
         type: 'DELETE',
         dataType: 'json',
         data: JSON.stringify($('#plan').serializeJSON()),

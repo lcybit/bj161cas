@@ -3,10 +3,10 @@
 
 <head>
 <title>教师信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -59,7 +59,7 @@
       list();
       upload.render({
         elem: '#importExcel',
-        url: '/teacher/import',
+        url: '/bj161cas/teacher/import',
         accept: 'file',
         acceptMime: '.xls,.xlsx',
         exts: 'xls|xlsx',
@@ -74,7 +74,7 @@
         type: 2,
         id: 'create',
         title: '新增教师信息',
-        content: '/html/information/teacher/create.html',
+        content: '/bj161cas/html/information/teacher/create.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -91,7 +91,7 @@
         type: 2,
         id: 'modify',
         title: '修改教师信息',
-        content: '/html/information/teacher/modify.html',
+        content: '/bj161cas/html/information/teacher/modify.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -103,7 +103,7 @@
     }
   
     function goCourseHtml() {
-      jump('html/information/course/list.html');
+      jump('/bj161cas/html/information/course/list.html');
     }
   
     function remove(teacherId) {
@@ -115,7 +115,7 @@
           $.ajax({
             async: false,
             type: 'DELETE',
-            url: '/teacher/delete/' + teacherId,
+            url: '/bj161cas/teacher/delete/' + teacherId,
             success: function() {
               layer.close(index);
               list();
@@ -128,7 +128,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/teacher/list',
+        url: '/bj161cas/teacher/list',
         dataType: 'json',
         success: function(teacherList) {
           loadData(teacherList);
@@ -154,7 +154,7 @@
     }
   
     function goBack() {
-      jump('html/common/home.html');
+      jump('/bj161cas/html/common/home.html');
     }
   </script>
 </body>

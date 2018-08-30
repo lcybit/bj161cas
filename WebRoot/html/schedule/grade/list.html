@@ -3,10 +3,10 @@
 
 <head>
 <title>年级组信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -24,9 +24,9 @@
       <thead>
         <tr>
           <th>编号</th>
-          <th>入学年份</th>
+          <th>年份</th>
+          <th>年级</th>
           <th>学期</th>
-          <th>初/高中</th>
           <th>起始日期</th>
           <th>操作</th>
         </tr>
@@ -39,8 +39,8 @@
     <tr>
       <td>{{:#index + 1}}</td>
       <td>{{:year}}</td>
+      <td>{{if level == 0}}初{{else level == 1}}高{{/if}}{{if grade == 0}}一{{else grade == 1}}二{{else grade == 2}}三{{/if}}</td>
       <td>{{if semester == 0}}上学期{{else semester == 1}}下学期{{/if}}</td>
-      <td>{{if level == 0}}初中{{else level == 1}}高中{{/if}}</td>
       <td>{{:startDate}}</td>
       <td>
         <div class="layui-btn-group">
@@ -71,7 +71,7 @@
           type: 2,
           id: 'create',
           title: '新增年级信息',
-          content: '/html/schedule/grade/create.html',
+          content: '/bj161cas/html/schedule/grade/create.html',
           area: [ '700px', '500px' ],
           shade: 0.5,
           shadeClose: true,
@@ -86,7 +86,7 @@
         type: 2,
         id: 'modify',
         title: '修改年级信息',
-        content: '/html/schedule/grade/modify.html',
+        content: '/bj161cas/html/schedule/grade/modify.html',
         area: [ '700px', '500px' ],
         shade: 0.5,
         shadeClose: true,
@@ -100,7 +100,7 @@
         type: 2,
         id: 'selectCourse',
         title: '选择课程',
-        content: '/html/schedule/grade/course.html',
+        content: '/bj161cas/html/schedule/grade/course.html',
         area: [ '800px', '600px' ],
         shade: 0.5,
         shadeClose: true,
@@ -114,7 +114,7 @@
         type: 2,
         id: 'selectTeacher',
         title: '选择教师',
-        content: '/html/schedule/grade/teacher.html',
+        content: '/bj161cas/html/schedule/grade/teacher.html',
         area: [ '800px', '600px' ],
         shade: 0.5,
         shadeClose: true,
@@ -124,14 +124,14 @@
   
     function enter(gradeId) {
       sessionStorage.setItem('currentGradeId', gradeId);
-      jump('html/schedule/schedule/list.html');
+      jump('/bj161cas/html/schedule/schedule/list.html');
     }
   
     function remove(gradeId) {
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/schedule/list/' + gradeId,
+        url: '/bj161cas/schedule/list/' + gradeId,
         success: function(scheduleList) {
           if (scheduleList.length != 0) {
             layer.msg('请先删除该年级所有课表！');
@@ -145,7 +145,7 @@
               $.ajax({
                 async: false,
                 type: 'DELETE',
-                url: '/grade/delete/' + gradeId,
+                url: '/bj161cas/grade/delete/' + gradeId,
                 success: function() {
                   layer.close(index);
                   list();
@@ -161,7 +161,7 @@
       $.ajax({
         async: false,
         type: 'GET',
-        url: '/grade/list',
+        url: '/bj161cas/grade/list',
         success: function(gradeList) {
           $('#gradeList').html($.templates('#tmpl-gradeList').render(gradeList));
         }
@@ -169,7 +169,7 @@
     }
   
     function goBack() {
-      jump('html/common/home.html');
+      jump('/bj161cas/html/common/home.html');
     }
   </script>
 </body>

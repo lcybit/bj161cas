@@ -3,11 +3,11 @@
 
 <head>
 <title>修改计划课时信息</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/layui/layui.all.js"></script>
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/layui/layui.all.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -66,7 +66,7 @@
       $.ajax({
         async : false,
         type : 'GET',
-        url : '/plan/find/' + planId,
+        url : '/bj161cas/plan/find/' + planId,
         success : function(plan) {
           $('#scheduleId').attr('value', plan.scheduleId);
           $('#courseId').attr('value', plan.courseId);
@@ -84,7 +84,7 @@
     function modify() {
       $.ajax({
         async : false,
-        url : '/plan/modify',
+        url : '/bj161cas/plan/modify',
         type : 'POST',
         dataType : 'json',
         contentType : 'application/json',

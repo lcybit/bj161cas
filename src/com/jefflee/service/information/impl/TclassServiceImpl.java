@@ -34,9 +34,12 @@ public class TclassServiceImpl implements TclassService {
 	@Override
 	public List<Tclass> selectListByGrade(Grade grade) {
 		Tclass tclass = new Tclass();
-		tclass.setYear(grade.getYear());
+		tclass.setYear(grade.getYear()-grade.getGrade());
 		tclass.setLevel(grade.getLevel());
 		List<Tclass> tclassList = tclassMapper.select(tclass);
+		for (Tclass tclass1:tclassList){
+			tclass1.setGrade(grade.getGrade());
+		}
 		return tclassList;
 	}
 

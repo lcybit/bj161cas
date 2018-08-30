@@ -3,10 +3,10 @@
 
 <head>
 <title>调整信息列表</title>
-<link rel="stylesheet" href="/plugin/layui/css/layui.css" />
-<script src="/plugin/jquery/jquery.js"></script>
-<script src="/plugin/jquery/jquery.serializejson.js"></script>
-<script src="/plugin/jsrender/jsrender.js"></script>
+<link rel="stylesheet" href="/bj161cas/plugin/layui/css/layui.css" />
+<script src="/bj161cas/plugin/jquery/jquery.js"></script>
+<script src="/bj161cas/plugin/jquery/jquery.serializejson.js"></script>
+<script src="/bj161cas/plugin/jsrender/jsrender.js"></script>
 </head>
 
 <body>
@@ -59,7 +59,7 @@
         type : 2,
         id : 'create',
         title : '新增调整信息',
-        content : '/html/schedule/adjustment/create.html',
+        content : '/bj161cas/html/schedule/adjustment/create.html',
         area : [ '700px', '500px' ],
         shade : 0.5,
         closeBtn : false
@@ -72,7 +72,7 @@
         type : 2,
         id : 'modify',
         title : '修改调整信息',
-        content : '/html/schedule/adjustment/modify.html',
+        content : '/bj161cas/html/schedule/adjustment/modify.html',
         area : [ '700px', '500px' ],
         shade : 0.5,
         closeBtn : false,
@@ -87,7 +87,7 @@
         function(index) {
           $.ajax({
             type : 'DELETE',
-            url : '/adjustments/' + adjustmentId,
+            url : '/bj161cas/adjustments/' + adjustmentId,
             success : function(response) {
               layer.close(index);
               list();
@@ -103,7 +103,7 @@
     function list() {
       $.ajax({
         type : 'GET',
-        url : '/adjustments/',
+        url : '/bj161cas/adjustments/',
         success : function(response) {
           $('#adjustmentList').html($.templates('#tmpl-adjustmentList').render(response.data));
         }
@@ -111,7 +111,7 @@
     }
   
     function goBack() {
-      jump('html/schedule/adjustment/list.html');
+      jump('/bj161cas/html/schedule/adjustment/list.html');
     }
   </script>
 </body>
